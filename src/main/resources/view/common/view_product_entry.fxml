@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.common.ViewProductEntry"
+          xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1">
+
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="NEVER"/>
+    </columnConstraints>
+
+
+    <Label GridPane.rowIndex="0"
+           GridPane.columnIndex="0"
+           GridPane.columnSpan="2"
+           fx:id="lblMenuItem"
+           id="peItem"/>
+
+    <Label GridPane.rowIndex="1"
+           GridPane.columnIndex="0"
+           fx:id="lblStatus"
+           id="peStatus"/>
+
+    <Label GridPane.rowIndex="1"
+           GridPane.columnIndex="1"
+           fx:id="lblTotal"
+           id="peTotal"/>
+
+    <Label GridPane.rowIndex="2"
+           GridPane.columnIndex="0"
+           GridPane.columnSpan="2"
+           fx:id="lblModifiers"
+           id="peModifiers"/>
+
+</GridPane>

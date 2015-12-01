@@ -1,0 +1,116 @@
+#sectionView, #salesOrderView, #customerView {
+    -fx-background-color: #A80000;
+    -fx-alignment: center-left;
+}
+
+#sectionTag, #salesOrderId, #salesOrderPay {
+    -fx-alignment: center;
+    -fx-background-color: #C01800;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 32px;
+    -fx-font-weight: bolder;
+    -fx-padding: 5px;
+    -fx-min-width: 80px;
+    -fx-max-width: 80px;
+    -fx-pref-width: 80px;
+    -fx-min-height: 80px;
+    -fx-max-height: 80px;
+    -fx-pref-height: 80px;
+}
+
+#sectionName {
+    -fx-text-fill: #D8AD00;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+#tgvSeats {
+    -fx-pref-columns: 6;
+    -fx-padding: 40px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+#seatView {
+    -fx-min-width: 130px;
+    -fx-max-width: 130px;
+    -fx-pref-width: 130px;
+    -fx-min-height: 130px;
+    -fx-max-height: 130px;
+    -fx-pref-height: 130px;
+    -fx-background-color: #C01800;
+}
+
+#seatViewV2 {
+    -fx-background-color: #C01800;
+}
+
+#restaurantLayoutGrid {
+    -fx-padding: 10px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+#seatTag {
+    -fx-min-width: inherit;
+    -fx-max-width: inherit;
+    -fx-pref-width: inherit;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+    -fx-background-color: #A80000;
+    -fx-text-fill: #FFFFFF;
+}
+
+#seatSalesOrders {
+    -fx-text-fill: #FFEF0F;
+    -fx-font-size: 30px;
+    -fxfont-weight: bolder;
+    -fx-min-width: inherit;
+    -fx-max-width: inherit;
+    -fx-pref-width: inherit;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-padding: 4px;
+}
+
+#salesOrderPhoneNumber, #salesOrderTarget, #customerFullName {
+    -fx-text-fill: #D8AD00;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 4px;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+#salesOrderStatus, #salesOrderTotal, #salesOrderEmployee, #customerPhoneNumber {
+    -fx-text-fill: #ffffff;
+    -fx-padding: 4px;
+}
+
+#selectedGrid {
+    -fx-hgap: 8px;
+}
+
+#salesOrderSummary {
+    -fx-fit-to-width: true;
+    -fx-alignment: top-left;
+    -fx-font-size: 16px;
+}
+
+#takeOutView, #findOrderView {
+    -fx-hgap: 8px;
+}
+
+#vbCustomerEntry, #vbOrderEntry {
+    -fx-spacing: 8px;
+}
+
+.button, .text-field {
+    -fx-fit-to-width: true;
+    -fx-min-height: 80px;
+    -fx-max-height: 80px;
+    -fx-pref-height: 80px;
+}

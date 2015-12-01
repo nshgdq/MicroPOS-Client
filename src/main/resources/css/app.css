@@ -1,0 +1,73 @@
+.root {
+    -fx-base: #000000;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+#root-pane {
+    -fx-border-color: #FFEF0F;
+    -fx-border-style: solid;
+    -fx-border-width: 5;
+}
+
+.tab-pane, .label, .button, .text-field {
+    -fx-font-size: 2em;
+}
+
+.tab-pane {
+    -fx-tab-min-height: 60;
+    -fx-tab-max-height: 60;
+    -fx-tab-min-width: 200;
+    -fx-tab-max-width: 200;
+}
+
+.tab-pane > .tab-content-area {
+    -fx-padding: 10px;
+}
+
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.list-view {
+    -fx-background-insets: 0;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.list-cell {
+    -fx-padding: 4px;
+    -fx-background: #ff0000;
+    -fx-background-color: transparent;
+}
+
+.tiled-list-view {
+    /*-fx-pref-columns: 7;*/
+}
+
+/* Scroll bar hack */
+.list-view .scroll-bar:vertical .increment-arrow,
+.list-view .scroll-bar:vertical .decrement-arrow,
+.list-view .scroll-bar:vertical .increment-button,
+.list-view .scroll-bar:vertical .decrement-button,
+.list-view .scroll-bar:horizontal .increment-arrow,
+.list-view .scroll-bar:horizontal .decrement-arrow,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button,
+.scroll-pane .scroll-bar:vertical .increment-arrow,
+.scroll-pane .scroll-bar:vertical .decrement-arrow,
+.scroll-pane .scroll-bar:vertical .increment-button,
+.scroll-pane .scroll-bar:vertical .decrement-button,
+.scroll-pane .scroll-bar:horizontal .increment-arrow,
+.scroll-pane .scroll-bar:horizontal .decrement-arrow,
+.scroll-pane .scroll-bar:horizontal .increment-button,
+.scroll-pane .scroll-bar:horizontal .decrement-button {
+    -fx-padding: 0;
+}
+
+#debug {
+    -fx-border-color: green;
+    -fx-border-width: 3px;
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import email.com.gmail.ttsai0509.javafx.control.GridView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.finder.FinderPresenter"
+          xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1"
+          id="findOrderView"
+          stylesheets="/css/finder.css"
+          focusTraversable="true">
+
+    <rowConstraints>
+        <RowConstraints percentHeight="100"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="80"/>
+        <ColumnConstraints percentWidth="20"/>
+    </columnConstraints>
+
+    <GridView id="gvOrders"
+              fx:id="orders"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="0"/>
+
+    <VBox GridPane.rowIndex="0"
+          GridPane.columnIndex="1"
+          fx:id="vbOrderEntry"
+          id="vbOrderEntry">
+
+        <Label text="Order Information"/>
+
+        <TextField fx:id="tfPhoneNumber"
+                   promptText="Phone Number"/>
+
+        <TextField fx:id="tfFirstName"
+                   promptText="First Name"/>
+
+        <TextField fx:id="tfLastName"
+                   promptText="Last Name"/>
+
+        <TextField fx:id="tfSeat"
+                   promptText="Seat"/>
+
+        <TextField fx:id="tfOrderNumber"
+                   promptText="Order Number"/>
+
+        <HBox>
+            <CheckBox fx:id="cbTypeDineIn"
+                      text="Dine In"
+                      selected="true"/>
+
+            <CheckBox fx:id="cbTypeTakeOut"
+                      text="Take Out"
+                      selected="true"/>
+        </HBox>
+
+        <HBox>
+            <CheckBox fx:id="cbStatusOpen"
+                      text="Open Orders"
+                      selected="true"/>
+
+            <CheckBox fx:id="cbStatusPaid"
+                      text="Paid Orders"/>
+
+            <CheckBox fx:id="cbStatusVoid"
+                      text="Void Orders"/>
+        </HBox>
+
+    </VBox>
+
+</GridPane>

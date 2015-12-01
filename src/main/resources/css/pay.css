@@ -1,0 +1,35 @@
+#keypad {
+    -fx-hgap: 8px;
+    -fx-vgap: 8px;
+}
+
+#keypadEntry {
+    -fx-min-height: 80px;
+    -fx-max-height: 80px;
+    -fx-pref-height: 80px;
+    -fx-font-size: 30px;
+    -fx-text-alignment: right;
+}
+
+#keypadLongButton {
+    -fx-font-size: 30px;
+    -fx-font-weight: bolder;
+    -fx-min-width: 464px;
+    -fx-max-width: 464px;
+    -fx-pref-width: 464px;
+    -fx-min-height: 110px;
+    -fx-max-height: 110px;
+    -fx-pref-height: 110px;
+    -fx-background-color: #C01800;
+}
+
+#keypadRegularButton {
+    -fx-min-width: 110px;
+    -fx-max-width: 110px;
+    -fx-pref-width: 110px;
+    -fx-min-height: 110px;
+    -fx-max-height: 110px;
+    -fx-pref-height: 110px;
+    -fx-background-color: #C01800;
+}
+

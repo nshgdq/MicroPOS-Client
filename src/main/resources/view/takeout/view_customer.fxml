@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx/8.0.40"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ow.micropos.client.desktop.presenter.takeout.ViewCustomer"
+      id="customerView">
+
+    <Label fx:id="lblFullName"
+           id="customerFullName"/>
+
+    <Label fx:id="lblPhoneNumber"
+           id="customerPhoneNumber"/>
+
+</VBox>

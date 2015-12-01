@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<HBox fx:controller="ow.micropos.client.desktop.presenter.dinein.ViewSection"
+      xmlns="http://javafx.com/javafx/8.0.40"
+      xmlns:fx="http://javafx.com/fxml/1"
+      id="sectionView">
+
+    <Label fx:id="lblTag"
+           id="sectionTag"/>
+
+    <Label fx:id="lblName"
+           id="sectionName"/>
+
+</HBox>

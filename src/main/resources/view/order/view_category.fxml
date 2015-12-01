@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ow.micropos.client.desktop.presenter.order.ViewCategory"
+          id="categoryView">
+
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <StackPane GridPane.rowIndex="0"
+               GridPane.columnIndex="0"
+               id="categoryTagPane">
+        <Label fx:id="lblTag"
+               id="categoryTag"/>
+    </StackPane>
+
+    <StackPane GridPane.rowIndex="1"
+               GridPane.columnIndex="0"
+               id="categoryNamePane">
+        <Label fx:id="lblName"
+               id="categoryName"/>
+    </StackPane>
+
+</GridPane>

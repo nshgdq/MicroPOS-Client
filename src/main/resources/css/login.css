@@ -1,0 +1,27 @@
+#gpLogin {
+    -fx-hgap: 50px;
+}
+
+#gpLayout {
+    -fx-hgap: 12px;
+    -fx-vgap: 12px;
+    -fx-alignment: center;
+}
+
+#keypadEntry {
+    -fx-font-size: 50px;
+    -fx-font-weight: bolder;
+}
+
+#keypadRegularButton {
+    -fx-min-width: 160px;
+    -fx-max-width: 160px;
+    -fx-pref-width: 160px;
+    -fx-min-height: 160px;
+    -fx-max-height: 160px;
+    -fx-pref-height: 160px;
+    -fx-background-color: #A80000;
+    -fx-text-fill: #D8AD00;
+    -fx-font-size: 30px;
+    -fx-font-weight: bolder;
+}

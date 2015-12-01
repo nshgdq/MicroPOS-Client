@@ -1,0 +1,58 @@
+#modifierGroupView, #modifierOptionsView {
+    -fx-background-color: #C01800;
+    -fx-alignment: center-left;
+}
+
+#modifiersView {
+    -fx-padding: 20px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+#modifierGroupTag {
+    -fx-alignment: center;
+    -fx-background-color: #C01800;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 32px;
+    -fx-font-weight: bolder;
+    -fx-padding: 5px;
+    -fx-min-width: 80px;
+    -fx-max-width: 80px;
+    -fx-pref-width: 80px;
+    -fx-min-height: 80px;
+    -fx-max-height: 80px;
+    -fx-pref-height: 80px;
+}
+
+#modifierGroupName {
+    -fx-text-fill: #D8AD00;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+#modifierTagPane {
+    -fx-background-color: #A80000;
+}
+
+#modifierTag {
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+    -fx-text-fill: #FFFFFF;
+}
+
+#modifierName {
+    -fx-text-fill: #FFEF0F;
+    -fx-font-size: 20px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-padding: 4px;
+}
+
+#modifierPrice {
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-text-fill: #000000;
+}

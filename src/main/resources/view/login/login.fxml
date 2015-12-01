@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ow.micropos.client.desktop.presenter.login.LoginPresenter"
+          stylesheets="/css/login.css"
+          id="gpLogin">
+
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <StackPane GridPane.rowIndex="0"
+               GridPane.columnIndex="1">
+        <ImageView fx:id="imgLogo"
+                   id="imgLogo"/>
+    </StackPane>
+
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="2"
+              fx:id="gpKeypad"
+              id="gpLayout">
+
+        <columnConstraints>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+        </rowConstraints>
+
+        <StackPane GridPane.rowIndex="0"
+                   GridPane.columnIndex="0"
+                   GridPane.columnSpan="3">
+            <Label fx:id="lblPin"/>
+        </StackPane>
+
+        <Button fx:id="btn1"
+                id="keypadRegularButton"
+                text="1"
+                GridPane.rowIndex="1"
+                GridPane.columnIndex="0"/>
+
+        <Button fx:id="btn2"
+                id="keypadRegularButton"
+                text="2"
+                GridPane.rowIndex="1"
+                GridPane.columnIndex="1"/>
+
+        <Button fx:id="btn3"
+                id="keypadRegularButton"
+                text="3"
+                GridPane.rowIndex="1"
+                GridPane.columnIndex="2"/>
+
+        <Button fx:id="btn4"
+                id="keypadRegularButton"
+                text="4"
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="0"/>
+
+        <Button fx:id="btn5"
+                id="keypadRegularButton"
+                text="5"
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="1"/>
+
+        <Button fx:id="btn6"
+                id="keypadRegularButton"
+                text="6"
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="2"/>
+
+        <Button fx:id="btn7"
+                id="keypadRegularButton"
+                text="7"
+                GridPane.rowIndex="3"
+                GridPane.columnIndex="0"/>
+
+        <Button fx:id="btn8"
+                id="keypadRegularButton"
+                text="8"
+                GridPane.rowIndex="3"
+                GridPane.columnIndex="1"/>
+
+        <Button fx:id="btn9"
+                id="keypadRegularButton"
+                text="9"
+                GridPane.rowIndex="3"
+                GridPane.columnIndex="2"/>
+
+        <Button fx:id="btnClear"
+                id="keypadRegularButton"
+                text="Clear"
+                GridPane.rowIndex="4"
+                GridPane.columnIndex="0"/>
+
+        <Button fx:id="btn0"
+                id="keypadRegularButton"
+                text="0"
+                GridPane.rowIndex="4"
+                GridPane.columnIndex="1"/>
+
+        <Button fx:id="btnLogin"
+                id="keypadRegularButton"
+                text="Login"
+                GridPane.rowIndex="4"
+                GridPane.columnIndex="2"/>
+
+    </GridPane>
+
+</GridPane>

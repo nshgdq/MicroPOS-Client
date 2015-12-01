@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import email.com.gmail.ttsai0509.javafx.control.GridView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.takeout.TakeOutPresenter"
+          xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1"
+          stylesheets="/css/take_out.css"
+          focusTraversable="true"
+          id="takeOutView">
+
+    <rowConstraints>
+        <RowConstraints percentHeight="100"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="56.25"/>
+        <ColumnConstraints percentWidth="25"/>
+        <ColumnConstraints percentWidth="18.75"/>
+    </columnConstraints>
+
+    <VBox GridPane.rowIndex="0"
+          GridPane.columnIndex="2"
+          id="vbCustomerEntry">
+        <Label text="Customer Information"/>
+        <TextField fx:id="tfPhoneNumber"
+                   promptText="Phone Number"/>
+        <TextField fx:id="tfFirstName"
+                   promptText="First Name"/>
+        <TextField fx:id="tfLastName"
+                   promptText="Last Name"/>
+        <Button fx:id="newCustomer"
+                text="Add Customer"/>
+    </VBox>
+
+    <ListView fx:id="customers"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="1"/>
+
+    <GridView fx:id="salesOrders"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="0"/>
+
+</GridPane>

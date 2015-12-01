@@ -1,0 +1,227 @@
+.root {
+    -fx-base: #000000;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-font-size: 2em;
+}
+
+.root {
+    -fx-base: #000000;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.container {
+    -fx-padding: 10px;
+    -fx-hgap: 10px;
+    -fx-fit-to-width: true;
+}
+
+.nav-tab {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-padding: 8 8 8 8;
+}
+
+.item-list .list-cell:selected {
+    -fx-border-color: green;
+    -fx-border-width: 2px;
+}
+
+#gpContainer {
+    -fx-hgap: 10px;
+}
+
+#tgvMenuItems {
+    -fx-padding: 12px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+    -fx-pref-tile-width: 160px;
+    -fx-pref-tile-height: 160px;
+}
+
+#categories .list-cell {
+    -fx-background-color: #A80000;
+}
+
+#tgvCharges {
+    -fx-padding: 12px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+    -fx-pref-tile-width: 160px;
+    -fx-pref-tile-height: 160px;
+}
+
+.tab-pane {
+    -fx-tab-min-height: 40;
+    -fx-tab-max-height: 40;
+    -fx-tab-min-width: 150;
+    -fx-tab-max-width: 150;
+}
+
+.tab-pane > .tab-content-area {
+    -fx-padding: 10 0 0 0;
+}
+
+.list-cell, .list-view, #lvSalesOrderEntries {
+    -fx-fit-to-width: true;
+}
+
+/* Scroll bar hack */
+.list-view .scroll-bar:vertical .increment-arrow,
+.list-view .scroll-bar:vertical .decrement-arrow,
+.list-view .scroll-bar:vertical .increment-button,
+.list-view .scroll-bar:vertical .decrement-button,
+.list-view .scroll-bar:horizontal .increment-arrow,
+.list-view .scroll-bar:horizontal .decrement-arrow,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button,
+.scroll-pane .scroll-bar:vertical .increment-arrow,
+.scroll-pane .scroll-bar:vertical .decrement-arrow,
+.scroll-pane .scroll-bar:vertical .increment-button,
+.scroll-pane .scroll-bar:vertical .decrement-button,
+.scroll-pane .scroll-bar:horizontal .increment-arrow,
+.scroll-pane .scroll-bar:horizontal .decrement-arrow,
+.scroll-pane .scroll-bar:horizontal .increment-button,
+.scroll-pane .scroll-bar:horizontal .decrement-button {
+    -fx-padding: 0;
+}
+
+#tag {
+    -fx-alignment: center;
+    -fx-background-color: #C01800;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 32px;
+    -fx-font-weight: bolder;
+    -fx-padding: 5px;
+    -fx-min-width: 80px;
+    -fx-max-width: 80px;
+    -fx-pref-width: 80px;
+    -fx-min-height: 80px;
+    -fx-max-height: 80px;
+    -fx-pref-height: 80px;
+}
+
+#name {
+    -fx-fit-to-width: true;
+    -fx-background-color: #A80000;
+    -fx-text-fill: #D8AD00;
+    -fx-alignment: center-left;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+#name {
+    -fx-background-color: #C01800;
+    -fx-text-fill: #FFEF0F;
+    -fx-font-size: 22px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-padding: 4px;
+}
+
+#amount {
+    -fx-alignment: center;
+    -fx-background-color: #C01800;
+    -fx-text-fill: #000000;
+}
+
+#lblSoeTotal {
+    -fx-text-fill: #ffffff;
+    -fx-text-alignment: right;
+}
+
+#lblSoeMenuItem {
+    -fx-text-fill: #ffffff;
+    -fx-pref-width: 200px;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+}
+
+#gpMain {
+    -fx-hgap: 8;
+}
+
+#lblMenuItemName {
+    -fx-background-color: #C01800;
+    -fx-text-fill: #FFEF0F;
+    -fx-font-size: 22px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-padding: 4px;
+}
+
+#lblMenuItemPrice {
+    -fx-alignment: center;
+    -fx-background-color: #C01800;
+    -fx-text-fill: #000000;
+}
+
+#tag {
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+    -fx-background-color: #A80000;
+    -fx-text-fill: #FFFFFF;
+}
+
+#lblSectionTag {
+    -fx-alignment: center;
+    -fx-background-color: #C01800;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 32px;
+    -fx-font-weight: bolder;
+    -fx-padding: 5px;
+    -fx-min-width: 80px;
+    -fx-max-width: 80px;
+    -fx-pref-width: 80px;
+    -fx-min-height: 80px;
+    -fx-max-height: 80px;
+    -fx-pref-height: 80px;
+}
+
+#lblSectionName {
+    -fx-fit-to-width: true;
+    -fx-background-color: #A80000;
+    -fx-text-fill: #D8AD00;
+    -fx-alignment: center-left;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+#lblSeatTag {
+    -fx-background-color: #C01800;
+    -fx-text-fill: #FFEF0F;
+    -fx-font-size: 22px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-padding: 4px;
+}
+
+#lblPartySize {
+    -fx-alignment: center;
+    -fx-background-color: #C01800;
+    -fx-text-fill: #000000;
+}
+
+#lvSections .list-cell, #lvOrderSummary .list-cell {
+    -fx-background-color: #A80000;
+}
+
+#gpContainer {
+    -fx-padding: 10px;
+    -fx-hgap: 10px;
+    -fx-fit-to-width: true;
+}
+
+.table-cell, .label, .text-field, .button {
+    -fx-font-size: 28px;
+}
+
+#gpContainer {
+    -fx-hgap: 10px;
+}

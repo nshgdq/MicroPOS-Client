@@ -1,0 +1,11 @@
+.text-field {
+    -fx-font-size: 24pt;
+}
+
+.table-view .column-header {
+    -fx-font-size: 14;
+}
+
+.table-cell {
+    -fx-font-size: 24px;
+}

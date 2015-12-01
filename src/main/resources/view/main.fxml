@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import email.com.gmail.ttsai0509.javafx.control.GridView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ow.micropos.client.desktop.presenter.MainPresenter"
+            stylesheets="/css/main.css">
+
+    <top>
+        <GridPane id="topBar">
+
+            <rowConstraints>
+                <RowConstraints/>
+            </rowConstraints>
+
+            <columnConstraints>
+                <ColumnConstraints/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+            </columnConstraints>
+
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="0"
+                       fx:id="back"
+                       id="paging">
+                <Label text="&lt;"
+                       id="menuText"/>
+            </StackPane>
+
+            <GridView GridPane.rowIndex="0"
+                      GridPane.columnIndex="1"
+                      fx:id="gvVisibleMenu"
+                      id="gvVisibleMenu"/>
+
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="2"
+                       fx:id="fore"
+                       id="paging">
+                <Label text="&gt;"
+                       id="menuText"/>
+            </StackPane>
+
+            <VBox GridPane.rowIndex="0"
+                  GridPane.columnIndex="3"
+                  fx:id="vbDateTime"
+                  id="menuItem">
+                <Label fx:id="lblDate"
+                       id="menuText"/>
+                <Label fx:id="lblTime"
+                       id="menuText"/>
+            </VBox>
+
+        </GridPane>
+    </top>
+
+    <center>
+        <StackPane fx:id="spContent"
+                   id="spContent"/>
+    </center>
+
+</BorderPane>

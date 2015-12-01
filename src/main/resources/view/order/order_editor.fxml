@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import email.com.gmail.ttsai0509.javafx.control.GridView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml"
+          stylesheets="/css/order.css"
+          fx:controller="ow.micropos.client.desktop.presenter.order.OrderEditorPresenter">
+
+    <rowConstraints>
+        <RowConstraints percentHeight="100"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="80"/>
+    </columnConstraints>
+
+    <StackPane fx:id="spItems"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="1">
+        <GridView fx:id="gvCategories"
+                  id="gpCategories"/>
+        <GridView fx:id="gvMenuItems"
+                  id="gpMenuItems"/>
+    </StackPane>
+
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="0">
+
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints/>
+        </columnConstraints>
+
+        <Label fx:id="employee"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2"/>
+
+        <Label fx:id="target"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2"/>
+
+        <Label fx:id="date"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2"/>
+
+        <AnchorPane GridPane.rowIndex="3"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2">
+            <ListView fx:id="orderEntries"
+                      AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.rightAnchor="0"
+                      AnchorPane.topAnchor="0"/>
+        </AnchorPane>
+
+        <Label text="Product Total"
+               GridPane.rowIndex="4"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="productTotal"
+               GridPane.rowIndex="4"
+               GridPane.columnIndex="1"/>
+
+        <Label text="Discount"
+               GridPane.rowIndex="5"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="chargeTotal"
+               GridPane.rowIndex="5"
+               GridPane.columnIndex="1"/>
+
+        <Label text="Gratuity"
+               GridPane.rowIndex="6"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="gratuityTotal"
+               GridPane.rowIndex="6"
+               GridPane.columnIndex="1"/>
+
+        <Label text="Sales Tax"
+               GridPane.rowIndex="7"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="taxTotal"
+               GridPane.rowIndex="7"
+               GridPane.columnIndex="1"/>
+
+        <Label text="Grand Total"
+               GridPane.rowIndex="8"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="grandTotal"
+               GridPane.rowIndex="8"
+               GridPane.columnIndex="1"/>
+
+    </GridPane>
+
+</GridPane>

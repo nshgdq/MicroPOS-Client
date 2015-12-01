@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1"
+          stylesheets="/css/common.css"
+          id="salesOrderView">
+
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="0"
+              fx:id="gpTop">
+
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label GridPane.rowIndex="0"
+               GridPane.columnIndex="0"
+               GridPane.rowSpan="3"
+               fx:id="lblId"
+               id="salesOrderId"/>
+
+        <Label GridPane.rowIndex="0"
+               GridPane.columnIndex="1"
+               fx:id="lblTarget"
+               id="salesOrderTarget"/>
+
+        <Label GridPane.rowIndex="1"
+               GridPane.columnIndex="1"
+               fx:id="lblTargetDetails"
+               id="salesOrderTargetDetails"/>
+
+        <Label GridPane.rowIndex="2"
+               GridPane.columnIndex="1"
+               fx:id="lblDate"
+               id="salesOrderDate"/>
+
+    </GridPane>
+
+    <ListView GridPane.rowIndex="1"
+              GridPane.columnIndex="0"
+              fx:id="lvOrderSummary"
+              id="salesOrderSummary"/>
+
+    <GridPane GridPane.rowIndex="2"
+              GridPane.columnIndex="0"
+              fx:id="gpBottom">
+
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints percentWidth="50"/>
+            <ColumnConstraints percentWidth="50"/>
+        </columnConstraints>
+
+        <Label GridPane.rowIndex="0"
+               GridPane.columnIndex="0"
+               fx:id="lblStatus"
+               id="salesOrderStatus"/>
+
+        <Label GridPane.rowIndex="1"
+               GridPane.columnIndex="0"
+               fx:id="lblEmployee"
+               id="salesOrderEmployee"/>
+
+        <StackPane GridPane.rowIndex="0"
+                   GridPane.columnIndex="1"
+                   GridPane.rowSpan="2"
+                   id="salesOrderTotalWrapper">
+            <Label fx:id="lblTotal"
+                   id="salesOrderTotal"/>
+        </StackPane>
+
+    </GridPane>
+
+</GridPane>

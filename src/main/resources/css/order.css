@@ -1,0 +1,35 @@
+#gpCategories, #gpMenuItems {
+    -fx-padding: 20px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+#menuItemView, #categoryView {
+    -fx-background-color: #C01800;
+}
+
+#menuItemTagPane, #categoryTagPane {
+    -fx-background-color: #A80000;
+}
+
+#menuItemTag, #categoryTag {
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+    -fx-text-fill: #FFFFFF;
+}
+
+#menuItemName, #categoryName {
+    -fx-text-fill: #FFEF0F;
+    -fx-font-size: 20px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-padding: 4px;
+}
+
+#menuItemPrice {
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-text-fill: #000000;
+}

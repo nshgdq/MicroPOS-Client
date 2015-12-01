@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import email.com.gmail.ttsai0509.javafx.control.GridView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.modify.ProductEditorPresenter"
+          stylesheets="/css/modify.css"
+          xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1">
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="18.75"/>
+        <ColumnConstraints percentWidth="56.25"/>
+        <ColumnConstraints percentWidth="25"/>
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <StackPane GridPane.rowIndex="0"
+               GridPane.columnIndex="0">
+        <ListView fx:id="modifierGroups"
+                  AnchorPane.bottomAnchor="0"
+                  AnchorPane.leftAnchor="0"
+                  AnchorPane.topAnchor="0"
+                  AnchorPane.rightAnchor="0"/>
+    </StackPane>
+
+    <VBox GridPane.rowIndex="1"
+          GridPane.columnIndex="0">
+        <RadioButton fx:id="rbAll"
+                     text="All"/>
+        <RadioButton fx:id="rbAdd"
+                     text="Addition"/>
+        <RadioButton fx:id="rbExc"
+                     text="Exclusion"/>
+        <RadioButton fx:id="rbSub"
+                     text="Substitution"/>
+        <RadioButton fx:id="rbIns"
+                     text="Instruction"/>
+        <RadioButton fx:id="rbVar"
+                     text="Variation"/>
+    </VBox>
+
+    <GridView GridPane.rowIndex="0"
+              GridPane.columnIndex="1"
+              GridPane.rowSpan="2"
+              fx:id="modifiers"
+              id="modifiersView"/>
+
+    <AnchorPane GridPane.rowIndex="0"
+                GridPane.columnIndex="2">
+        <ListView fx:id="entryModifiers"
+                  AnchorPane.bottomAnchor="0"
+                  AnchorPane.leftAnchor="0"
+                  AnchorPane.topAnchor="0"
+                  AnchorPane.rightAnchor="0"/>
+    </AnchorPane>
+
+</GridPane>

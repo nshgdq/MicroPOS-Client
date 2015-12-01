@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.modify.ViewModifier"
+          xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1"
+          id="modifierOptionsView">
+
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <StackPane GridPane.rowIndex="0"
+               GridPane.columnIndex="0"
+               id="modifierTagPane">
+        <Label fx:id="lblTag"
+               id="modifierTag"/>
+    </StackPane>
+
+    <StackPane GridPane.rowIndex="1"
+               GridPane.columnIndex="0"
+               id="modifierNamePane">
+        <Label fx:id="lblName"
+               id="modifierName"/>
+    </StackPane>
+
+    <StackPane GridPane.rowIndex="2"
+               GridPane.columnIndex="0"
+               id="modifierPricePane">
+        <Label fx:id="lblPrice"
+               id="modifierPrice"/>
+    </StackPane>
+
+</GridPane>

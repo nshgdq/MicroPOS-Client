@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ow.micropos.client.desktop.presenter.payment.PaymentEditorPresenter"
+          stylesheets="/css/pay.css">
+
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="40"/>
+        <ColumnConstraints percentWidth="20"/>
+    </columnConstraints>
+
+    <!-- Order Summary -->
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="0">
+
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints/>
+        </columnConstraints>
+
+        <Label fx:id="employee"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2"/>
+
+        <Label fx:id="target"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2"/>
+
+        <Label fx:id="date"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2"/>
+
+        <AnchorPane GridPane.rowIndex="3"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2">
+            <ListView fx:id="orderEntries"
+                      AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.rightAnchor="0"
+                      AnchorPane.topAnchor="0"/>
+        </AnchorPane>
+
+        <Label text="Product Total"
+               GridPane.rowIndex="4"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="productTotal"
+               GridPane.rowIndex="4"
+               GridPane.columnIndex="1"/>
+
+        <Label text="Discount"
+               GridPane.rowIndex="5"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="chargeTotal"
+               GridPane.rowIndex="5"
+               GridPane.columnIndex="1"/>
+
+        <Label text="Gratuity"
+               GridPane.rowIndex="6"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="serviceCharge"
+               GridPane.rowIndex="6"
+               GridPane.columnIndex="1"/>
+
+        <Label text="Sales Tax"
+               GridPane.rowIndex="7"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="tax"
+               GridPane.rowIndex="7"
+               GridPane.columnIndex="1"/>
+
+        <Label text="Grand Total"
+               GridPane.rowIndex="8"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="grandtotal"
+               GridPane.rowIndex="8"
+               GridPane.columnIndex="1"/>
+
+
+        <Label fx:id="lblPaidAmount"
+               GridPane.rowIndex="9"
+               GridPane.columnIndex="1"/>
+
+        <Label fx:id="lblChangeAmount"
+               GridPane.rowIndex="10"
+               GridPane.columnIndex="1"/>
+
+    </GridPane>
+
+    <!-- Charges -->
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="1">
+
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <ListView GridPane.rowIndex="0"
+                  GridPane.columnIndex="0"
+                  fx:id="lvCharges"/>
+    </GridPane>
+
+    <!-- Keypad -->
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="2"
+              id="keypad">
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <TextField fx:id="tfAmount"
+                   id="keypadEntry"
+                   promptText="Amount"
+                   editable="false"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="1"
+                   GridPane.columnSpan="4"/>
+
+        <Button fx:id="btnEvenTender"
+                id="keypadLongButton"
+                text="Even Tender"
+                GridPane.rowIndex="6"
+                GridPane.columnIndex="1"
+                GridPane.columnSpan="4"/>
+
+        <Button fx:id="btn7"
+                id="keypadRegularButton"
+                text="7"
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="1"/>
+
+        <Button fx:id="btn8"
+                id="keypadRegularButton"
+                text="8"
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="2"/>
+
+        <Button fx:id="btn9"
+                id="keypadRegularButton"
+                text="9"
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="3"/>
+
+        <Button fx:id="btn4"
+                id="keypadRegularButton"
+                text="4"
+                GridPane.rowIndex="3"
+                GridPane.columnIndex="1"/>
+
+        <Button fx:id="btn5"
+                id="keypadRegularButton"
+                text="5"
+                GridPane.rowIndex="3"
+                GridPane.columnIndex="2"/>
+
+        <Button fx:id="btn6"
+                id="keypadRegularButton"
+                text="6"
+                GridPane.rowIndex="3"
+                GridPane.columnIndex="3"/>
+
+        <Button fx:id="btn1"
+                id="keypadRegularButton"
+                text="1"
+                GridPane.rowIndex="4"
+                GridPane.columnIndex="1"/>
+
+        <Button fx:id="btn2"
+                id="keypadRegularButton"
+                text="2"
+                GridPane.rowIndex="4"
+                GridPane.columnIndex="2"/>
+
+        <Button fx:id="btn3"
+                id="keypadRegularButton"
+                text="3"
+                GridPane.rowIndex="4"
+                GridPane.columnIndex="3"/>
+
+        <Button fx:id="btn0"
+                id="keypadRegularButton"
+                text="0"
+                GridPane.rowIndex="5"
+                GridPane.columnIndex="1"/>
+
+        <Button fx:id="btn00"
+                id="keypadRegularButton"
+                text="00"
+                GridPane.rowIndex="5"
+                GridPane.columnIndex="2"/>
+
+        <Button fx:id="btnClear"
+                id="keypadRegularButton"
+                text="C"
+                GridPane.rowIndex="5"
+                GridPane.columnIndex="3"/>
+
+        <Button fx:id="btnCash"
+                id="keypadRegularButton"
+                text="Cash"
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="4"/>
+
+        <Button fx:id="btnCredit"
+                id="keypadRegularButton"
+                text="Credit"
+                GridPane.rowIndex="3"
+                GridPane.columnIndex="4"/>
+
+        <Button fx:id="btnCheck"
+                id="keypadRegularButton"
+                text="Check"
+                GridPane.rowIndex="4"
+                GridPane.columnIndex="4"/>
+
+        <Button fx:id="btnGiftCard"
+                id="keypadRegularButton"
+                text="GC"
+                GridPane.rowIndex="5"
+                GridPane.columnIndex="4"/>
+
+    </GridPane>
+
+    <!-- Summary -->
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="3">
+
+        <rowConstraints>
+            <RowConstraints percentHeight="50"/>
+            <RowConstraints percentHeight="50"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <ListView fx:id="lvChargeEntries"
+                  GridPane.rowIndex="0"
+                  GridPane.columnIndex="0"/>
+
+        <ListView fx:id="lvPaymentEntries"
+                  GridPane.rowIndex="1"
+                  GridPane.columnIndex="0"/>
+
+    </GridPane>
+
+</GridPane>

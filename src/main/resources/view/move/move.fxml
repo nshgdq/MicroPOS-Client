@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import email.com.gmail.ttsai0509.javafx.control.GridView?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ow.micropos.client.desktop.presenter.move.MovePresenter"
+          stylesheets="/css/move.css">
+
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="80"/>
+    </columnConstraints>
+
+    <ListView GridPane.rowIndex="0"
+              GridPane.columnIndex="0"
+              fx:id="lvContext"/>
+
+    <GridView GridPane.rowIndex="0"
+              GridPane.columnIndex="1"
+              fx:id="gvOrderGrid"/>
+
+</GridPane>
