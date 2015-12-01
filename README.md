@@ -1,2 +1,2 @@
 # MicroPOS-Client
-JavaFX Point-of-Sale System
+Point-of-Sale System Client in JavaFX
