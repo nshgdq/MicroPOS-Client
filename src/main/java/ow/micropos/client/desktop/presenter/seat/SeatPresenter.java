@@ -43,14 +43,12 @@ public class SeatPresenter extends ItemPresenter<Seat> {
         gvOrderGrid.setPage(0);
         gvOrderGrid.setItems(FXCollections.emptyObservableList());
 
-        if (App.apiIsBusy.compareAndSet(false, true)) {
-            App.api.getSalesOrderBySeat(
-                    getItem().getId(),
-                    SalesOrderStatus.OPEN,
-                    (AlertCallback<List<SalesOrder>>) (salesOrders, response) ->
-                            gvOrderGrid.setItems(FXCollections.observableList(salesOrders))
-            );
-        }
+        App.api.getSalesOrderBySeat(
+                getItem().getId(),
+                SalesOrderStatus.OPEN,
+                (AlertCallback<List<SalesOrder>>) (salesOrders, response) ->
+                        gvOrderGrid.setItems(FXCollections.observableList(salesOrders))
+        );
     }
 
     @Override

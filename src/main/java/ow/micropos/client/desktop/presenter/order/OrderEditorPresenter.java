@@ -133,15 +133,13 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         gvCategories.setItems(FXCollections.emptyObservableList());
         gvMenuItems.setItems(FXCollections.emptyObservableList());
 
-        if (App.apiIsBusy.compareAndSet(false, true)) {
-            App.api.getCategories(new AlertCallback<List<Category>>() {
-                @Override
-                public void onSuccess(List<Category> categories, Response response) {
-                    gvCategories.setItems(FXCollections.observableList(categories));
-                    showCategories();
-                }
-            });
-        }
+        App.api.getCategories(new AlertCallback<List<Category>>() {
+            @Override
+            public void onSuccess(List<Category> categories, Response response) {
+                gvCategories.setItems(FXCollections.observableList(categories));
+                showCategories();
+            }
+        });
     }
 
     @Override
