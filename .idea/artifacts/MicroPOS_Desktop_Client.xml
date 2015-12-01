@@ -13,7 +13,7 @@
     </properties>
     <root id="root">
       <element id="archive" name="MicroPOS_Desktop_Client.jar">
-        <element id="module-output" name="MicroPOS Desktop Client" />
+        <element id="module-output" name="MicroPOS Client" />
       </element>
       <element id="library" level="project" name="Gradle: org.controlsfx:controlsfx:8.40.9" />
       <element id="library" level="project" name="Gradle: org.controlsfx:openjfx-dialogs:1.0.3" />
