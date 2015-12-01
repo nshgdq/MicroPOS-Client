@@ -16,7 +16,7 @@ public class ChargeEntry {
     public ChargeEntry(Charge charge) {
         setDate(new Date());
         setCharge(charge);
-        setStatus(ChargeEntryStatus.APPLIED);
+        setStatus(ChargeEntryStatus.REQUEST_APPLY);
     }
 
     private ObjectProperty<Long> id = new SimpleObjectProperty<>();
@@ -107,9 +107,10 @@ public class ChargeEntry {
     }
 
     public BigDecimal applyAmountIfActive(BigDecimal price) {
-        if (!hasStatus(ChargeEntryStatus.APPLIED))
-            return BigDecimal.ZERO;
-        else
+        if (hasStatus(ChargeEntryStatus.APPLIED) ||
+                hasStatus(ChargeEntryStatus.REQUEST_APPLY))
             return applyAmountTo(price);
+        else
+            return BigDecimal.ZERO;
     }
 }
