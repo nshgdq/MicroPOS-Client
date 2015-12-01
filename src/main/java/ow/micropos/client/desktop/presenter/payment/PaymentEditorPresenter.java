@@ -199,12 +199,8 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
 
     private void addPaymentEntry(PaymentEntryType type) {
 
-        BigDecimal amount;
-
-        if (amountFormatter.get().isEmpty())
-            amount = new BigDecimal("0");
-        else
-            amount = new BigDecimal(amountFormatter.get());
+        String strAmount = amountFormatter.get().isEmpty() ? "0" : amountFormatter.get();
+        BigDecimal amount = new BigDecimal(strAmount);
 
         if (amount.compareTo(BigDecimal.ZERO) == 1) {
             PaymentEntry payment = new PaymentEntry(amount, type);

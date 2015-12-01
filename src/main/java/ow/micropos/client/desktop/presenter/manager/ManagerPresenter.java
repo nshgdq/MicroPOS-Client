@@ -47,8 +47,8 @@ public class ManagerPresenter extends Presenter {
      ******************************************************************/
 
     private final ObservableList<Action> managerMenu = FXCollections.observableArrayList(
-            new Action("Shutdown", ActionType.BUTTON, event -> Platform.runLater(App::exit)),
-            new Action("Migration", ActionType.BUTTON, event -> Platform.runLater(() -> {
+            new Action("Shutdown", ActionType.FINISH, event -> Platform.runLater(App::exit)),
+            new Action("Migration", ActionType.FINISH, event -> Platform.runLater(() -> {
                 if (App.apiIsBusy.compareAndSet(false, true)) {
                     App.api.migrateSalesOrders(new AlertCallback<Integer>() {
                         @Override
@@ -58,7 +58,7 @@ public class ManagerPresenter extends Presenter {
                     });
                 }
             })),
-            new Action("Close Unpaid", ActionType.BUTTON, event -> Platform.runLater(() -> {
+            new Action("Close Unpaid", ActionType.FINISH, event -> Platform.runLater(() -> {
                 if (App.apiIsBusy.compareAndSet(false, true)) {
                     App.api.closeUnpaidSalesOrders(new AlertCallback<List<Long>>() {
                         @Override

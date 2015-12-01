@@ -15,6 +15,7 @@ public class PaymentEntry {
     public PaymentEntry() {}
 
     public PaymentEntry(BigDecimal amount, PaymentEntryType type) {
+        setStatus(PaymentEntryStatus.REQUEST_PAID);
         setAmount(amount);
         setType(type);
     }
