@@ -9,6 +9,7 @@ import ow.micropos.client.desktop.model.menu.ModifierGroup;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.model.people.Customer;
 import ow.micropos.client.desktop.model.people.Employee;
+import ow.micropos.client.desktop.model.report.CurrentSalesReport;
 import ow.micropos.client.desktop.model.seating.Section;
 import retrofit.Callback;
 import retrofit.http.*;
@@ -117,6 +118,11 @@ public interface AppApi {
     void getSettings(
             @Query("keys") String[] keys,
             Callback<Map<String, String>> callback
+    );
+
+    @GET("/reports/current")
+    void getCurrentReport(
+            Callback<CurrentSalesReport> callback
     );
 
 }

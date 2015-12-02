@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.model.report.CurrentSalesReport;
 import ow.micropos.client.desktop.utils.Action;
 import ow.micropos.client.desktop.utils.ActionLabel;
 import ow.micropos.client.desktop.utils.ActionType;
@@ -64,6 +65,16 @@ public class ManagerPresenter extends Presenter {
                         @Override
                         public void onSuccess(List<Long> longs, Response response) {
                             App.warn.showAndWait("Closed Orders : " + longs.toString());
+                        }
+                    });
+                }
+            })),
+            new Action("Current Report", ActionType.FINISH, event -> Platform.runLater(() -> {
+                if (App.apiIsBusy.compareAndSet(false, true)) {
+                    App.api.getCurrentReport(new AlertCallback<CurrentSalesReport>() {
+                        @Override
+                        public void onSuccess(CurrentSalesReport report, Response response) {
+                            System.out.println(report.toString());
                         }
                     });
                 }
