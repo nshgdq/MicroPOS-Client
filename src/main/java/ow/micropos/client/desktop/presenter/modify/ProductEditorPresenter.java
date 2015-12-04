@@ -91,7 +91,13 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
         modifiers.setCols(App.properties.getInt("modify-modifiers-cols"));
         modifiers.setCellFactory(param -> {
             ViewModifier presenter = Presenter.load("/view/modify/view_modifier.fxml");
-            presenter.onClick(event -> Platform.runLater(() -> entryModifiers.getItems().add(presenter.getItem())));
+            presenter.onClick(event -> Platform.runLater(() -> {
+                entryModifiers.getItems().add(presenter.getItem());
+
+                ProductEntry pe = getItem();
+                if (pe.hasStatus(ProductEntryStatus.SENT))
+                    pe.setStatus(ProductEntryStatus.REQUEST_EDIT);
+            }));
             return presenter;
         });
 
@@ -101,6 +107,10 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                 Platform.runLater(() -> {
                     entryModifiers.getSelectionModel().clearSelection();
                     entryModifiers.getItems().remove(newValue);
+
+                    ProductEntry pe = getItem();
+                    if (pe.hasStatus(ProductEntryStatus.SENT))
+                        pe.setStatus(ProductEntryStatus.REQUEST_EDIT);
                 });
         });
 
@@ -129,7 +139,11 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
 
     @Override
     public ObservableList<Action> menu() {
-        return menu;
+        if (getItem().hasStatus(ProductEntryStatus.REQUEST_HOLD) ||
+                getItem().hasStatus(ProductEntryStatus.HOLD))
+            return menuHold;
+        else
+            return menuSend;
     }
 
     @Override
@@ -151,7 +165,37 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
         this.context = context;
     }
 
-    private final ObservableList<Action> menu = FXCollections.observableArrayList(
+    private final ObservableList<Action> menuHold = FXCollections.observableArrayList(
+
+            new Action("Done", ActionType.FINISH, event -> Platform.runLater(App.main::back)),
+            new Action("Void", ActionType.FINISH, event -> Platform.runLater(() -> {
+                if (getItem().hasStatus(ProductEntryStatus.REQUEST_SENT)) {
+                    context.remove(getItem());
+                    App.main.back();
+
+                } else if (!App.employee.hasPermission(Permission.VOID_SALES_ORDER)) {
+                    App.warn.showAndWait("Requires Permissions : [VOID_SALES_ORDER]");
+
+                } else {
+                    getItem().setStatus(ProductEntryStatus.REQUEST_VOID);
+                    App.main.back();
+                }
+            })),
+            new Action("Send", ActionType.FINISH, event -> Platform.runLater(() -> {
+                if (getItem().hasStatus(ProductEntryStatus.REQUEST_HOLD) ||
+                        getItem().hasStatus(ProductEntryStatus.HOLD)) {
+                    getItem().setStatus(ProductEntryStatus.REQUEST_SENT);
+                    App.main.back();
+
+                } else {
+                    App.warn.showAndWait("Item can not be held anymore.");
+                }
+            }))
+
+    );
+
+
+    private final ObservableList<Action> menuSend = FXCollections.observableArrayList(
 
             new Action("Done", ActionType.FINISH, event -> Platform.runLater(App.main::back)),
             new Action("Void", ActionType.FINISH, event -> Platform.runLater(() -> {
@@ -182,5 +226,6 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
             }))
 
     );
+
 
 }

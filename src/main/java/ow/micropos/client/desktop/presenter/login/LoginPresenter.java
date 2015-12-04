@@ -97,7 +97,6 @@ public class LoginPresenter extends Presenter {
     }
 
     private final EventHandler<ActionEvent> loginEvent = (event) -> {
-        if (App.apiIsBusy.compareAndSet(false, true)) {
             App.api.getEmployee(
                     rawPin.get(),
                     new AlertCallback<Employee>() {
@@ -114,7 +113,6 @@ public class LoginPresenter extends Presenter {
                             refresh();
                         }
                     });
-        }
     };
 
 

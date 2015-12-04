@@ -42,8 +42,8 @@ public class DineInPresenter extends Presenter {
                             )
                     );
                 } else {
-                    App.seatPresenter.setItem(presenter.getItem());
-                    App.main.nextRefresh(App.seatPresenter);
+                    App.targetPresenter.setItem(presenter.getItem());
+                    App.main.nextRefresh(App.targetPresenter);
                 }
             });
             return presenter;
@@ -59,25 +59,11 @@ public class DineInPresenter extends Presenter {
 
         if (App.apiIsBusy.compareAndSet(false, true)) {
             App.api.getSection(id, (AlertCallback<Section>) (section, response) -> {
-
-                // TODO : This should probably be done server-side, if even necessary
-                // Resolve Sales Order Back References To Seats?
-                for (Seat seat : section.getSeats()) {
-                    Seat copy = new Seat(seat);
-                    for (SalesOrder so : seat.getSalesOrders())
-                        so.setSeat(copy);
-                }
-
                 gvRestaurantLayout.setRows(section.getRows());
                 gvRestaurantLayout.setCols(section.getCols());
                 gvRestaurantLayout.setItems(section.getSeats());
             });
         }
-    }
-
-    @Override
-    public ObservableList<Action> menu() {
-        return menu;
     }
 
     @Override
@@ -90,6 +76,11 @@ public class DineInPresenter extends Presenter {
      * Menu                                                                      *
      *                                                                           *
      *****************************************************************************/
+
+    @Override
+    public ObservableList<Action> menu() {
+        return menu;
+    }
 
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
             new Action("Dine In", ActionType.TAB_SELECT, event -> Platform.runLater(() ->

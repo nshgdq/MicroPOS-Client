@@ -3,8 +3,8 @@
 <?import email.com.gmail.ttsai0509.javafx.control.GridView?>
 <GridView xmlns="http://javafx.com/javafx/8"
           xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="ow.micropos.client.desktop.presenter.seat.SeatPresenter"
+          fx:controller="ow.micropos.client.desktop.presenter.target.TargetPresenter"
           fx:id="gvOrderGrid"
-          stylesheets="/css/seat.css">
+          stylesheets="/css/target.css">
 
 </GridView>

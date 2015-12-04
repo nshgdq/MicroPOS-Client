@@ -8,6 +8,7 @@ import ow.micropos.client.desktop.model.people.Customer;
 
 public class ViewCustomer extends ItemPresenter<Customer> {
 
+    @FXML Label lblPreviousOrder;
     @FXML Label lblFullName;
     @FXML Label lblPhoneNumber;
 
@@ -16,9 +17,11 @@ public class ViewCustomer extends ItemPresenter<Customer> {
         if (newItem == null) {
             unsetLabel(lblFullName);
             unsetLabel(lblPhoneNumber);
+            unsetLabel(lblPreviousOrder);
         } else {
             setLabel(lblFullName, newItem.fullNameProperty());
             setLabel(lblPhoneNumber, newItem.phoneNumberProperty());
+            setLabel(lblPreviousOrder, newItem.previousOrderProperty());
         }
     }
 
@@ -26,6 +29,7 @@ public class ViewCustomer extends ItemPresenter<Customer> {
     public void dispose() {
         unsetLabel(lblFullName);
         unsetLabel(lblPhoneNumber);
+        unsetLabel(lblPreviousOrder);
         getView().setOnMouseClicked(null);
     }
 }

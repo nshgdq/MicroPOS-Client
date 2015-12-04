@@ -2,6 +2,8 @@ package ow.micropos.client.desktop.model.people;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 
 import java.util.List;
@@ -24,7 +26,9 @@ public class Customer {
 
     private StringProperty phoneNumber = new SimpleStringProperty();
 
-    private ListProperty<SalesOrder> salesOrders = new SimpleListProperty<>();
+    private ListProperty<SalesOrder> salesOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    private StringProperty previousOrder = new SimpleStringProperty();
 
     public Long getId() {
         return id.get();
@@ -78,8 +82,24 @@ public class Customer {
         return salesOrders;
     }
 
+    public ObservableList<SalesOrder> getSalesOrders() {
+        return salesOrders.get();
+    }
+
     public void setSalesOrders(List<SalesOrder> salesOrders) {
         this.salesOrders.setAll(salesOrders);
+    }
+
+    public String getPreviousOrder() {
+        return previousOrder.get();
+    }
+
+    public StringProperty previousOrderProperty() {
+        return previousOrder;
+    }
+
+    public void setPreviousOrder(String previousOrder) {
+        this.previousOrder.set(previousOrder);
     }
 
     public boolean contains(String firstName, String lastName, String phoneNumber) {

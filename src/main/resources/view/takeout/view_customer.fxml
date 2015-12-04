@@ -13,4 +13,7 @@
     <Label fx:id="lblPhoneNumber"
            id="customerPhoneNumber"/>
 
+    <Label fx:id="lblPreviousOrder"
+           id="customerPreviousOrder"/>
+
 </VBox>

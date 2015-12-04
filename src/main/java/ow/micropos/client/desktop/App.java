@@ -28,8 +28,8 @@ import ow.micropos.client.desktop.presenter.modify.ProductEditorPresenter;
 import ow.micropos.client.desktop.presenter.move.MovePresenter;
 import ow.micropos.client.desktop.presenter.order.OrderEditorPresenter;
 import ow.micropos.client.desktop.presenter.payment.PaymentEditorPresenter;
-import ow.micropos.client.desktop.presenter.seat.SeatPresenter;
 import ow.micropos.client.desktop.presenter.takeout.TakeOutPresenter;
+import ow.micropos.client.desktop.presenter.target.TargetPresenter;
 import ow.micropos.client.desktop.utils.DataConverter;
 import retrofit.RestAdapter;
 
@@ -77,7 +77,7 @@ public class App extends Application implements VkProperties {
     public static OrderEditorPresenter orderEditorPresenter;
     public static ProductEditorPresenter productEditorPresenter;
     public static PaymentEditorPresenter paymentEditorPresenter;
-    public static SeatPresenter seatPresenter;
+    public static TargetPresenter targetPresenter;
     public static MovePresenter movePresenter;
 
     /******************************************************************
@@ -189,7 +189,7 @@ public class App extends Application implements VkProperties {
         orderEditorPresenter = Presenter.load("/view/order/order_editor.fxml");
         productEditorPresenter = Presenter.load("/view/modify/product_editor.fxml");
         paymentEditorPresenter = Presenter.load("/view/pay/payment_editor.fxml");
-        seatPresenter = Presenter.load("/view/seat/seat.fxml");
+        targetPresenter = Presenter.load("/view/target/target.fxml");
         movePresenter = Presenter.load("/view/move/move.fxml");
 
         homePresenter = getHomePresenter(properties.getStr("home"));

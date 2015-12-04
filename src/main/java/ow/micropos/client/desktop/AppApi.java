@@ -26,6 +26,13 @@ public interface AppApi {
             Callback<List<SalesOrder>> callback
     );
 
+    @GET("/orders/customer")
+    void getSalesOrderByCustomer(
+            @Query("id") long id,
+            @Query("status") SalesOrderStatus status,
+            Callback<List<SalesOrder>> callback
+    );
+
     @GET("/charges")
     void getCharges(
             Callback<List<Charge>> callback
