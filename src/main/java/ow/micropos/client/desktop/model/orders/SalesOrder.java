@@ -5,10 +5,8 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.fxmisc.easybind.EasyBind;
-import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.menu.MenuItem;
@@ -19,7 +17,6 @@ import ow.micropos.client.desktop.model.seating.Seat;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class SalesOrder {
 
@@ -272,26 +269,6 @@ public class SalesOrder {
 
     /******************************************************************
      *                                                                *
-     * Filtered Products                                              *
-     *                                                                *
-     ******************************************************************/
-
-    private FilteredList<ProductEntry> filteredProductEntries;
-
-    public FilteredList<ProductEntry> filteredProductEntriesProperty() {
-        if (filteredProductEntries == null)
-            filteredProductEntries = new FilteredList<>(productEntries, new Predicate<ProductEntry>() {
-                @Override
-                public boolean test(ProductEntry productEntry) {
-                    return productEntry.getStatus() != ProductEntryStatus.VOID
-                            && productEntry.getStatus() != ProductEntryStatus.REQUEST_VOID;
-                }
-            });
-        return filteredProductEntries;
-    }
-
-    /******************************************************************
-     *                                                                *
      * Customer Name                                                  *
      *                                                                *
      ******************************************************************/
@@ -355,12 +332,16 @@ public class SalesOrder {
         if (productTotal == null) {
             productTotal = new ReadOnlyObjectWrapper<>();
             productTotal.bind(EasyBind.combine(
-                    EasyBind.map(filteredProductEntriesProperty(), ProductEntry::totalProperty),
+                    EasyBind.map(
+                            productEntriesProperty(),
+                            ProductEntry::totalProperty
+                    ),
                     bigDecimalStream -> bigDecimalStream
                             .reduce(BigDecimal.ZERO, BigDecimal::add)
                             .max(BigDecimal.ZERO)
                             .setScale(2, BigDecimal.ROUND_HALF_UP)
             ));
+
         }
         return productTotal.getReadOnlyProperty();
     }
@@ -570,6 +551,57 @@ public class SalesOrder {
         return statusText.getReadOnlyProperty();
     }
 
+    /******************************************************************
+     *                                                                *
+     * Tax / Gratuity As Percent                                      *
+     *                                                                *
+     ******************************************************************/
+
+    private ReadOnlyStringWrapper gratuityText;
+
+    private static final BigDecimal HUNDRED = new BigDecimal("100");
+
+    public ReadOnlyStringProperty gratuityTextProperty() {
+        if (gratuityText == null) {
+            gratuityText = new ReadOnlyStringWrapper();
+            gratuityText.bind(new StringBinding() {
+                {
+                    bind(gratuityPercent);
+                }
+
+                @Override
+                protected String computeValue() {
+                    return getGratuityPercent()
+                            .multiply(HUNDRED)
+                            .setScale(0, BigDecimal.ROUND_UNNECESSARY)
+                            .toString() + "%";
+                }
+            });
+        }
+        return gratuityText.getReadOnlyProperty();
+    }
+
+    private ReadOnlyStringWrapper taxText;
+
+    public ReadOnlyStringProperty taxTextProperty() {
+        if (taxText == null) {
+            taxText = new ReadOnlyStringWrapper();
+            taxText.bind(new StringBinding() {
+                {
+                    bind(taxPercent);
+                }
+
+                @Override
+                protected String computeValue() {
+                    return getTaxPercent()
+                            .multiply(HUNDRED)
+                            .setScale(0, BigDecimal.ROUND_UNNECESSARY)
+                            .toString() + "%";
+                }
+            });
+        }
+        return taxText.getReadOnlyProperty();
+    }
 
     /******************************************************************
      *                                                                *

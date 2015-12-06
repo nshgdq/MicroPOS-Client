@@ -290,17 +290,22 @@ public class ProductEntry {
             total = new ReadOnlyObjectWrapper<>();
             total.bind(new ObjectBinding<BigDecimal>() {
                 {
-                    bind(modifierTotalProperty(), menuItem, quantity);
+                    bind(modifierTotalProperty(), menuItem, quantity, status);
                 }
 
                 @Override
                 protected BigDecimal computeValue() {
-                    if (modifierTotal.get() != null && menuItem.get() != null && menuItem.get().getPrice() != null)
-                        return (modifierTotalProperty().get().add(menuItem.get().getPrice()))
-                                .multiply(quantity.get())
-                                .max(BigDecimal.ZERO)
-                                .setScale(2, BigDecimal.ROUND_HALF_UP);
-                    return BigDecimal.ZERO;
+                    if (status.get() == ProductEntryStatus.VOID || status.get() == ProductEntryStatus.REQUEST_VOID)
+                        return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+
+                    if (modifierTotal.get() == null || menuItem.get() == null || menuItem.get().getPrice() == null)
+                        return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+
+                    return (modifierTotalProperty().get().add(menuItem.get().getPrice()))
+                            .multiply(quantity.get())
+                            .max(BigDecimal.ZERO)
+                            .setScale(2, BigDecimal.ROUND_HALF_UP);
+
                 }
 
                 @Override

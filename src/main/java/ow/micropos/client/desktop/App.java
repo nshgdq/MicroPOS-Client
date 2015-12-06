@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class App extends Application implements VkProperties {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(App.class);
 
     // Properties
     public static AppProperties properties;
@@ -56,6 +56,7 @@ public class App extends Application implements VkProperties {
     public static AppApi api;
     public static KeyBoardPopup keyboard;
     public static DateTimeClock clock;
+    public static AppPrinter printer;
 
     // Display Components
     public static StageScene primary, secondary;
@@ -128,8 +129,14 @@ public class App extends Application implements VkProperties {
 
         logo = new Image(properties.getStr("logo"));
 
+        apiIsBusy = new AtomicBoolean(false);
+
+        clock = new DateTimeClock();
+
+        printer = new AppPrinter(properties.getInt("printer-width"), properties.getStr("printers"));
+
         api = new RestAdapter.Builder()
-                .setLog(logger::info)
+                .setLog(log::info)
                 .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .setConverter(DataConverter.jackson())
                 .setEndpoint(server)
@@ -170,10 +177,6 @@ public class App extends Application implements VkProperties {
 
         stage.getIcons().add(logo);
 
-        apiIsBusy = new AtomicBoolean(false);
-
-        clock = new DateTimeClock();
-
         primary = new StageScene(pConfig, stage, keyboard);
         secondary = new StageScene(sConfig);
 
@@ -195,6 +198,7 @@ public class App extends Application implements VkProperties {
         homePresenter = getHomePresenter(properties.getStr("home"));
 
         clock.start();
+        printer.start();
         primary.setShow(main);
         main.next(loginPresenter);
     }

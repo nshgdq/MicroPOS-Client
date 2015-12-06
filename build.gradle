@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    compile files('libs/rxtx-2.1-7/RXTXcomm.jar')
     compile 'commons-io:commons-io:2.4'
     compile 'commons-codec:commons-codec:1.10'
     compile 'org.apache.commons:commons-lang3:3.4'

@@ -189,6 +189,9 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             )),
             new Action("Pay", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                             App.main.setSwapRefresh(App.paymentEditorPresenter, getItem())
+            )),
+            new Action("Print", ActionType.BUTTON, event -> Platform.runLater(() ->
+                            App.printer.printCheck(getItem())
             ))
     );
 

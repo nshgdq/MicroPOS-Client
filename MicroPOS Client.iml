@@ -32,5 +32,14 @@
     <orderEntry type="library" exported="" name="Gradle: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.apache.commons:commons-collections4:4.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-codec:commons-codec:1.10" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library name="Gradle: RXTXcomm">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/rxtx-2.1-7/RXTXcomm.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
