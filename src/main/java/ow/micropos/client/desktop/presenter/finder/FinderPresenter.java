@@ -30,6 +30,9 @@ import java.util.function.Predicate;
 
 public class FinderPresenter extends Presenter {
 
+    @FXML StackPane spReset;
+    @FXML StackPane spNext;
+    @FXML StackPane spBack;
     @FXML VBox vbOrderEntry;
     @FXML StackPane spOrderEntry;
     @FXML TextField tfPhoneNumber;
@@ -55,6 +58,10 @@ public class FinderPresenter extends Presenter {
 
     @FXML
     public void initialize() {
+
+        spReset.setOnMouseClicked(event -> Platform.runLater(this::refresh));
+        spBack.setOnMouseClicked(event -> Platform.runLater(orders::prevPage));
+        spNext.setOnMouseClicked(event -> Platform.runLater(orders::nextPage));
 
         tfPhoneNumber.getProperties().put(VkProperties.VK_TYPE, VkProperties.VK_TYPE_NUMERIC);
         tfFirstName.getProperties().put(VkProperties.VK_TYPE, VkProperties.VK_TYPE_TEXT);
@@ -99,19 +106,12 @@ public class FinderPresenter extends Presenter {
         cbStatusVoid.setSelected(false);
         orders.setPage(0);
 
-        if (App.apiIsBusy.compareAndSet(false, true)) {
-            App.api.getSalesOrders((AlertCallback<List<SalesOrder>>) (salesOrders, response) ->
-                    Platform.runLater(() -> {
-                        filteredSalesOrders = new FilteredList<>(FXCollections.observableList(salesOrders));
-                        updateSalesOrderFilter();
-                        orders.setItems(filteredSalesOrders);
-                    }));
-        }
-    }
-
-    @Override
-    public ObservableList<Action> menu() {
-        return menu;
+        App.api.getSalesOrders((AlertCallback<List<SalesOrder>>) (salesOrders, response) ->
+                Platform.runLater(() -> {
+                    filteredSalesOrders = new FilteredList<>(FXCollections.observableList(salesOrders));
+                    updateSalesOrderFilter();
+                    orders.setItems(filteredSalesOrders);
+                }));
     }
 
     @Override
@@ -141,7 +141,7 @@ public class FinderPresenter extends Presenter {
 
     /*****************************************************************************
      *                                                                           *
-     * Reusable Components                                                       *
+     * Filters                                                                   *
      *                                                                           *
      *****************************************************************************/
 
@@ -173,6 +173,17 @@ public class FinderPresenter extends Presenter {
         return true;
     };
 
+    /******************************************************************
+     *                                                                *
+     * Menu
+     *                                                                *
+     ******************************************************************/
+
+    @Override
+    public ObservableList<Action> menu() {
+        return menu;
+    }
+
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
             new Action("Dine In", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.dineInPresenter))
@@ -188,13 +199,7 @@ public class FinderPresenter extends Presenter {
 
             new Action("Manager", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.managerPresenter))
-            ),
-
-            new Action("Reset", ActionType.BUTTON, event -> Platform.runLater(this::refresh)),
-
-            new Action("Prev Pg", ActionType.BUTTON, event -> Platform.runLater(orders::prevPage)),
-
-            new Action("Next Pg", ActionType.BUTTON, event -> Platform.runLater(orders::nextPage))
+            )
     );
 
 }

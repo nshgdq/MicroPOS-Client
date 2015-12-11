@@ -4,16 +4,18 @@ import email.com.gmail.ttsai0509.javafx.control.GridView;
 import email.com.gmail.ttsai0509.javafx.control.PresenterCellAdapter;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
+import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import javafx.application.Platform;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.geometry.HPos;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import org.fxmisc.easybind.EasyBind;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.enums.ModifierType;
 import ow.micropos.client.desktop.model.enums.Permission;
@@ -26,11 +28,18 @@ import ow.micropos.client.desktop.utils.ActionType;
 import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.client.Response;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Predicate;
 
 public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
 
+    @FXML Label lblStatus;
+    @FXML Label lblQuantity;
+    @FXML Label lblMenuItemPrice;
+    @FXML Label lblBasePrice;
+    @FXML Label lblTotalPrice;
+    @FXML Label lblMenuItem;
     @FXML RadioButton rbAll;
     @FXML RadioButton rbAdd;
     @FXML RadioButton rbExc;
@@ -48,6 +57,13 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
 
     @FXML
     public void initialize() {
+
+        GridPane.setHalignment(lblMenuItem, HPos.LEFT);
+        GridPane.setHalignment(lblStatus, HPos.RIGHT);
+        GridPane.setHalignment(lblQuantity, HPos.LEFT);
+        GridPane.setHalignment(lblMenuItemPrice, HPos.LEFT);
+        GridPane.setHalignment(lblBasePrice, HPos.RIGHT);
+        GridPane.setHalignment(lblTotalPrice, HPos.RIGHT);
 
         rbAll.setToggleGroup(filterToggle);
         rbAdd.setToggleGroup(filterToggle);
@@ -120,7 +136,47 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
     protected void updateItem(ProductEntry currentItem, ProductEntry newItem) {
         if (newItem == null) {
             unsetListView(entryModifiers);
+            unsetLabel(lblStatus);
+            unsetLabel(lblQuantity);
+            unsetLabel(lblMenuItemPrice);
+            unsetLabel(lblBasePrice);
+            unsetLabel(lblTotalPrice);
+            unsetLabel(lblMenuItem);
         } else {
+            setLabel(lblStatus, new StringBinding() {
+                {bind(newItem.statusProperty());}
+
+                @Override
+                protected String computeValue() {
+                    switch (newItem.getStatus()) {
+                        case SENT:
+                            return "Sent";
+                        case HOLD:
+                            return "Held";
+                        case VOID:
+                            return "Void";
+                        case REQUEST_SENT:
+                            return "Sending";
+                        case REQUEST_EDIT:
+                            return "Editing";
+                        case REQUEST_HOLD:
+                            return "Holding";
+                        case REQUEST_VOID:
+                            return "Voiding";
+                        default:
+                            return "Error";
+                    }
+                }
+            });
+            setLabel(lblBasePrice, EasyBind.combine(
+                            newItem.getMenuItem().priceProperty(),
+                            newItem.modifierTotalProperty(),
+                            (bd1, bd2) -> BigDecimalUtils.asDollars(bd1.add(bd2).max(BigDecimal.ZERO)).toString())
+            );
+            setLabel(lblMenuItem, newItem.getMenuItem().nameProperty());
+            setLabel(lblQuantity, newItem.quantityProperty().asString());
+            setLabel(lblMenuItemPrice, newItem.getMenuItem().priceProperty().asString());
+            setLabel(lblTotalPrice, newItem.totalProperty().asString());
             setListView(entryModifiers, newItem.modifiersProperty());
         }
     }
@@ -138,18 +194,15 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
     }
 
     @Override
-    public ObservableList<Action> menu() {
-        if (getItem().hasStatus(ProductEntryStatus.REQUEST_HOLD) ||
-                getItem().hasStatus(ProductEntryStatus.HOLD))
-            return menuHold;
-        else
-            return menuSend;
-    }
-
-    @Override
     public void dispose() {
         unsetListView(entryModifiers);
         unsetListView(modifierGroups);
+        unsetLabel(lblStatus);
+        unsetLabel(lblQuantity);
+        unsetLabel(lblMenuItemPrice);
+        unsetLabel(lblBasePrice);
+        unsetLabel(lblTotalPrice);
+        unsetLabel(lblMenuItem);
         setItem(null);
     }
 
@@ -163,6 +216,15 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
 
     public final void setContextList(ObservableList<ProductEntry> context) {
         this.context = context;
+    }
+
+    @Override
+    public ObservableList<Action> menu() {
+        if (getItem().hasStatus(ProductEntryStatus.REQUEST_HOLD) ||
+                getItem().hasStatus(ProductEntryStatus.HOLD))
+            return menuHold;
+        else
+            return menuSend;
     }
 
     private final ObservableList<Action> menuHold = FXCollections.observableArrayList(

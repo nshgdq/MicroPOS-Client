@@ -74,10 +74,13 @@ public class ManagerPresenter extends Presenter {
                     App.api.getCurrentReport(new AlertCallback<CurrentSalesReport>() {
                         @Override
                         public void onSuccess(CurrentSalesReport report, Response response) {
-                            System.out.println(report.toString());
+                            App.printer.printReport(report);
                         }
                     });
                 }
+            })),
+            new Action("Edit Menu Items", ActionType.FINISH, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.dbMenuItemsPresenter);
             }))
     );
 

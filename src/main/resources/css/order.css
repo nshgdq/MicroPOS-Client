@@ -1,5 +1,23 @@
+#editorWrapper, #gpMenu, #gpSalesOrder {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+#gpTop, #gpBottom {
+    -fx-border-color: #c01800;
+    -fx-padding: 0 5px 0 5px;
+}
+
+#backText {
+    -fx-font-weight: bolder;
+    -fx-padding: 40px;
+}
+
+#backButton {
+    -fx-background-color: #C01800;
+}
+
 #gpCategories, #gpMenuItems {
-    -fx-padding: 20px;
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
@@ -32,4 +50,38 @@
     -fx-text-alignment: center;
     -fx-alignment: center;
     -fx-text-fill: #000000;
+}
+
+/******************************************************************
+ *                                                                *
+ * Product Entries
+ *                                                                *
+ ******************************************************************/
+
+#lvOrderEntries {
+    -fx-spacing: 10px;
+}
+
+#productEntryView {
+    -fx-background-color: #C01800;
+}
+
+#lblPeMenuItem {
+    -fx-background-color: #A80000;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblPeModifiers {
+    -fx-padding: 0 20px 0 20px;
+}
+
+#lblPeStatus {
+    -fx-text-fill: #FFEF0F;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblPeTotal {
+    -fx-text-fill: #FFEF0F;
+    -fx-font-weight: bolder;
+    -fx-padding: 0 10px 0 10px;
 }

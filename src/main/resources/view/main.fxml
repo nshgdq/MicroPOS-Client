@@ -7,9 +7,8 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ow.micropos.client.desktop.presenter.MainPresenter"
             stylesheets="/css/main.css">
-
     <top>
-        <GridPane id="topBar">
+        <GridPane id="top">
 
             <rowConstraints>
                 <RowConstraints/>
@@ -33,7 +32,7 @@
             <GridView GridPane.rowIndex="0"
                       GridPane.columnIndex="1"
                       fx:id="gvVisibleMenu"
-                      id="gvVisibleMenu"/>
+                      id="menu"/>
 
             <StackPane GridPane.rowIndex="0"
                        GridPane.columnIndex="2"
@@ -46,19 +45,18 @@
             <VBox GridPane.rowIndex="0"
                   GridPane.columnIndex="3"
                   fx:id="vbDateTime"
-                  id="menuItem">
+                  id="datetime">
                 <Label fx:id="lblDate"
                        id="menuText"/>
                 <Label fx:id="lblTime"
                        id="menuText"/>
             </VBox>
-
         </GridPane>
     </top>
 
     <center>
         <StackPane fx:id="spContent"
-                   id="spContent"/>
+                   id="center"/>
     </center>
 
 </BorderPane>

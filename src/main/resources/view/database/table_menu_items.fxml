@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.database.DbMenuItemsPresenter"
+          xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1"
+          stylesheets="/css/database.css">
+
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="80"/>
+        <ColumnConstraints percentWidth="20"/>
+    </columnConstraints>
+
+    <TableView fx:id="menuItemsTable"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="0">
+
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+
+        <columns>
+            <TableColumn fx:id="name"
+                         text="Name"/>
+            <TableColumn fx:id="tag"
+                         text="Tag"/>
+            <TableColumn fx:id="price"
+                         text="Price"/>
+            <TableColumn fx:id="category"
+                         text="Category"/>
+            <TableColumn fx:id="date"
+                         text="Date"/>
+            <TableColumn fx:id="archived"
+                         text="Archived"/>
+            <TableColumn fx:id="archiveDate"
+                         text="archiveDate"/>
+            <TableColumn fx:id="printers"
+                         text="Printers"/>
+        </columns>
+
+    </TableView>
+
+    <VBox GridPane.rowIndex="0"
+          GridPane.columnIndex="1">
+
+        <StackPane>
+            <Label text="Menu Item"/>
+        </StackPane>
+
+        <TextField fx:id="tfName"
+                   promptText="Name"/>
+
+        <TextField fx:id="tfTag"
+                   promptText="Tag"/>
+
+        <TextField fx:id="tfPrice"
+                   promptText="Price"/>
+
+        <TextField fx:id="tfCategory"
+                   promptText="Category"/>
+
+        <TextField fx:id="tfPrinters"
+                   promptText="Printers"/>
+
+    </VBox>
+
+</GridPane>

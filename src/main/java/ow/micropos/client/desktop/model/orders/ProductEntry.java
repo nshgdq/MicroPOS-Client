@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.model.orders;
 
+import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -98,7 +99,7 @@ public class ProductEntry {
     }
 
     public void setQuantity(BigDecimal quantity) {
-        this.quantity.set(quantity);
+        this.quantity.set(BigDecimalUtils.asQuantity(quantity));
     }
 
     public MenuItem getMenuItem() {
@@ -183,7 +184,10 @@ public class ProductEntry {
                 protected String computeValue() {
                     StringBuilder sb = new StringBuilder("");
                     for (Modifier modifier : modifiers)
-                        sb.append(modifier.getName()).append(" - ").append(modifier.getPrice()).append('\n');
+                        sb.append(modifier.getName())
+                                .append(" ")
+                                .append(modifier.getPrice())
+                                .append('\n');
                     return sb.toString();
                 }
             });

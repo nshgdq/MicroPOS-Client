@@ -29,44 +29,82 @@
           fx:id="vbOrderEntry"
           id="vbOrderEntry">
 
-        <Label text="Order Information"/>
+        <StackPane>
+            <Label text="Order Information"/>
+        </StackPane>
 
-        <TextField fx:id="tfPhoneNumber"
-                   promptText="Phone Number"/>
+        <VBox id="vbInfo">
 
-        <TextField fx:id="tfFirstName"
-                   promptText="First Name"/>
+            <TextField fx:id="tfPhoneNumber"
+                       promptText="Phone Number"/>
 
-        <TextField fx:id="tfLastName"
-                   promptText="Last Name"/>
+            <TextField fx:id="tfFirstName"
+                       promptText="First Name"/>
 
-        <TextField fx:id="tfSeat"
-                   promptText="Seat"/>
+            <TextField fx:id="tfLastName"
+                       promptText="Last Name"/>
 
-        <TextField fx:id="tfOrderNumber"
-                   promptText="Order Number"/>
+            <TextField fx:id="tfSeat"
+                       promptText="Seat"/>
 
-        <HBox>
-            <CheckBox fx:id="cbTypeDineIn"
+            <TextField fx:id="tfOrderNumber"
+                       promptText="Order Number"/>
+        </VBox>
+
+        <VBox id="vbType">
+
+        <CheckBox fx:id="cbTypeDineIn"
                       text="Dine In"
                       selected="true"/>
 
             <CheckBox fx:id="cbTypeTakeOut"
                       text="Take Out"
                       selected="true"/>
-        </HBox>
+        </VBox>
 
-        <HBox>
+        <VBox id="vbStatus">
+
             <CheckBox fx:id="cbStatusOpen"
                       text="Open Orders"
                       selected="true"/>
 
             <CheckBox fx:id="cbStatusPaid"
-                      text="Paid Orders"/>
+                      text="Closed Orders"/>
 
             <CheckBox fx:id="cbStatusVoid"
                       text="Void Orders"/>
-        </HBox>
+        </VBox>
+
+        <StackPane fx:id="spReset"
+                   id="resetButton">
+            <Label text="Reset"
+                   id="resetText"/>
+        </StackPane>
+
+        <GridPane id="vbPage">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+
+            <StackPane fx:id="spBack"
+                       id="backButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0">
+                <Label text="&lt;"
+                       id="backText"/>
+            </StackPane>
+
+            <StackPane fx:id="spNext"
+                       id="nextButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="1">
+                <Label text="&gt;"
+                       id="nextText"/>
+            </StackPane>
+
+        </GridPane>
 
     </VBox>
 

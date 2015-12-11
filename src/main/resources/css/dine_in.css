@@ -1,5 +1,52 @@
 #restaurantLayoutGrid {
-    -fx-padding: 10px;
     -fx-hgap: 10px;
     -fx-vgap: 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Seat Style Classes
+ *                                                                *
+ ******************************************************************/
+
+#seatView0 {
+    -fx-border-width: 2px;
+    -fx-border-color: #C01800;
+    -fx-background-color: transparent;
+}
+
+#seatTag0 {
+    -fx-text-fill: #eeeeee;
+}
+
+#seatView1 {
+    -fx-background-color: #D8AD00;
+}
+
+#seatTag1 {
+    -fx-text-fill: #111111;
+}
+
+#seatView2 {
+    -fx-background-color: #D07B00;
+}
+
+#seatTag2 {
+    -fx-text-fill: #111111;
+}
+
+#seatView3 {
+    -fx-background-color: #C84900;
+}
+
+#seatTag3 {
+    -fx-text-fill: #eeeeee;
+}
+
+#seatView4 {
+    -fx-background-color: #C01800;
+}
+
+#seatTag4 {
+    -fx-text-fill: #eeeeee;
 }

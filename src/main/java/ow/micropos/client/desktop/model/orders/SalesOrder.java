@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.model.orders;
 
+import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -7,8 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.fxmisc.easybind.EasyBind;
-import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
-import ow.micropos.client.desktop.model.enums.SalesOrderType;
+import ow.micropos.client.desktop.model.enums.*;
 import ow.micropos.client.desktop.model.menu.MenuItem;
 import ow.micropos.client.desktop.model.people.Customer;
 import ow.micropos.client.desktop.model.people.Employee;
@@ -42,7 +42,7 @@ public class SalesOrder {
         created.setStatus(SalesOrderStatus.REQUEST_OPEN);
         created.setType(SalesOrderType.TAKEOUT);
         created.setTaxPercent(taxPercent);
-        created.setGratuityPercent(new BigDecimal("0.00"));
+        created.setGratuityPercent(BigDecimal.ZERO);
         created.setDate(new Date());
         return created;
     }
@@ -267,6 +267,39 @@ public class SalesOrder {
         return getGratuityPercent() != null && getGratuityPercent().compareTo(BigDecimal.ZERO) != 0;
     }
 
+    public boolean hasAppliedCharge() {
+        for (ChargeEntry ce : chargeEntries)
+            if (ce.hasStatus(ChargeEntryStatus.APPLIED))
+                return true;
+        return false;
+    }
+
+    public boolean canPrint() {
+        if (hasStatus(SalesOrderStatus.REQUEST_CLOSE)
+                || hasStatus(SalesOrderStatus.REQUEST_OPEN)
+                || hasStatus(SalesOrderStatus.REQUEST_VOID))
+            return false;
+
+        for (PaymentEntry pe : paymentEntries)
+            if (pe.hasStatus(PaymentEntryStatus.REQUEST_PAID)
+                    || pe.hasStatus(PaymentEntryStatus.REQUEST_VOID))
+                return false;
+
+        for (ProductEntry pe : productEntries)
+            if (pe.hasStatus(ProductEntryStatus.REQUEST_EDIT)
+                    || pe.hasStatus(ProductEntryStatus.REQUEST_SENT)
+                    || pe.hasStatus(ProductEntryStatus.REQUEST_VOID)
+                    || pe.hasStatus(ProductEntryStatus.REQUEST_HOLD))
+                return false;
+
+        for (ChargeEntry ce : chargeEntries)
+            if (ce.hasStatus(ChargeEntryStatus.REQUEST_APPLY)
+                    || ce.hasStatus(ChargeEntryStatus.REQUEST_VOID))
+                return false;
+
+        return true;
+    }
+
     /******************************************************************
      *                                                                *
      * Customer Name                                                  *
@@ -336,10 +369,11 @@ public class SalesOrder {
                             productEntriesProperty(),
                             ProductEntry::totalProperty
                     ),
-                    bigDecimalStream -> bigDecimalStream
-                            .reduce(BigDecimal.ZERO, BigDecimal::add)
-                            .max(BigDecimal.ZERO)
-                            .setScale(2, BigDecimal.ROUND_HALF_UP)
+                    bigDecimalStream -> BigDecimalUtils.asDollars(
+                            bigDecimalStream
+                                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                                    .max(BigDecimal.ZERO)
+                    )
             ));
 
         }
@@ -352,14 +386,19 @@ public class SalesOrder {
             chargeTotal.bind(new ObjectBinding<BigDecimal>() {
                 {
                     bind(productTotalProperty(), chargeEntriesProperty());
+                    chargeEntries.forEach(ce -> bind(ce.statusProperty()));
+                    chargeEntries.addListener((obs, oldVal, newVal) -> {
+                        oldVal.forEach(ce -> unbind(ce.statusProperty()));
+                        newVal.forEach(ce -> bind(ce.statusProperty()));
+                    });
                 }
 
                 @Override
                 protected BigDecimal computeValue() {
-                    BigDecimal total = new BigDecimal(0);
+                    BigDecimal total = BigDecimal.ZERO;
                     for (ChargeEntry chargeEntry : chargeEntriesProperty())
                         total = total.add(chargeEntry.applyAmountIfActive(productTotalProperty().get()));
-                    return total.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    return BigDecimalUtils.asDollars(total);
                 }
             });
         }
@@ -370,10 +409,10 @@ public class SalesOrder {
         if (subTotal == null) {
             subTotal = new ReadOnlyObjectWrapper<>();
             subTotal.bind(EasyBind.combine(
-                            productTotalProperty(),
-                            chargeTotalProperty(),
-                            (a, b) -> a.add(b).max(BigDecimal.ZERO).setScale(2, BigDecimal.ROUND_HALF_UP))
-            );
+                    productTotalProperty(),
+                    chargeTotalProperty(),
+                    (a, b) -> BigDecimalUtils.asDollars(a.add(b).max(BigDecimal.ZERO))
+            ));
         }
         return subTotal.getReadOnlyProperty();
     }
@@ -390,11 +429,13 @@ public class SalesOrder {
                 protected BigDecimal computeValue() {
                     if (subTotalProperty().get() == null ||
                             taxPercentProperty().get() == null)
-                        return BigDecimal.ZERO;
-                    return subTotalProperty().get()
-                            .multiply(taxPercent.get())
-                            .max(BigDecimal.ZERO)
-                            .setScale(2, BigDecimal.ROUND_HALF_UP);
+                        return BigDecimalUtils.ZERO_DOLLARS;
+
+                    return BigDecimalUtils.asDollars(
+                            subTotalProperty().get()
+                                    .multiply(taxPercent.get())
+                                    .max(BigDecimal.ZERO)
+                    );
                 }
             });
         }
@@ -413,11 +454,13 @@ public class SalesOrder {
                 protected BigDecimal computeValue() {
                     if (subTotalProperty().get() == null ||
                             gratuityPercentProperty().get() == null)
-                        return BigDecimal.ZERO;
-                    return subTotalProperty().get()
-                            .multiply(gratuityPercent.get())
-                            .max(BigDecimal.ZERO)
-                            .setScale(2, BigDecimal.ROUND_HALF_UP);
+                        return BigDecimalUtils.ZERO_DOLLARS;
+
+                    return BigDecimalUtils.asDollars(
+                            subTotalProperty().get()
+                                    .multiply(gratuityPercent.get())
+                                    .max(BigDecimal.ZERO)
+                    );
                 }
             });
         }
@@ -431,7 +474,7 @@ public class SalesOrder {
                     subTotalProperty(),
                     taxTotalProperty(),
                     gratuityTotalProperty(),
-                    (a, b, c) -> a.add(b).add(c).max(BigDecimal.ZERO).setScale(2, BigDecimal.ROUND_HALF_UP)
+                    (a, b, c) -> BigDecimalUtils.asDollars(a.add(b).add(c).max(BigDecimal.ZERO))
             ));
         }
         return grandTotal.getReadOnlyProperty();
@@ -442,10 +485,11 @@ public class SalesOrder {
             paymentTotal = new ReadOnlyObjectWrapper<>();
             paymentTotal.bind(EasyBind.combine(
                     EasyBind.map(getPaymentEntries(), PaymentEntry::amountProperty),
-                    bigDecimalStream -> bigDecimalStream
-                            .reduce(BigDecimal.ZERO, BigDecimal::add)
-                            .max(BigDecimal.ZERO)
-                            .setScale(2, BigDecimal.ROUND_HALF_UP)
+                    bigDecimalStream -> BigDecimalUtils.asDollars(
+                            bigDecimalStream
+                                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                                    .max(BigDecimal.ZERO)
+                    )
             ));
         }
         return paymentTotal.getReadOnlyProperty();
@@ -457,7 +501,7 @@ public class SalesOrder {
             change.bind(EasyBind.combine(
                     paymentTotalProperty(),
                     grandTotalProperty(),
-                    (a, b) -> a.subtract(b).setScale(2, BigDecimal.ROUND_HALF_UP)
+                    (a, b) -> BigDecimalUtils.asDollars(a.subtract(b))
             ));
         }
         return change.getReadOnlyProperty();
@@ -531,7 +575,7 @@ public class SalesOrder {
                 protected String computeValue() {
                     switch (status.get()) {
                         case REQUEST_OPEN:
-                            return "Opening";
+                            return "Creating";
                         case REQUEST_CLOSE:
                             return "Paying";
                         case REQUEST_VOID:
@@ -559,8 +603,6 @@ public class SalesOrder {
 
     private ReadOnlyStringWrapper gratuityText;
 
-    private static final BigDecimal HUNDRED = new BigDecimal("100");
-
     public ReadOnlyStringProperty gratuityTextProperty() {
         if (gratuityText == null) {
             gratuityText = new ReadOnlyStringWrapper();
@@ -571,10 +613,7 @@ public class SalesOrder {
 
                 @Override
                 protected String computeValue() {
-                    return getGratuityPercent()
-                            .multiply(HUNDRED)
-                            .setScale(0, BigDecimal.ROUND_UNNECESSARY)
-                            .toString() + "%";
+                    return BigDecimalUtils.asPercent(getGratuityPercent()).toString() + "%";
                 }
             });
         }
@@ -593,10 +632,7 @@ public class SalesOrder {
 
                 @Override
                 protected String computeValue() {
-                    return getTaxPercent()
-                            .multiply(HUNDRED)
-                            .setScale(0, BigDecimal.ROUND_UNNECESSARY)
-                            .toString() + "%";
+                    return BigDecimalUtils.asPercent(getTaxPercent()).toString() + "%";
                 }
             });
         }

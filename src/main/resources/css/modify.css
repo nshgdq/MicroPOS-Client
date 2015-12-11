@@ -1,3 +1,7 @@
+#editorWrapper {
+    -fx-padding: 10px;
+}
+
 #modifierGroupView, #modifierOptionsView {
     -fx-background-color: #C01800;
     -fx-alignment: center-left;

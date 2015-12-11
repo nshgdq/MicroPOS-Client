@@ -1,25 +1,48 @@
-#spContent {
+/******************************************************************
+ *                                                                *
+ * Center Content
+ *                                                                *
+ ******************************************************************/
+
+#center {
+    -fx-padding: 10px;
 }
 
-#topBar {
+/******************************************************************
+ *                                                                *
+ * Top Bar Configuration
+ *                                                                *
+ ******************************************************************/
+
+#top {
     -fx-background-color: #aaaaaa;
     -fx-hgap: 8px;
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.3), 0, 0, 0, 1);
-}
-
-#gvVisibleMenu {
-    -fx-hgap: 8px;
 }
 
 #paging {
     -fx-min-width: 90px;
 }
 
+#menu {
+    -fx-hgap: 8px;
+}
+
 #menuText {
     -fx-background-color: transparent;
-    -fx-font-size: 2em;
-    -fx-font-weight: bold;
+    -fx-text-fill: #222222;
+    -fx-padding: 0 10px 0 10px;
 }
+
+#datetime {
+
+}
+
+/******************************************************************
+ *                                                                *
+ * Menu Button Classes
+ *                                                                *
+ ******************************************************************/
 
 #defaultItem {
     -fx-background-color: #555555;

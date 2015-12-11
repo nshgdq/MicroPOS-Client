@@ -90,6 +90,14 @@ public class PaymentEntry {
         this.salesOrder.set(salesOrder);
     }
 
+    public boolean hasStatus(PaymentEntryStatus status) {
+        return getStatus() == status;
+    }
+
+    public boolean hasType(PaymentEntryType type) {
+        return getType() == type;
+    }
+
     /******************************************************************
      *                                                                *
      * Payment Type Text                                              *

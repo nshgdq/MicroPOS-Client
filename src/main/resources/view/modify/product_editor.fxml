@@ -5,58 +5,119 @@
 <?import javafx.scene.layout.*?>
 <GridPane fx:controller="ow.micropos.client.desktop.presenter.modify.ProductEditorPresenter"
           stylesheets="/css/modify.css"
+          id="editorWrapper"
           xmlns="http://javafx.com/javafx/8.0.40"
           xmlns:fx="http://javafx.com/fxml/1">
 
     <columnConstraints>
-        <ColumnConstraints percentWidth="18.75"/>
-        <ColumnConstraints percentWidth="56.25"/>
         <ColumnConstraints percentWidth="25"/>
+        <ColumnConstraints percentWidth="55"/>
+        <ColumnConstraints percentWidth="20"/>
     </columnConstraints>
 
     <rowConstraints>
         <RowConstraints vgrow="ALWAYS"/>
-        <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
-    <StackPane GridPane.rowIndex="0"
-               GridPane.columnIndex="0">
-        <ListView fx:id="modifierGroups"
-                  AnchorPane.bottomAnchor="0"
-                  AnchorPane.leftAnchor="0"
-                  AnchorPane.topAnchor="0"
-                  AnchorPane.rightAnchor="0"/>
-    </StackPane>
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="0">
 
-    <VBox GridPane.rowIndex="1"
-          GridPane.columnIndex="0">
-        <RadioButton fx:id="rbAll"
-                     text="All"/>
-        <RadioButton fx:id="rbAdd"
-                     text="Addition"/>
-        <RadioButton fx:id="rbExc"
-                     text="Exclusion"/>
-        <RadioButton fx:id="rbSub"
-                     text="Substitution"/>
-        <RadioButton fx:id="rbIns"
-                     text="Instruction"/>
-        <RadioButton fx:id="rbVar"
-                     text="Variation"/>
-    </VBox>
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="NEVER"/>
+        </columnConstraints>
+
+        <Label fx:id="lblMenuItem"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="lblStatus"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="1"/>
+
+        <Label fx:id="lblQuantity"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2"/>
+
+        <Label fx:id="lblMenuItemPrice"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="2"/>
+
+        <ListView fx:id="entryModifiers"
+                  GridPane.rowIndex="3"
+                  GridPane.columnIndex="0"/>
+
+        <Label text="Base Price"
+               GridPane.rowIndex="4"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="lblBasePrice"
+               GridPane.rowIndex="4"
+               GridPane.columnIndex="1"/>
+
+        <Label text="Total Price"
+               GridPane.rowIndex="5"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="lblTotalPrice"
+               GridPane.rowIndex="5"
+               GridPane.columnIndex="1"/>
+
+    </GridPane>
 
     <GridView GridPane.rowIndex="0"
               GridPane.columnIndex="1"
-              GridPane.rowSpan="2"
               fx:id="modifiers"
               id="modifiersView"/>
 
-    <AnchorPane GridPane.rowIndex="0"
-                GridPane.columnIndex="2">
-        <ListView fx:id="entryModifiers"
-                  AnchorPane.bottomAnchor="0"
-                  AnchorPane.leftAnchor="0"
-                  AnchorPane.topAnchor="0"
-                  AnchorPane.rightAnchor="0"/>
-    </AnchorPane>
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="2">
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <StackPane GridPane.rowIndex="0"
+                   GridPane.columnIndex="0">
+            <ListView fx:id="modifierGroups"
+                      AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0"
+                      AnchorPane.topAnchor="0"
+                      AnchorPane.rightAnchor="0"/>
+        </StackPane>
+
+        <VBox GridPane.rowIndex="1"
+              GridPane.columnIndex="0">
+            <RadioButton fx:id="rbAll"
+                         text="All"/>
+            <RadioButton fx:id="rbAdd"
+                         text="Addition"/>
+            <RadioButton fx:id="rbExc"
+                         text="Exclusion"/>
+            <RadioButton fx:id="rbSub"
+                         text="Substitution"/>
+            <RadioButton fx:id="rbIns"
+                         text="Instruction"/>
+            <RadioButton fx:id="rbVar"
+                         text="Variation"/>
+        </VBox>
+
+
+    </GridPane>
 
 </GridPane>

@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import org.comtel2000.keyboard.control.VkProperties;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
@@ -21,6 +22,10 @@ import java.util.function.Predicate;
 
 public class TakeOutPresenter extends Presenter {
 
+    @FXML StackPane spCreate;
+    @FXML StackPane spReset;
+    @FXML StackPane spBack;
+    @FXML StackPane spNext;
     @FXML GridView<Customer> gvCustomers;
     @FXML TextField tfPhoneNumber;
     @FXML TextField tfFirstName;
@@ -30,6 +35,28 @@ public class TakeOutPresenter extends Presenter {
 
     @FXML
     public void initialize() {
+
+        spReset.setOnMouseClicked(event -> Platform.runLater(this::clear));
+        spBack.setOnMouseClicked(event -> Platform.runLater(gvCustomers::prevPage));
+        spNext.setOnMouseClicked(event -> Platform.runLater(gvCustomers::nextPage));
+        spCreate.setOnMouseClicked(event -> {
+            String fn = tfFirstName.getText();
+            String ln = tfLastName.getText();
+            String pn = tfPhoneNumber.getText();
+
+            if (!fn.isEmpty() || !ln.isEmpty() || !pn.isEmpty()) {
+                Customer c = new Customer(fn, ln, pn);
+                App.api.postCustomer(c, (AlertCallback<Long>) (aLong, response) -> {
+                    c.setId(aLong);
+                    App.main.setNextRefresh(
+                            App.orderEditorPresenter,
+                            SalesOrder.forCustomer(App.employee, c, App.properties.getBd("tax-percent"))
+                    );
+                });
+            }
+        });
+
+        filteredCustomers = new FilteredList<>(FXCollections.emptyObservableList());
 
         tfFirstName.textProperty().addListener(event -> updateCustomerFilter());
         tfLastName.textProperty().addListener(event -> updateCustomerFilter());
@@ -71,13 +98,11 @@ public class TakeOutPresenter extends Presenter {
         tfFirstName.clear();
         tfPhoneNumber.clear();
 
-        if (App.apiIsBusy.compareAndSet(false, true)) {
-            App.api.getCustomers((AlertCallback<List<Customer>>) (cList, response) -> {
-                filteredCustomers = new FilteredList<>(FXCollections.observableList(cList));
-                updateCustomerFilter();
-                gvCustomers.setItems(filteredCustomers);
-            });
-        }
+        App.api.getCustomers((AlertCallback<List<Customer>>) (cList, response) -> {
+            filteredCustomers = new FilteredList<>(FXCollections.observableList(cList));
+            updateCustomerFilter();
+            gvCustomers.setItems(filteredCustomers);
+        });
     }
 
     @Override
@@ -126,24 +151,7 @@ public class TakeOutPresenter extends Presenter {
             ),
             new Action("Manager", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.managerPresenter))
-            ),
-            new Action("New Order", ActionType.FINISH, event -> {
-                String fn = tfFirstName.getText();
-                String ln = tfLastName.getText();
-                String pn = tfPhoneNumber.getText();
-
-                if (!fn.isEmpty() || !ln.isEmpty() || !pn.isEmpty()) {
-                    Customer c = new Customer(fn, ln, pn);
-                    App.api.postCustomer(c, (AlertCallback<Long>) (aLong, response) -> {
-                        c.setId(aLong);
-                        App.main.setNextRefresh(
-                                App.orderEditorPresenter,
-                                SalesOrder.forCustomer(App.employee, c, App.properties.getBd("tax-percent"))
-                        );
-                    });
-                }
-            }),
-            new Action("Reset", ActionType.BUTTON, event -> Platform.runLater(this::clear))
+            )
     );
 
 }

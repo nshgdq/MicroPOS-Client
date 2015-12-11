@@ -2,6 +2,7 @@ package ow.micropos.client.desktop.model.menu;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 
 import java.math.BigDecimal;
@@ -24,9 +25,13 @@ public class MenuItem {
 
     private BooleanProperty archived = new SimpleBooleanProperty();
 
+    private ObjectProperty<Date> archiveDate = new SimpleObjectProperty<>();
+
     private ObjectProperty<Category> category = new SimpleObjectProperty<>();
 
     private ListProperty<ProductEntry> salesOrderEntries = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    private ListProperty<String> printers = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public Long getId() {
         return id.get();
@@ -100,6 +105,18 @@ public class MenuItem {
         this.archived.set(archived);
     }
 
+    public Date getArchiveDate() {
+        return archiveDate.get();
+    }
+
+    public ObjectProperty<Date> archiveDateProperty() {
+        return archiveDate;
+    }
+
+    public void setArchiveDate(Date archiveDate) {
+        this.archiveDate.set(archiveDate);
+    }
+
     public Category getCategory() {
         return category.get();
     }
@@ -120,4 +137,15 @@ public class MenuItem {
         this.salesOrderEntries.setAll(salesOrderEntries);
     }
 
+    public ObservableList<String> getPrinters() {
+        return printers.get();
+    }
+
+    public ListProperty<String> printersProperty() {
+        return printers;
+    }
+
+    public void setPrinters(List<String> printers) {
+        this.printers.setAll(printers);
+    }
 }

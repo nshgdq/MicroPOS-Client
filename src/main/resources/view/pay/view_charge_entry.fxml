@@ -8,4 +8,8 @@
 
     <Label fx:id="lblChargeName"/>
 
+    <Label fx:id="lblChargeValue"/>
+
+    <Label fx:id="lblChargeStatus"/>
+
 </VBox>

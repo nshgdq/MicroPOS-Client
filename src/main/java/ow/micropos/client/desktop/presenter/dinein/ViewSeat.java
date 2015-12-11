@@ -22,24 +22,8 @@ public class ViewSeat extends ItemPresenter<Seat> {
             setLabel(lblSeatTag, newItem.tagProperty());
 
             Platform.runLater(() -> {
-                String style = "";
-                switch (getSeatState(getItem())) {
-                    case 1:
-                        style = "-fx-background-color: yellow";
-                        break;
-                    case 2:
-                        style = "-fx-background-color: purple";
-                        break;
-                    case 3:
-                        style = "-fx-background-color: green";
-                        break;
-                    case 4:
-                        style = "-fx-background-color: blue";
-                        break;
-                    default:
-                        style = "-fx-background-color: #c01800";
-                }
-                getView().setStyle(style);
+                getView().setId("seatView" + getSeatState(getItem()));
+                lblSeatTag.setId("seatTag" + getSeatState(getItem()));
             });
         }
     }

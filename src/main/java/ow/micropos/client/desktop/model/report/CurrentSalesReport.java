@@ -10,8 +10,18 @@ import java.util.List;
 @Data
 public class CurrentSalesReport {
 
-    public BigDecimal productTotal = BigDecimal.ZERO;
+    public int orderCount = 0;
+    public int openCount = 0;
+    public int closedCount = 0;
+    public int voidCount = 0;
+
+    public int dineInCount = 0;
+    public int takeOutCount = 0;
+
     public int productCount = 0;
+    public int productVoidCount = 0;
+
+    public BigDecimal productTotal = BigDecimal.ZERO;
     public List<CategoryReport> categoryReports = new ArrayList<>();
 
     public BigDecimal chargeTotal = BigDecimal.ZERO;

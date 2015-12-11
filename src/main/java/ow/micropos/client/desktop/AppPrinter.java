@@ -13,6 +13,7 @@ import gnu.io.SerialPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
+import ow.micropos.client.desktop.model.report.CurrentSalesReport;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,6 +28,7 @@ public class AppPrinter {
     private final PrinterDispatcher dispatcher;
     private final AppCommander cmd;
 
+    // TODO : Might as well hardcode the various printers in.
     public AppPrinter(int width, String printersProperty) {
 
         cmd = new AppCommander(width);
@@ -118,6 +120,23 @@ public class AppPrinter {
             dispatch(
                     "RECEIPT",
                     "Could not print order " + so.getId() + ". Contact Manager."
+            );
+        }
+    }
+
+    public void printReport(CurrentSalesReport report) {
+        try {
+            dispatch("REPORT",
+                    cmd.begin()
+                            .restaurant()
+                            .address()
+                            .report(report)
+                            .footer()
+            );
+        } catch (IOException e) {
+            dispatch(
+                    "REPORT",
+                    "Could not print current sales report. Contact Administrator."
             );
         }
     }

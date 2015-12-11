@@ -119,7 +119,7 @@ public class TargetPresenter extends ItemPresenter<Object> {
             new Action("Split", ActionType.FINISH, event -> Platform.runLater(() ->
                     App.main.setNextRefresh(App.movePresenter, gvOrderGrid.getItems())))
             ,
-            new Action("Cancel", ActionType.FINISH, event -> Platform.runLater(App.main::back)),
+            new Action("Cancel", ActionType.FINISH, event -> Platform.runLater(App.main::backRefresh)),
             new Action("Prev Pg", ActionType.BUTTON, event -> Platform.runLater(gvOrderGrid::prevPage)),
             new Action("Next Pg", ActionType.BUTTON, event -> Platform.runLater(gvOrderGrid::nextPage))
     );

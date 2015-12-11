@@ -57,13 +57,11 @@ public class DineInPresenter extends Presenter {
         // Oriental Wok does not use sections feature, so all seats belong to one section.
         long id = App.properties.getLng("default-section");
 
-        if (App.apiIsBusy.compareAndSet(false, true)) {
-            App.api.getSection(id, (AlertCallback<Section>) (section, response) -> {
-                gvRestaurantLayout.setRows(section.getRows());
-                gvRestaurantLayout.setCols(section.getCols());
-                gvRestaurantLayout.setItems(section.getSeats());
-            });
-        }
+        App.api.getSection(id, (AlertCallback<Section>) (section, response) -> {
+            gvRestaurantLayout.setRows(section.getRows());
+            gvRestaurantLayout.setCols(section.getCols());
+            gvRestaurantLayout.setItems(section.getSeats());
+        });
     }
 
     @Override

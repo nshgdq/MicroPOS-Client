@@ -20,6 +20,7 @@ import ow.micropos.client.desktop.presenter.ErrorPresenter;
 import ow.micropos.client.desktop.presenter.MainPresenter;
 import ow.micropos.client.desktop.presenter.PopupPresenter;
 import ow.micropos.client.desktop.presenter.WarnPresenter;
+import ow.micropos.client.desktop.presenter.database.DbMenuItemsPresenter;
 import ow.micropos.client.desktop.presenter.dinein.DineInPresenter;
 import ow.micropos.client.desktop.presenter.finder.FinderPresenter;
 import ow.micropos.client.desktop.presenter.login.LoginPresenter;
@@ -80,6 +81,9 @@ public class App extends Application implements VkProperties {
     public static PaymentEditorPresenter paymentEditorPresenter;
     public static TargetPresenter targetPresenter;
     public static MovePresenter movePresenter;
+
+    // Database Presenters
+    public static DbMenuItemsPresenter dbMenuItemsPresenter;
 
     /******************************************************************
      *                                                                *
@@ -194,6 +198,8 @@ public class App extends Application implements VkProperties {
         paymentEditorPresenter = Presenter.load("/view/pay/payment_editor.fxml");
         targetPresenter = Presenter.load("/view/target/target.fxml");
         movePresenter = Presenter.load("/view/move/move.fxml");
+
+        dbMenuItemsPresenter = Presenter.load("/view/database/table_menu_items.fxml");
 
         homePresenter = getHomePresenter(properties.getStr("home"));
 

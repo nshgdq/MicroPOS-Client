@@ -29,7 +29,7 @@
     <GridPane GridPane.rowIndex="0"
               GridPane.columnIndex="2"
               fx:id="gpKeypad"
-              id="gpLayout">
+              id="keypad">
 
         <columnConstraints>
             <ColumnConstraints/>
@@ -53,73 +53,73 @@
         </StackPane>
 
         <Button fx:id="btn1"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="1"
                 GridPane.rowIndex="1"
                 GridPane.columnIndex="0"/>
 
         <Button fx:id="btn2"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="2"
                 GridPane.rowIndex="1"
                 GridPane.columnIndex="1"/>
 
         <Button fx:id="btn3"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="3"
                 GridPane.rowIndex="1"
                 GridPane.columnIndex="2"/>
 
         <Button fx:id="btn4"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="4"
                 GridPane.rowIndex="2"
                 GridPane.columnIndex="0"/>
 
         <Button fx:id="btn5"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="5"
                 GridPane.rowIndex="2"
                 GridPane.columnIndex="1"/>
 
         <Button fx:id="btn6"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="6"
                 GridPane.rowIndex="2"
                 GridPane.columnIndex="2"/>
 
         <Button fx:id="btn7"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="7"
                 GridPane.rowIndex="3"
                 GridPane.columnIndex="0"/>
 
         <Button fx:id="btn8"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="8"
                 GridPane.rowIndex="3"
                 GridPane.columnIndex="1"/>
 
         <Button fx:id="btn9"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="9"
                 GridPane.rowIndex="3"
                 GridPane.columnIndex="2"/>
 
         <Button fx:id="btnClear"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="Clear"
                 GridPane.rowIndex="4"
                 GridPane.columnIndex="0"/>
 
         <Button fx:id="btn0"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="0"
                 GridPane.rowIndex="4"
                 GridPane.columnIndex="1"/>
 
         <Button fx:id="btnLogin"
-                id="keypadRegularButton"
+                id="keypadButton"
                 text="Login"
                 GridPane.rowIndex="4"
                 GridPane.columnIndex="2"/>

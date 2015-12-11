@@ -1,27 +1,29 @@
+/* Gap between logo & keypad */
 #gpLogin {
-    -fx-hgap: 50px;
+    -fx-hgap: 80px;
 }
 
-#gpLayout {
-    -fx-hgap: 12px;
-    -fx-vgap: 12px;
+/******************************************************************
+ *                                                                *
+ * Keypad Style
+ *                                                                *
+ ******************************************************************/
+
+#keypad {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
     -fx-alignment: center;
 }
 
-#keypadEntry {
-    -fx-font-size: 50px;
-    -fx-font-weight: bolder;
-}
-
-#keypadRegularButton {
+#keypadButton {
+    -fx-background-color: #A80000;
+    -fx-text-fill: #D8AD00;
     -fx-min-width: 160px;
     -fx-max-width: 160px;
     -fx-pref-width: 160px;
     -fx-min-height: 160px;
     -fx-max-height: 160px;
     -fx-pref-height: 160px;
-    -fx-background-color: #A80000;
-    -fx-text-fill: #D8AD00;
-    -fx-font-size: 30px;
+    -fx-font-size: 3em;
     -fx-font-weight: bolder;
 }

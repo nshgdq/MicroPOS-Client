@@ -1,5 +1,43 @@
+/* Spacing between orders & order entry */
+#findOrderView {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+/* Spacing between orders */
 #gvOrders {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+/* Spacing between entry groups */
+#vbOrderEntry {
+    -fx-spacing: 10px;
+}
+
+/* Info, Type, Status Entry */
+#vbInfo, #vbType, #vbStatus {
+    -fx-border-color: #c01800;
     -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Paging and Resetting
+ *                                                                *
+ ******************************************************************/
+
+#backButton, #nextButton, #resetButton {
+    -fx-background-color: #C01800;
+}
+
+#backText, #nextText, #resetText {
+    -fx-font-weight: bolder;
+    -fx-padding: 20px;
+}
+
+#vbPage {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }

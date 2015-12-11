@@ -121,9 +121,9 @@ public class ViewSalesOrder extends ItemPresenter<SalesOrder> {
                     unbind(newItem.idProperty());
                 }
             });
-            setLabel(lblStatus, newItem.statusTextProperty());
+            setLabel(lblStatus, Bindings.concat("Status : ", newItem.statusTextProperty()));
             setLabel(lblTotal, Bindings.concat("$", newItem.grandTotalProperty().asString()));
-            setLabel(lblEmployee, newItem.employeeNameProperty());
+            setLabel(lblEmployee, Bindings.concat("Employee : ", newItem.employeeNameProperty()));
             setLabel(lblDate, newItem.prettyTimeProperty());
             setListView(lvOrderSummary, newItem.getProductEntries());
 

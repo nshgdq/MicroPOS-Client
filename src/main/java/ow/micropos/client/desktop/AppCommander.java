@@ -1,15 +1,16 @@
 package ow.micropos.client.desktop;
 
 import email.com.gmail.ttsai0509.escpos.ESCPos;
+import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ow.micropos.client.desktop.model.menu.Modifier;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
+import ow.micropos.client.desktop.model.report.CurrentSalesReport;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -48,6 +49,24 @@ public class AppCommander {
         return print(ESCPos.INITIALIZE);
     }
 
+    public byte[] end() throws IOException {
+
+        print(ESCPos.FEED_N)
+                .print(4)
+                .print(ESCPos.PART_CUT);
+
+        byte[] result = out.toByteArray();
+        out.reset();
+
+        return result;
+    }
+
+    /******************************************************************
+     *                                                                *
+     * General Use
+     *                                                                *
+     ******************************************************************/
+
     public AppCommander restaurant() throws IOException {
         return print(ESCPos.ALIGN_CENTER)
                 .print(ESCPos.FONT_DH_EMPH)
@@ -67,6 +86,28 @@ public class AppCommander {
                 .print(ESCPos.FEED_N)
                 .print(2);
     }
+
+    public AppCommander thanks() throws IOException {
+        return print(ESCPos.ALIGN_CENTER)
+                .print(ESCPos.FONT_REG)
+                .print("We appreciate your business!")
+                .print(ESCPos.FEED_N)
+                .print(2);
+    }
+
+    public AppCommander footer() throws IOException {
+        return print(ESCPos.ALIGN_CENTER)
+                .print(ESCPos.FONT_REG)
+                .print(Long.toString(new Date().getTime()))
+                .print(ESCPos.FEED_N)
+                .print(2);
+    }
+
+    /******************************************************************
+     *                                                                *
+     * Sales Orders
+     *                                                                *
+     ******************************************************************/
 
     public AppCommander salesOrderInfo(SalesOrder so) throws IOException {
 
@@ -98,11 +139,7 @@ public class AppCommander {
 
             String tag = pe.getMenuItem().getTag();
 
-            String quantity;
-            if (isIntegerValue(pe.getQuantity()))
-                quantity = pe.getQuantity().setScale(0, BigDecimal.ROUND_UNNECESSARY).toString();
-            else
-                quantity = pe.getQuantity().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+            String quantity = BigDecimalUtils.asQuantity(pe.getQuantity()).toString();
 
             String status;
             switch (pe.getStatus()) {
@@ -116,6 +153,7 @@ public class AppCommander {
                     status = "HOLD ";
                     break;
                 default:
+                    // TODO : Should probably throw Exception here instead
                     log.warn("Skipping unexpected product entry " + pe.toString());
                     return this;
             }
@@ -134,7 +172,7 @@ public class AppCommander {
                     .print(ESCPos.FEED);
 
             for (Modifier mod : pe.getModifiers())
-                total("        " + mod.getName(), mod.getPrice() + "        ");
+                total("        " + mod.getTag() + " " + mod.getName(), mod.getPrice() + "        ");
         }
 
         return print(ESCPos.FEED_N).print(2);
@@ -153,7 +191,7 @@ public class AppCommander {
 
         total("Subtotal", subtotal);
 
-        if (!so.getChargeEntries().isEmpty())
+        if (so.hasAppliedCharge())
             total("Discounts", discounts);
 
         if (so.hasGratuity())
@@ -167,32 +205,47 @@ public class AppCommander {
         return print(ESCPos.FEED_N).print(2);
     }
 
-    public AppCommander thanks() throws IOException {
-        return print(ESCPos.ALIGN_CENTER)
-                .print(ESCPos.FONT_REG)
-                .print("We appreciate your business!")
+    /******************************************************************
+     *                                                                *
+     * Reports
+     *                                                                *
+     ******************************************************************/
+
+    public AppCommander report(CurrentSalesReport report) throws IOException {
+
+        return total("Product Total", report.getProductTotal().toString())
+                .total("Charge Total", report.getChargeTotal().toString())
+                .total("Charge Count", report.getChargeCount())
+                .total("Sub Total", report.getSubTotal().toString())
+                .total("Tax Total", report.getTaxTotal().toString())
+                .total("Gratuity Total", report.getGratuityTotal().toString())
+                .total("Grand Total", report.getGrandTotal().toString())
+                .total("Payment Total", report.getPaymentTotal().toString())
+                .total("Payment Count", report.getPaymentCount())
+                .total("Change Total", report.getChangeTotal().toString())
+                .total("Net Sales", report.getNetSales().toString())
                 .print(ESCPos.FEED_N)
-                .print(2);
+                .print(2)
+                .total("Order Count", report.orderCount)
+                .total("   Open", report.openCount)
+                .total("   Closed", report.closedCount)
+                .total("   Void", report.voidCount)
+                .total("   Dine In", report.dineInCount)
+                .total("   Take Out", report.takeOutCount)
+                .print(ESCPos.FEED_N)
+                .print(2)
+                .total("Product Count", report.getProductCount())
+                .total("   Void", report.productVoidCount);
     }
 
-    public AppCommander footer() throws IOException {
-        return print(ESCPos.ALIGN_CENTER)
-                .print(ESCPos.FONT_REG)
-                .print(Long.toString(new Date().getTime()))
-                .print(ESCPos.FEED_N)
-                .print(2);
-    }
+    /******************************************************************
+     *                                                                *
+     * Misc
+     *                                                                *
+     ******************************************************************/
 
-    public byte[] end() throws IOException {
-
-        print(ESCPos.FEED_N)
-                .print(4)
-                .print(ESCPos.PART_CUT);
-
-        byte[] result = out.toByteArray();
-        out.reset();
-
-        return result;
+    private AppCommander total(String desc, int total) throws IOException {
+        return total(desc, Integer.toString(total));
     }
 
     private AppCommander total(String desc, String total) throws IOException {
@@ -203,10 +256,6 @@ public class AppCommander {
                 .print(" ")
                 .print(total)
                 .print(ESCPos.FEED);
-    }
-
-    private boolean isIntegerValue(BigDecimal bd) {
-        return bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0;
     }
 
 }

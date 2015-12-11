@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx/8"
           xmlns:fx="http://javafx.com/fxml"
+          id="editorWrapper"
           stylesheets="/css/order.css"
           fx:controller="ow.micropos.client.desktop.presenter.order.OrderEditorPresenter">
 
@@ -13,103 +14,147 @@
     </rowConstraints>
 
     <columnConstraints>
-        <ColumnConstraints percentWidth="20"/>
-        <ColumnConstraints percentWidth="80"/>
+        <ColumnConstraints percentWidth="25"/>
+        <ColumnConstraints percentWidth="75"/>
     </columnConstraints>
 
-    <StackPane fx:id="spItems"
-               GridPane.rowIndex="0"
-               GridPane.columnIndex="1">
-        <GridView fx:id="gvCategories"
-                  id="gpCategories"/>
-        <GridView fx:id="gvMenuItems"
-                  id="gpMenuItems"/>
-    </StackPane>
-
-    <GridPane GridPane.rowIndex="0"
+    <GridPane id="gpSalesOrder"
+              GridPane.rowIndex="0"
               GridPane.columnIndex="0">
 
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="ALWAYS"/>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS"/>
-            <ColumnConstraints/>
         </columnConstraints>
 
-        <Label fx:id="employee"
-               GridPane.rowIndex="0"
-               GridPane.columnIndex="0"
-               GridPane.columnSpan="2"/>
+        <GridPane id="gpTop"
+                  GridPane.rowIndex="0"
+                  GridPane.columnIndex="0">
 
-        <Label fx:id="target"
-               GridPane.rowIndex="1"
-               GridPane.columnIndex="0"
-               GridPane.columnSpan="2"/>
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
 
-        <Label fx:id="date"
-               GridPane.rowIndex="2"
-               GridPane.columnIndex="0"
-               GridPane.columnSpan="2"/>
+            <Label fx:id="info"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0"
+                   GridPane.columnSpan="2"/>
 
-        <AnchorPane GridPane.rowIndex="3"
-                    GridPane.columnIndex="0"
-                    GridPane.columnSpan="2">
+            <Label fx:id="employee"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="0"/>
+
+            <Label fx:id="status"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="1"/>
+
+            <Label fx:id="target"
+                   GridPane.rowIndex="2"
+                   GridPane.columnIndex="0"/>
+
+            <Label fx:id="time"
+                   GridPane.rowIndex="2"
+                   GridPane.columnIndex="1"/>
+
+        </GridPane>
+
+        <AnchorPane GridPane.rowIndex="1"
+                    GridPane.columnIndex="0">
             <ListView fx:id="orderEntries"
+                      id="lvOrderEntries"
                       AnchorPane.bottomAnchor="0"
                       AnchorPane.leftAnchor="0"
                       AnchorPane.rightAnchor="0"
                       AnchorPane.topAnchor="0"/>
         </AnchorPane>
 
-        <Label text="Product Total"
-               GridPane.rowIndex="4"
-               GridPane.columnIndex="0"/>
+        <GridPane id="gpBottom"
+                  GridPane.rowIndex="2"
+                  GridPane.columnIndex="0">
 
-        <Label fx:id="productTotal"
-               GridPane.rowIndex="4"
-               GridPane.columnIndex="1"/>
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
 
-        <Label text="Discount"
-               GridPane.rowIndex="5"
-               GridPane.columnIndex="0"/>
+            <Label text="Product Total"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0"/>
 
-        <Label fx:id="chargeTotal"
-               GridPane.rowIndex="5"
-               GridPane.columnIndex="1"/>
+            <Label fx:id="productTotal"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="1"/>
 
-        <Label text="Gratuity"
-               GridPane.rowIndex="6"
-               GridPane.columnIndex="0"/>
+            <Label text="Discount"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="0"/>
 
-        <Label fx:id="gratuityTotal"
-               GridPane.rowIndex="6"
-               GridPane.columnIndex="1"/>
+            <Label fx:id="chargeTotal"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="1"/>
 
-        <Label text="Sales Tax"
-               GridPane.rowIndex="7"
-               GridPane.columnIndex="0"/>
+            <Label text="Gratuity"
+                   GridPane.rowIndex="2"
+                   GridPane.columnIndex="0"/>
 
-        <Label fx:id="taxTotal"
-               GridPane.rowIndex="7"
-               GridPane.columnIndex="1"/>
+            <Label fx:id="gratuityTotal"
+                   GridPane.rowIndex="2"
+                   GridPane.columnIndex="1"/>
 
-        <Label text="Grand Total"
-               GridPane.rowIndex="8"
-               GridPane.columnIndex="0"/>
+            <Label text="Sales Tax"
+                   GridPane.rowIndex="3"
+                   GridPane.columnIndex="0"/>
 
-        <Label fx:id="grandTotal"
-               GridPane.rowIndex="8"
-               GridPane.columnIndex="1"/>
+            <Label fx:id="taxTotal"
+                   GridPane.rowIndex="3"
+                   GridPane.columnIndex="1"/>
+
+            <Label text="Grand Total"
+                   GridPane.rowIndex="4"
+                   GridPane.columnIndex="0"/>
+
+            <Label fx:id="grandTotal"
+                   GridPane.rowIndex="4"
+                   GridPane.columnIndex="1"/>
+        </GridPane>
+
+    </GridPane>
+
+    <GridPane id="gpMenu"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="1">
+
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="NEVER"/>
+        </columnConstraints>
+
+        <StackPane fx:id="spBack"
+                   id="backButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="1">
+            <Label text="&lt;"
+                   id="backText"/>
+        </StackPane>
+
+        <StackPane fx:id="spItems"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0">
+            <GridView fx:id="gvCategories"
+                      id="gpCategories"/>
+            <GridView fx:id="gvMenuItems"
+                      id="gpMenuItems"/>
+        </StackPane>
 
     </GridPane>
 

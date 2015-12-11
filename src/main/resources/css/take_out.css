@@ -1,8 +1,52 @@
-#gvCustomers {
-    -fx-padding: 10px;
+/* Spacing between customers & customer entry */
+#takeOutView {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
+
+/* Spacing between customers */
+#gvCustomers {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+/* Spacing between entry groups */
+#vbTakeOutEntry {
+    -fx-spacing: 10px;
+}
+
+/* Customer Entry */
+#vbCustomerEntry {
+    -fx-border-color: #c01800;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Paging and Resetting
+ *                                                                *
+ ******************************************************************/
+
+#backButton, #nextButton, #resetButton, #createButton {
+    -fx-background-color: #C01800;
+}
+
+#backText, #nextText, #resetText, #createText {
+    -fx-font-weight: bolder;
+    -fx-padding: 20px;
+}
+
+#vbPage {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Individual Customer Views
+ *                                                                *
+ ******************************************************************/
 
 #customerView {
     -fx-background-color: #A80000;

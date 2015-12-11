@@ -4,8 +4,9 @@ import email.com.gmail.ttsai0509.javafx.binding.CentStringBinding;
 import email.com.gmail.ttsai0509.javafx.control.PresenterCellAdapter;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
+import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -19,8 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.charge.Charge;
-import ow.micropos.client.desktop.model.enums.PaymentEntryType;
-import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
+import ow.micropos.client.desktop.model.enums.*;
 import ow.micropos.client.desktop.model.orders.ChargeEntry;
 import ow.micropos.client.desktop.model.orders.PaymentEntry;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
@@ -36,17 +36,19 @@ import java.util.List;
 
 public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
 
+    @FXML Label time;
     @FXML ListView<ProductEntry> orderEntries;
     @FXML Label employee;
     @FXML Label target;
-    @FXML Label date;
+    @FXML Label info;
+    @FXML Label status;
     @FXML Label productTotal;
     @FXML Label chargeTotal;
-    @FXML Label serviceCharge;
-    @FXML Label tax;
-    @FXML Label grandtotal;
-    @FXML Label lblPaidAmount;
-    @FXML Label lblChangeAmount;
+    @FXML Label gratuityTotal;
+    @FXML Label taxTotal;
+    @FXML Label grandTotal;
+    //@FXML Label lblPaidAmount;
+    //@FXML Label lblChangeAmount;
 
     @FXML ListView<Charge> lvCharges;
 
@@ -78,13 +80,19 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     @FXML
     public void initialize() {
 
-        GridPane.setHalignment(lblPaidAmount, HPos.RIGHT);
-        GridPane.setHalignment(lblChangeAmount, HPos.RIGHT);
+        //GridPane.setHalignment(lblPaidAmount, HPos.RIGHT);
+        //GridPane.setHalignment(lblChangeAmount, HPos.RIGHT);
+
+        GridPane.setHalignment(info, HPos.CENTER);
+        GridPane.setHalignment(employee, HPos.LEFT);
+        GridPane.setHalignment(status, HPos.RIGHT);
+        GridPane.setHalignment(target, HPos.LEFT);
+        GridPane.setHalignment(time, HPos.RIGHT);
         GridPane.setHalignment(productTotal, HPos.RIGHT);
         GridPane.setHalignment(chargeTotal, HPos.RIGHT);
-        GridPane.setHalignment(serviceCharge, HPos.RIGHT);
-        GridPane.setHalignment(tax, HPos.RIGHT);
-        GridPane.setHalignment(grandtotal, HPos.RIGHT);
+        GridPane.setHalignment(gratuityTotal, HPos.RIGHT);
+        GridPane.setHalignment(taxTotal, HPos.RIGHT);
+        GridPane.setHalignment(grandTotal, HPos.RIGHT);
 
         orderEntries.setCellFactory(param -> {
             ViewProductEntry presenter = Presenter.load("/view/order/view_product_entry.fxml");
@@ -95,7 +103,18 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         lvChargeEntries.setCellFactory(param -> {
             ViewChargeEntry presenter = Presenter.load("/view/pay/view_charge_entry.fxml");
             presenter.onClick(event -> Platform.runLater(() -> {
-                getItem().chargeEntriesProperty().remove(presenter.getItem());
+                ChargeEntry ce = presenter.getItem();
+
+                if (ce.hasStatus(ChargeEntryStatus.REQUEST_APPLY)) {
+                    getItem().chargeEntriesProperty().remove(ce);
+
+                } else if (ce.hasStatus(ChargeEntryStatus.APPLIED)
+                        && App.employee.hasPermission(Permission.VOID_CHARGE_ENTRY)) {
+                    ce.setStatus(ChargeEntryStatus.REQUEST_VOID);
+
+                } else if (ce.hasStatus(ChargeEntryStatus.REQUEST_VOID)) {
+                    ce.setStatus(ChargeEntryStatus.APPLIED);
+                }
             }));
             return new PresenterCellAdapter<>(presenter);
         });
@@ -103,7 +122,18 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         lvPaymentEntries.setCellFactory(param -> {
             ViewPaymentEntry presenter = Presenter.load("/view/pay/view_payment_entry.fxml");
             presenter.onClick(event -> Platform.runLater(() -> {
-                lvPaymentEntries.getItems().remove(presenter.getItem());
+                PaymentEntry pe = presenter.getItem();
+
+                if (pe.hasStatus(PaymentEntryStatus.REQUEST_PAID)) {
+                    getItem().paymentEntriesProperty().remove(pe);
+
+                } else if (pe.hasStatus(PaymentEntryStatus.PAID)
+                        && App.employee.hasPermission(Permission.VOID_PAYMENT_ENTRY)) {
+                    pe.setStatus(PaymentEntryStatus.REQUEST_VOID);
+
+                } else if (pe.hasStatus(PaymentEntryStatus.REQUEST_VOID)) {
+                    pe.setStatus(PaymentEntryStatus.PAID);
+                }
             }));
             return new PresenterCellAdapter<>(presenter);
         });
@@ -122,7 +152,6 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     @Override
     public void refresh() {
         rawAmount.set("");
-        lvPaymentEntries.getSelectionModel().clearSelection();
 
         if (App.apiIsBusy.compareAndSet(false, true)) {
             App.api.getCharges((AlertCallback<List<Charge>>) (charges, response) ->
@@ -136,13 +165,13 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         if (newItem == null) {
             disableKeypad();
             unsetListView(lvPaymentEntries);
-            unsetLabel(lblChangeAmount);
-            unsetLabel(lblPaidAmount);
+            //unsetLabel(lblChangeAmount);
+            //unsetLabel(lblPaidAmount);
 
         } else {
             setListView(lvPaymentEntries, newItem.getPaymentEntries());
-            setLabel(lblChangeAmount, newItem.changeProperty().asString());
-            setLabel(lblPaidAmount, newItem.paymentTotalProperty().asString());
+            //setLabel(lblChangeAmount, newItem.changeProperty().asString());
+            //setLabel(lblPaidAmount, newItem.paymentTotalProperty().asString());
 
             if (newItem.changeProperty().get().compareTo(BigDecimal.ZERO) >= 0)
                 disableKeypad();
@@ -151,27 +180,44 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         }
 
         if (newItem == null) {
+            unsetLabel(status);
             unsetLabel(target);
             unsetLabel(employee);
-            unsetLabel(date);
+            unsetLabel(info);
             unsetLabel(productTotal);
             unsetLabel(chargeTotal);
-            unsetLabel(serviceCharge);
-            unsetLabel(tax);
-            unsetLabel(grandtotal);
+            unsetLabel(gratuityTotal);
+            unsetLabel(taxTotal);
+            unsetLabel(grandTotal);
             unsetListView(orderEntries);
             unsetListView(lvChargeEntries);
         } else {
-            setLabel(employee, Bindings.concat("Employee : ", newItem.employeeNameProperty()));
-            setLabel(target, Bindings.concat("Customer : ", newItem.targetNameProperty()));
-            setLabel(date, newItem.prettyTimeProperty());
+            setLabel(info, new StringBinding() {
+                {bind(newItem.idProperty());}
+
+                @Override
+                protected String computeValue() {
+                    Long id = newItem.idProperty().get();
+                    return (id == null) ? "---" : "Order # " + Long.toString(id);
+                }
+
+                @Override
+                public void dispose() {
+                    unbind(newItem.idProperty());
+                }
+            });
+            setLabel(status, newItem.statusTextProperty());
+            setLabel(employee, newItem.employeeNameProperty());
+            setLabel(target, newItem.targetNameProperty());
+            setLabel(time, newItem.prettyTimeProperty());
             setLabel(productTotal, newItem.productTotalProperty().asString());
             setLabel(chargeTotal, newItem.chargeTotalProperty().asString());
-            setLabel(grandtotal, newItem.grandTotalProperty().asString());
-            setLabel(serviceCharge, newItem.gratuityTotalProperty().asString());
-            setLabel(tax, newItem.taxTotalProperty().asString());
+            setLabel(grandTotal, newItem.grandTotalProperty().asString());
+            setLabel(gratuityTotal, newItem.gratuityTotalProperty().asString());
+            setLabel(taxTotal, newItem.taxTotalProperty().asString());
             setListView(orderEntries, newItem.productEntriesProperty());
             setListView(lvChargeEntries, newItem.chargeEntriesProperty());
+            setListView(lvPaymentEntries, newItem.paymentEntriesProperty());
         }
     }
 
@@ -184,23 +230,25 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     public void dispose() {
         disableKeypad();
         unsetListView(lvPaymentEntries);
-        unsetLabel(lblChangeAmount);
-        unsetLabel(lblPaidAmount);
+        //unsetLabel(lblChangeAmount);
+        //unsetLabel(lblPaidAmount);
 
+        unsetLabel(status);
         unsetLabel(target);
         unsetLabel(employee);
-        unsetLabel(date);
+        unsetLabel(info);
         unsetLabel(productTotal);
-        unsetLabel(grandtotal);
-        unsetLabel(tax);
-        unsetLabel(serviceCharge);
+        unsetLabel(chargeTotal);
+        unsetLabel(gratuityTotal);
+        unsetLabel(taxTotal);
+        unsetLabel(grandTotal);
         unsetListView(orderEntries);
     }
 
     private void addPaymentEntry(PaymentEntryType type) {
 
-        String strAmount = amountFormatter.get().isEmpty() ? "0" : amountFormatter.get();
-        BigDecimal amount = new BigDecimal(strAmount);
+        String strAmount = amountFormatter.get().isEmpty() ? "0.00" : amountFormatter.get();
+        BigDecimal amount = BigDecimalUtils.asDollars(new BigDecimal(strAmount));
 
         if (amount.compareTo(BigDecimal.ZERO) == 1) {
             PaymentEntry payment = new PaymentEntry(amount, type);
@@ -287,6 +335,15 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
                     });
                 }
             }),
+
+            new Action("Print", ActionType.FINISH, event -> Platform.runLater(() -> {
+                if (getItem().canPrint()) {
+                    App.main.backRefresh();
+                    App.printer.printCheck(getItem());
+                } else {
+                    App.warn.showAndWait("Order must be sent before printing.");
+                }
+            })),
 
             new Action("Cancel", ActionType.FINISH, event -> Platform.runLater(App.main::backRefresh)),
 

@@ -24,8 +24,6 @@
 
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
         <columnConstraints>
@@ -35,24 +33,20 @@
 
         <Label GridPane.rowIndex="0"
                GridPane.columnIndex="0"
-               GridPane.rowSpan="3"
                fx:id="lblId"
                id="salesOrderId"/>
 
-        <Label GridPane.rowIndex="0"
-               GridPane.columnIndex="1"
-               fx:id="lblTarget"
-               id="salesOrderTarget"/>
+        <VBox GridPane.rowIndex="0"
+              GridPane.columnIndex="1">
+            <Label fx:id="lblTarget"
+                   id="salesOrderTarget"/>
 
-        <Label GridPane.rowIndex="1"
-               GridPane.columnIndex="1"
-               fx:id="lblTargetDetails"
-               id="salesOrderTargetDetails"/>
+            <Label fx:id="lblTargetDetails"
+                   id="salesOrderTargetDetails"/>
 
-        <Label GridPane.rowIndex="2"
-               GridPane.columnIndex="1"
-               fx:id="lblDate"
-               id="salesOrderDate"/>
+            <Label fx:id="lblDate"
+                   id="salesOrderDate"/>
+        </VBox>
 
     </GridPane>
 

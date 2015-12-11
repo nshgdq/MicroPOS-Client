@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import email.com.gmail.ttsai0509.javafx.control.GridView?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <GridPane fx:controller="ow.micropos.client.desktop.presenter.takeout.TakeOutPresenter"
           xmlns="http://javafx.com/javafx/8.0.40"
@@ -12,7 +11,6 @@
           id="takeOutView">
 
     <rowConstraints>
-        <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="ALWAYS"/>
     </rowConstraints>
 
@@ -24,19 +22,63 @@
     <GridView fx:id="gvCustomers"
               id="gvCustomers"
               GridPane.rowIndex="0"
-              GridPane.columnIndex="0"
-              GridPane.rowSpan="2"/>
+              GridPane.columnIndex="0"/>
 
-    <VBox GridPane.rowIndex="0"
-          GridPane.columnIndex="1"
-          id="vbCustomerEntry">
-        <Label text="Customer Information"/>
-        <TextField fx:id="tfPhoneNumber"
-                   promptText="Phone Number"/>
-        <TextField fx:id="tfFirstName"
-                   promptText="First Name"/>
-        <TextField fx:id="tfLastName"
-                   promptText="Last Name"/>
+    <VBox id="vbTakeOutEntry"
+          GridPane.rowIndex="0"
+          GridPane.columnIndex="1">
+
+        <StackPane>
+            <Label text="Customer Information"/>
+        </StackPane>
+
+        <VBox id="vbCustomerEntry">
+
+            <TextField fx:id="tfPhoneNumber"
+                       promptText="Phone Number"/>
+            <TextField fx:id="tfFirstName"
+                       promptText="First Name"/>
+            <TextField fx:id="tfLastName"
+                       promptText="Last Name"/>
+        </VBox>
+
+        <StackPane fx:id="spCreate"
+                   id="createButton">
+            <Label text="Create"
+                   id="createText"/>
+        </StackPane>
+
+        <StackPane fx:id="spReset"
+                   id="resetButton">
+            <Label text="Reset"
+                   id="resetText"/>
+        </StackPane>
+
+        <GridPane id="vbPage">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+
+            <StackPane fx:id="spBack"
+                       id="backButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0">
+                <Label text="&lt;"
+                       id="backText"/>
+            </StackPane>
+
+            <StackPane fx:id="spNext"
+                       id="nextButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="1">
+                <Label text="&gt;"
+                       id="nextText"/>
+            </StackPane>
+
+        </GridPane>
+
     </VBox>
 
 </GridPane>

@@ -1,10 +1,14 @@
+#gpTop {
+    -fx-hgap: 10px;
+}
+
 #salesOrderView {
-    -fx-background-color: #A80000;
+    -fx-background-color: #C01800;
 }
 
 #salesOrderId {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #A80000;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 32px;
     -fx-font-weight: bolder;
@@ -19,13 +23,14 @@
 
 #salesOrderTotalWrapper {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #A80000;
 }
 
 #salesOrderTotal {
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 26px;
     -fx-font-weight: bolder;
+    -fx-padding: 4px 0 4px 0;
 
 }
 
@@ -39,9 +44,13 @@
 
 #salesOrderStatus, #salesOrderEmployee {
     -fx-text-fill: #ffffff;
-    -fx-font-size: 18px;
+    -fx-font-size: 12px;
 }
 
 #peItem, #peStatus, #peTotal, #peModifiers {
-    -fx-font-size: 16px;
+    -fx-font-size: 18px;
+}
+
+#peModifiers {
+    -fx-padding: 0 0 0 10px;
 }
