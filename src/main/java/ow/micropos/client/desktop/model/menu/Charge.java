@@ -1,4 +1,4 @@
-package ow.micropos.client.desktop.model.charge;
+package ow.micropos.client.desktop.model.menu;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;

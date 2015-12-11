@@ -1,16 +1,16 @@
 package ow.micropos.client.desktop;
 
-import ow.micropos.client.desktop.model.charge.Charge;
+import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.menu.Category;
+import ow.micropos.client.desktop.model.menu.Charge;
 import ow.micropos.client.desktop.model.menu.MenuItem;
 import ow.micropos.client.desktop.model.menu.ModifierGroup;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import ow.micropos.client.desktop.model.people.Customer;
-import ow.micropos.client.desktop.model.people.Employee;
 import ow.micropos.client.desktop.model.report.CurrentSalesReport;
-import ow.micropos.client.desktop.model.seating.Section;
+import ow.micropos.client.desktop.model.target.Customer;
+import ow.micropos.client.desktop.model.target.Section;
 import retrofit.Callback;
 import retrofit.http.*;
 

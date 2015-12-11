@@ -8,11 +8,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.fxmisc.easybind.EasyBind;
+import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.model.enums.*;
 import ow.micropos.client.desktop.model.menu.MenuItem;
-import ow.micropos.client.desktop.model.people.Customer;
-import ow.micropos.client.desktop.model.people.Employee;
-import ow.micropos.client.desktop.model.seating.Seat;
+import ow.micropos.client.desktop.model.target.Customer;
+import ow.micropos.client.desktop.model.target.Seat;
 
 import java.math.BigDecimal;
 import java.util.Date;

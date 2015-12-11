@@ -2,9 +2,9 @@ package ow.micropos.client.desktop.model.orders;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import ow.micropos.client.desktop.model.charge.Charge;
 import ow.micropos.client.desktop.model.enums.ChargeEntryStatus;
 import ow.micropos.client.desktop.model.enums.ChargeType;
+import ow.micropos.client.desktop.model.menu.Charge;
 
 import java.math.BigDecimal;
 import java.util.Date;

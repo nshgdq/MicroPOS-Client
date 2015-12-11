@@ -14,7 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import org.apache.commons.lang3.StringUtils;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.model.people.Employee;
+import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

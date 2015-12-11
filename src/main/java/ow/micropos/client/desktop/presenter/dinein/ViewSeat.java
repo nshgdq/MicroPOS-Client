@@ -5,7 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import ow.micropos.client.desktop.model.seating.Seat;
+import ow.micropos.client.desktop.model.target.Seat;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;

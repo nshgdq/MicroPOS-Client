@@ -1,22 +1,21 @@
-package ow.micropos.client.desktop.model.people;
+package ow.micropos.client.desktop.model.target;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import ow.micropos.client.desktop.model.auth.Position;
-import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 
 import java.util.List;
-import java.util.Objects;
 
-public class Employee {
+public class Customer {
 
-    public Employee() {}
+    public Customer() {}
 
-    public Employee(long id) {
-        setId(id);
+    public Customer(String firstName, String lastName, String phoneNumber) {
+        setFirstName(firstName);
+        setLastName(lastName);
+        setPhoneNumber(phoneNumber);
     }
 
     private ObjectProperty<Long> id = new SimpleObjectProperty<>();
@@ -25,13 +24,11 @@ public class Employee {
 
     private StringProperty lastName = new SimpleStringProperty();
 
-    private ListProperty<Position> positions = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-    private IntegerProperty pin = new SimpleIntegerProperty();
-
-    private BooleanProperty archived = new SimpleBooleanProperty();
+    private StringProperty phoneNumber = new SimpleStringProperty();
 
     private ListProperty<SalesOrder> salesOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    private StringProperty previousOrder = new SimpleStringProperty();
 
     public Long getId() {
         return id.get();
@@ -69,69 +66,46 @@ public class Employee {
         this.lastName.set(lastName);
     }
 
-    public ObservableList<Position> getPositions() {
-        return positions.get();
+    public String getPhoneNumber() {
+        return phoneNumber.get();
     }
 
-    public ListProperty<Position> positionsProperty() {
-        return positions;
+    public StringProperty phoneNumberProperty() {
+        return phoneNumber;
     }
 
-    public void setPositions(List<Position> positions) {
-        this.positions.setAll(positions);
-    }
-
-    public int getPin() {
-        return pin.get();
-    }
-
-    public IntegerProperty pinProperty() {
-        return pin;
-    }
-
-    public void setPin(int pin) {
-        this.pin.set(pin);
-    }
-
-
-    public boolean getArchived() {
-        return archived.get();
-    }
-
-    public BooleanProperty archivedProperty() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived.set(archived);
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber.set(phoneNumber);
     }
 
     public ListProperty<SalesOrder> salesOrdersProperty() {
         return salesOrders;
     }
 
+    public ObservableList<SalesOrder> getSalesOrders() {
+        return salesOrders.get();
+    }
+
     public void setSalesOrders(List<SalesOrder> salesOrders) {
         this.salesOrders.setAll(salesOrders);
     }
 
-    public boolean hasPermission(Permission permission) {
-        for (Position position : positions)
-            if (position.hasPermission(permission))
-                return true;
-        return false;
+    public String getPreviousOrder() {
+        return previousOrder.get();
     }
 
-    public boolean hasPermissions(Permission... permissions) {
-        for (Permission reqPermission : permissions)
-            if (!hasPermission(reqPermission))
-                return false;
-        return true;
+    public StringProperty previousOrderProperty() {
+        return previousOrder;
     }
 
-    public boolean owns(SalesOrder salesOrder) {
-        return (id != null)
-                && (salesOrder.getEmployee() != null)
-                && Objects.equals(getId(), salesOrder.getEmployee().getId());
+    public void setPreviousOrder(String previousOrder) {
+        this.previousOrder.set(previousOrder);
+    }
+
+    public boolean contains(String firstName, String lastName, String phoneNumber) {
+        return this.firstName.get().toLowerCase().contains(firstName.toLowerCase())
+                && this.lastName.get().toLowerCase().contains(lastName.toLowerCase())
+                && this.phoneNumber.get().toLowerCase().contains(phoneNumber.toLowerCase());
     }
 
     /******************************************************************

@@ -12,7 +12,7 @@ import javafx.scene.layout.StackPane;
 import org.comtel2000.keyboard.control.VkProperties;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import ow.micropos.client.desktop.model.people.Customer;
+import ow.micropos.client.desktop.model.target.Customer;
 import ow.micropos.client.desktop.utils.Action;
 import ow.micropos.client.desktop.utils.ActionType;
 import ow.micropos.client.desktop.utils.AlertCallback;

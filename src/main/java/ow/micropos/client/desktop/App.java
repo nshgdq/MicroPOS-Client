@@ -15,7 +15,7 @@ import org.comtel2000.keyboard.control.VkProperties;
 import org.comtel2000.keyboard.robot.FXRobotHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ow.micropos.client.desktop.model.people.Employee;
+import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.presenter.ErrorPresenter;
 import ow.micropos.client.desktop.presenter.MainPresenter;
 import ow.micropos.client.desktop.presenter.PopupPresenter;

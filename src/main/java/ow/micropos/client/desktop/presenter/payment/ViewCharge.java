@@ -4,7 +4,7 @@ package ow.micropos.client.desktop.presenter.payment;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import ow.micropos.client.desktop.model.charge.Charge;
+import ow.micropos.client.desktop.model.menu.Charge;
 
 public class ViewCharge extends ItemPresenter<Charge> {
 

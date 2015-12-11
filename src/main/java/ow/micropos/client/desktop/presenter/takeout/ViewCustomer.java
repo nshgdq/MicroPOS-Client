@@ -3,7 +3,7 @@ package ow.micropos.client.desktop.presenter.takeout;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import ow.micropos.client.desktop.model.people.Customer;
+import ow.micropos.client.desktop.model.target.Customer;
 
 
 public class ViewCustomer extends ItemPresenter<Customer> {

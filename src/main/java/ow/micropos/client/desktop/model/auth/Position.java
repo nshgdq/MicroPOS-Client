@@ -3,8 +3,8 @@ package ow.micropos.client.desktop.model.auth;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.model.enums.Permission;
-import ow.micropos.client.desktop.model.people.Employee;
 
 import java.util.List;
 

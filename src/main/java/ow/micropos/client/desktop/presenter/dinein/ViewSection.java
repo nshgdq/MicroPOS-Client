@@ -3,7 +3,7 @@ package ow.micropos.client.desktop.presenter.dinein;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import ow.micropos.client.desktop.model.seating.Section;
+import ow.micropos.client.desktop.model.target.Section;
 
 public class ViewSection extends ItemPresenter<Section> {
 

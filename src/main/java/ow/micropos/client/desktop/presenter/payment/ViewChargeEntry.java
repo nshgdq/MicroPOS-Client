@@ -5,8 +5,8 @@ import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import ow.micropos.client.desktop.model.charge.Charge;
 import ow.micropos.client.desktop.model.enums.ChargeType;
+import ow.micropos.client.desktop.model.menu.Charge;
 import ow.micropos.client.desktop.model.orders.ChargeEntry;
 
 public class ViewChargeEntry extends ItemPresenter<ChargeEntry> {

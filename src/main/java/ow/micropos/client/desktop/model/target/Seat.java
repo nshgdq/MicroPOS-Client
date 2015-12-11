@@ -1,4 +1,4 @@
-package ow.micropos.client.desktop.model.seating;
+package ow.micropos.client.desktop.model.target;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
