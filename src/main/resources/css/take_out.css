@@ -49,5 +49,14 @@
  ******************************************************************/
 
 #customerView {
+    -fx-background-color: #C01800;
+}
+
+#customerFullName, #customerPhoneNumber {
     -fx-background-color: #A80000;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#customerPreviousOrder {
+
 }

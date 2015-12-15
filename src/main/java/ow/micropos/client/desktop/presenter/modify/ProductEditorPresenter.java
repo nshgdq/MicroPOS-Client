@@ -6,6 +6,7 @@ import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -35,11 +36,12 @@ import java.util.function.Predicate;
 public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
 
     @FXML Label lblStatus;
-    @FXML Label lblQuantity;
-    @FXML Label lblMenuItemPrice;
+    @FXML Label lblMenuItem;
+    @FXML Label lblUnitPrice;
+
     @FXML Label lblBasePrice;
     @FXML Label lblTotalPrice;
-    @FXML Label lblMenuItem;
+
     @FXML RadioButton rbAll;
     @FXML RadioButton rbAdd;
     @FXML RadioButton rbExc;
@@ -58,10 +60,10 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
     @FXML
     public void initialize() {
 
-        GridPane.setHalignment(lblMenuItem, HPos.LEFT);
+        GridPane.setHalignment(lblMenuItem, HPos.CENTER);
+        GridPane.setHalignment(lblUnitPrice, HPos.LEFT);
         GridPane.setHalignment(lblStatus, HPos.RIGHT);
-        GridPane.setHalignment(lblQuantity, HPos.LEFT);
-        GridPane.setHalignment(lblMenuItemPrice, HPos.LEFT);
+
         GridPane.setHalignment(lblBasePrice, HPos.RIGHT);
         GridPane.setHalignment(lblTotalPrice, HPos.RIGHT);
 
@@ -137,8 +139,7 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
         if (newItem == null) {
             unsetListView(entryModifiers);
             unsetLabel(lblStatus);
-            unsetLabel(lblQuantity);
-            unsetLabel(lblMenuItemPrice);
+            unsetLabel(lblUnitPrice);
             unsetLabel(lblBasePrice);
             unsetLabel(lblTotalPrice);
             unsetLabel(lblMenuItem);
@@ -173,9 +174,17 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                             newItem.modifierTotalProperty(),
                             (bd1, bd2) -> BigDecimalUtils.asDollars(bd1.add(bd2).max(BigDecimal.ZERO)).toString())
             );
-            setLabel(lblMenuItem, newItem.getMenuItem().nameProperty());
-            setLabel(lblQuantity, newItem.quantityProperty().asString());
-            setLabel(lblMenuItemPrice, newItem.getMenuItem().priceProperty().asString());
+            setLabel(lblMenuItem, Bindings.concat(
+                    newItem.quantityProperty(),
+                    " - ",
+                    newItem.getMenuItem().tagProperty(),
+                    " ",
+                    newItem.getMenuItem().nameProperty()
+            ));
+            setLabel(lblUnitPrice, Bindings.concat(
+                    "Item Price : ",
+                    newItem.getMenuItem().priceProperty().asString()
+            ));
             setLabel(lblTotalPrice, newItem.totalProperty().asString());
             setListView(entryModifiers, newItem.modifiersProperty());
         }
@@ -198,8 +207,7 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
         unsetListView(entryModifiers);
         unsetListView(modifierGroups);
         unsetLabel(lblStatus);
-        unsetLabel(lblQuantity);
-        unsetLabel(lblMenuItemPrice);
+        unsetLabel(lblUnitPrice);
         unsetLabel(lblBasePrice);
         unsetLabel(lblTotalPrice);
         unsetLabel(lblMenuItem);
@@ -236,7 +244,7 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                     App.main.back();
 
                 } else if (!App.employee.hasPermission(Permission.VOID_SALES_ORDER)) {
-                    App.warn.showAndWait("Requires Permissions : [VOID_SALES_ORDER]");
+                    App.notify.showAndWait("Requires Permissions : [VOID_SALES_ORDER]");
 
                 } else {
                     getItem().setStatus(ProductEntryStatus.REQUEST_VOID);
@@ -250,7 +258,7 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                     App.main.back();
 
                 } else {
-                    App.warn.showAndWait("Item can not be held anymore.");
+                    App.notify.showAndWait("Item can not be held anymore.");
                 }
             }))
 
@@ -266,7 +274,7 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                     App.main.back();
 
                 } else if (!App.employee.hasPermission(Permission.VOID_SALES_ORDER)) {
-                    App.warn.showAndWait("Requires Permissions : [VOID_SALES_ORDER]");
+                    App.notify.showAndWait("Requires Permissions : [VOID_SALES_ORDER]");
 
                 } else {
                     getItem().setStatus(ProductEntryStatus.REQUEST_VOID);
@@ -283,7 +291,7 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                     App.main.back();
 
                 } else {
-                    App.warn.showAndWait("Item can not be held anymore.");
+                    App.notify.showAndWait("Item can not be held anymore.");
                 }
             }))
 

@@ -1,4 +1,4 @@
-#gpEntries, #gvPaymentEditor, #paymentWrapper, #gpSalesOrder {
+#gpEntries, #gvPaymentEditor, #paymentWrapper, #gpSalesOrder, #gpChargeEntries, #gpPaymentEntries {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
@@ -8,8 +8,18 @@
     -fx-padding: 0 5px 0 5px;
 }
 
-#gpChargeEntries, #gpPaymentEntries {
-    -fx-border-color: #c01800;
+/******************************************************************
+ *                                                                *
+ * Charges
+ *                                                                *
+ ******************************************************************/
+
+#chargeView {
+    -fx-background-color: #C01800;
+}
+
+#lblChargeTag {
+    -fx-padding: 0 10px 0 10px;
 }
 
 /******************************************************************
@@ -41,6 +51,58 @@
 }
 
 #lblPeTotal {
+    -fx-text-fill: #FFEF0F;
+    -fx-font-weight: bolder;
+    -fx-padding: 0 10px 0 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Charge Entries
+ *                                                                *
+ ******************************************************************/
+
+#chargeEntryView {
+    -fx-background-color: #C01800;
+}
+
+#lblChargeName {
+    -fx-background-color: #A80000;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblChargeStatus {
+    -fx-text-fill: #FFEF0F;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblChargeValue {
+    -fx-text-fill: #FFEF0F;
+    -fx-font-weight: bolder;
+    -fx-padding: 0 10px 0 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Payment Entries
+ *                                                                *
+ ******************************************************************/
+
+#paymentEntryView {
+    -fx-background-color: #C01800;
+}
+
+#lblPaymentType {
+    -fx-background-color: #A80000;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblPaymentStatus {
+    -fx-text-fill: #FFEF0F;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblPaymentAmount {
     -fx-text-fill: #FFEF0F;
     -fx-font-weight: bolder;
     -fx-padding: 0 10px 0 10px;

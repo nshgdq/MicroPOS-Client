@@ -14,7 +14,6 @@ public class Seat {
     public Seat(Seat seat) {
         setId(seat.getId());
         setTag(seat.getTag());
-        setArchived(seat.getArchived());
         setSection(seat.getSection());
         setRow(seat.getRow());
         setCol(seat.getCol());
@@ -28,8 +27,6 @@ public class Seat {
     private ObjectProperty<Long> id = new SimpleObjectProperty<>();
 
     private StringProperty tag = new SimpleStringProperty();
-
-    private BooleanProperty archived = new SimpleBooleanProperty();
 
     private ObjectProperty<Section> section = new SimpleObjectProperty<>();
 
@@ -85,18 +82,6 @@ public class Seat {
 
     public void setTag(String tag) {
         this.tag.set(tag);
-    }
-
-    public boolean getArchived() {
-        return archived.get();
-    }
-
-    public BooleanProperty archivedProperty() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived.set(archived);
     }
 
     public Section getSection() {

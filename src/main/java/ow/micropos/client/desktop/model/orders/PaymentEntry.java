@@ -1,9 +1,6 @@
 package ow.micropos.client.desktop.model.orders;
 
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import ow.micropos.client.desktop.model.enums.PaymentEntryStatus;
 import ow.micropos.client.desktop.model.enums.PaymentEntryType;
@@ -96,42 +93,6 @@ public class PaymentEntry {
 
     public boolean hasType(PaymentEntryType type) {
         return getType() == type;
-    }
-
-    /******************************************************************
-     *                                                                *
-     * Payment Type Text                                              *
-     *                                                                *
-     ******************************************************************/
-
-    private ReadOnlyStringWrapper typeText;
-
-    public ReadOnlyStringProperty typeTextProperty() {
-        if (typeText == null) {
-            typeText = new ReadOnlyStringWrapper();
-            typeText.bind(new StringBinding() {
-                {
-                    bind(type);
-                }
-
-                @Override
-                protected String computeValue() {
-                    switch (type.get()) {
-                        case CASH:
-                            return "Cash";
-                        case CREDIT:
-                            return "Credit";
-                        case CHECK:
-                            return "Check";
-                        case GIFTCARD:
-                            return "Giftcard";
-                        default:
-                            return "No type";
-                    }
-                }
-            });
-        }
-        return typeText.getReadOnlyProperty();
     }
 
 }

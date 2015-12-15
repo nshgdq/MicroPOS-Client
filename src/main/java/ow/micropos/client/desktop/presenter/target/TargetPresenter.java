@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
@@ -22,10 +23,47 @@ import java.util.List;
 
 public class TargetPresenter extends ItemPresenter<Object> {
 
+    @FXML StackPane newOption;
+    @FXML StackPane cancelOption;
+    @FXML StackPane spBack;
+    @FXML StackPane spNext;
     @FXML GridView<SalesOrder> gvOrderGrid;
 
     @FXML
     public void initialize() {
+
+        newOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            if (getItem() == null) {
+                // Do nothing
+
+            } else if (getItem() instanceof Seat) {
+                // Inherit gratuity settings from first sales order
+                BigDecimal gratuityPercent;
+                List<SalesOrder> currentOrders = gvOrderGrid.getItems();
+                if (currentOrders == null || currentOrders.size() <= 0)
+                    gratuityPercent = BigDecimal.ZERO;
+                else
+                    gratuityPercent = currentOrders.get(0).getGratuityPercent();
+
+                App.main.setNextRefresh(App.orderEditorPresenter, SalesOrder.forSeat(
+                        App.employee,
+                        (Seat) getItem(),
+                        App.properties.getBd("tax-percent"),
+                        gratuityPercent
+                ));
+
+            } else if (getItem() instanceof Customer) {
+                App.main.setNextRefresh(App.orderEditorPresenter, SalesOrder.forCustomer(
+                        App.employee,
+                        (Customer) getItem(),
+                        App.properties.getBd("tax-percent")
+                ));
+            }
+        }));
+
+        cancelOption.setOnMouseClicked(event -> Platform.runLater(App.main::backRefresh));
+        spNext.setOnMouseClicked(event -> Platform.runLater(gvOrderGrid::nextPage));
+        spBack.setOnMouseClicked(event -> Platform.runLater(gvOrderGrid::prevPage));
 
         gvOrderGrid.setPage(0);
         gvOrderGrid.setRows(App.properties.getInt("multi-rows"));
@@ -70,11 +108,6 @@ public class TargetPresenter extends ItemPresenter<Object> {
     protected void updateItem(Object currentItem, Object newItem) {}
 
     @Override
-    public ObservableList<Action> menu() {
-        return menu;
-    }
-
-    @Override
     public void dispose() {
 
     }
@@ -85,43 +118,15 @@ public class TargetPresenter extends ItemPresenter<Object> {
      *                                                                           *
      *****************************************************************************/
 
+    @Override
+    public ObservableList<Action> menu() {
+        return menu;
+    }
+
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
-            new Action("New", ActionType.FINISH, event -> Platform.runLater(() -> {
-
-                if (getItem() == null) {
-                    // Do nothing
-
-                } else if (getItem() instanceof Seat) {
-                    // Inherit gratuity settings from first sales order
-                    BigDecimal gratuityPercent;
-                    List<SalesOrder> currentOrders = gvOrderGrid.getItems();
-                    if (currentOrders == null || currentOrders.size() <= 0)
-                        gratuityPercent = BigDecimal.ZERO;
-                    else
-                        gratuityPercent = currentOrders.get(0).getGratuityPercent();
-
-                    App.main.setNextRefresh(App.orderEditorPresenter, SalesOrder.forSeat(
-                            App.employee,
-                            (Seat) getItem(),
-                            App.properties.getBd("tax-percent"),
-                            gratuityPercent
-                    ));
-
-                } else if (getItem() instanceof Customer) {
-                    App.main.setNextRefresh(App.orderEditorPresenter, SalesOrder.forCustomer(
-                            App.employee,
-                            (Customer) getItem(),
-                            App.properties.getBd("tax-percent")
-                    ));
-
-                }
-            })),
-            new Action("Split", ActionType.FINISH, event -> Platform.runLater(() ->
+            new Action("View", ActionType.TAB_SELECT, event -> Platform.runLater(this::refresh)),
+            new Action("Split", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.setNextRefresh(App.movePresenter, gvOrderGrid.getItems())))
-            ,
-            new Action("Cancel", ActionType.FINISH, event -> Platform.runLater(App.main::backRefresh)),
-            new Action("Prev Pg", ActionType.BUTTON, event -> Platform.runLater(gvOrderGrid::prevPage)),
-            new Action("Next Pg", ActionType.BUTTON, event -> Platform.runLater(gvOrderGrid::nextPage))
     );
 
 }

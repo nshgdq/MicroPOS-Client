@@ -48,39 +48,70 @@ public class ManagerPresenter extends Presenter {
      ******************************************************************/
 
     private final ObservableList<Action> managerMenu = FXCollections.observableArrayList(
-            new Action("Shutdown", ActionType.FINISH, event -> Platform.runLater(App::exit)),
-            new Action("Migration", ActionType.FINISH, event -> Platform.runLater(() -> {
-                if (App.apiIsBusy.compareAndSet(false, true)) {
-                    App.api.migrateSalesOrders(new AlertCallback<Integer>() {
-                        @Override
-                        public void onSuccess(Integer aInt, Response response) {
-                            App.warn.showAndWait("Migrated " + aInt + " Sales Orders.");
-                        }
-                    });
-                }
+
+            new Action("Shutdown", ActionType.FINISH, event -> {
+                App.confirm.showAndWait("Exit Application?", App::exit);
+            }),
+
+            new Action("Migration", ActionType.FINISH, event -> {
+                App.confirm.showAndWait("Perform Migration?", () -> {
+                    if (App.apiIsBusy.compareAndSet(false, true)) {
+                        App.api.migrateSalesOrders(new AlertCallback<Integer>() {
+                            @Override
+                            public void onSuccess(Integer aInt, Response response) {
+                                App.notify.showAndWait("Migrated " + aInt + " Sales Orders.");
+                            }
+                        });
+                    }
+                });
+            }),
+            new Action("Close Unpaid", ActionType.FINISH, event -> {
+                App.confirm.showAndWait("Close All Unpaid Orders?", () -> {
+                    if (App.apiIsBusy.compareAndSet(false, true)) {
+                        App.api.closeUnpaidSalesOrders(new AlertCallback<List<Long>>() {
+                            @Override
+                            public void onSuccess(List<Long> longs, Response response) {
+                                App.notify.showAndWait("Closed Orders : " + longs.toString());
+                            }
+                        });
+                    }
+                });
+            }),
+            new Action("Current Report", ActionType.FINISH, event -> {
+                App.confirm.showAndWait("Generate Current Report?", () -> {
+                    if (App.apiIsBusy.compareAndSet(false, true)) {
+                        App.api.getCurrentReport(new AlertCallback<CurrentSalesReport>() {
+                            @Override
+                            public void onSuccess(CurrentSalesReport report, Response response) {
+                                App.printer.printReport(report);
+                            }
+                        });
+                    }
+                });
+            }),
+            new Action("Customers", ActionType.BUTTON, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.dbCustomerPresenter);
             })),
-            new Action("Close Unpaid", ActionType.FINISH, event -> Platform.runLater(() -> {
-                if (App.apiIsBusy.compareAndSet(false, true)) {
-                    App.api.closeUnpaidSalesOrders(new AlertCallback<List<Long>>() {
-                        @Override
-                        public void onSuccess(List<Long> longs, Response response) {
-                            App.warn.showAndWait("Closed Orders : " + longs.toString());
-                        }
-                    });
-                }
-            })),
-            new Action("Current Report", ActionType.FINISH, event -> Platform.runLater(() -> {
-                if (App.apiIsBusy.compareAndSet(false, true)) {
-                    App.api.getCurrentReport(new AlertCallback<CurrentSalesReport>() {
-                        @Override
-                        public void onSuccess(CurrentSalesReport report, Response response) {
-                            App.printer.printReport(report);
-                        }
-                    });
-                }
-            })),
-            new Action("Edit Menu Items", ActionType.FINISH, event -> Platform.runLater(() -> {
+            new Action("Menu Items", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 App.main.nextRefresh(App.dbMenuItemsPresenter);
+            })),
+            new Action("Categories", ActionType.BUTTON, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.dbCategoriesPresenter);
+            })),
+            new Action("Modifiers", ActionType.BUTTON, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.dbModifierPresenter);
+            })),
+            new Action("Modifier Groups", ActionType.BUTTON, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.dbModifierGroupPresenter);
+            })),
+            new Action("Sections", ActionType.BUTTON, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.dbSectionPresenter);
+            })),
+            new Action("Seats", ActionType.BUTTON, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.dbSeatPresenter);
+            })),
+            new Action("Charges", ActionType.BUTTON, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.dbChargePresenter);
             }))
     );
 

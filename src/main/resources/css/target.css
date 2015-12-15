@@ -1,7 +1,19 @@
-#gvOrderGrid {
-    -fx-padding: 10px;
+#targetView, #gvOrderGrid, #vbPage {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
+}
+
+#vbOptions {
+    -fx-spacing: 10px;
+}
+
+#newOption, #cancelOption, #backButton, #nextButton {
+    -fx-background-color: #C01800;
+}
+
+#newText, #cancelText, #backText, #nextText {
+    -fx-font-weight: bolder;
+    -fx-padding: 20px;
 }
 
 #salesOrderView {

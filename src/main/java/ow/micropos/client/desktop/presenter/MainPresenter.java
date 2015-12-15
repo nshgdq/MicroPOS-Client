@@ -69,6 +69,11 @@ public class MainPresenter extends Presenter {
         backStack.clear();
     }
 
+    @Override
+    public void refresh() {
+        backStack.peek().refresh();
+    }
+
     public void menuRefresh() {
         Presenter presenter = backStack.peek();
         gvVisibleMenu.setItems(FXCollections.emptyObservableList());

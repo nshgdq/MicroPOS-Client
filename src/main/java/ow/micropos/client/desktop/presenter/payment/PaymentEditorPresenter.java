@@ -80,9 +80,6 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     @FXML
     public void initialize() {
 
-        //GridPane.setHalignment(lblPaidAmount, HPos.RIGHT);
-        //GridPane.setHalignment(lblChangeAmount, HPos.RIGHT);
-
         GridPane.setHalignment(info, HPos.CENTER);
         GridPane.setHalignment(employee, HPos.LEFT);
         GridPane.setHalignment(status, HPos.RIGHT);
@@ -102,6 +99,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
 
         lvChargeEntries.setCellFactory(param -> {
             ViewChargeEntry presenter = Presenter.load("/view/pay/view_charge_entry.fxml");
+            presenter.fixWidth(lvChargeEntries);
             presenter.onClick(event -> Platform.runLater(() -> {
                 ChargeEntry ce = presenter.getItem();
 
@@ -121,6 +119,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
 
         lvPaymentEntries.setCellFactory(param -> {
             ViewPaymentEntry presenter = Presenter.load("/view/pay/view_payment_entry.fxml");
+            presenter.fixWidth(lvPaymentEntries);
             presenter.onClick(event -> Platform.runLater(() -> {
                 PaymentEntry pe = presenter.getItem();
 
@@ -140,6 +139,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
 
         lvCharges.setCellFactory(param -> {
             ViewCharge presenter = Presenter.load("/view/pay/view_charge.fxml");
+            presenter.fixWidth(lvCharges);
             presenter.onClick(event -> Platform.runLater(() -> {
                 ChargeEntry entry = new ChargeEntry(presenter.getItem());
                 lvChargeEntries.getItems().add(entry);
@@ -255,7 +255,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             getItem().paymentEntriesProperty().add(payment);
             rawAmount.set("");
         } else {
-            App.warn.showAndWait("You must enter a payment amount.");
+            App.notify.showAndWait("You must enter a payment amount.");
         }
 
         if (getItem().changeProperty().get().compareTo(BigDecimal.ZERO) >= 0) {
@@ -314,7 +314,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
 
     private Callback<Long> onPost = (AlertCallback<Long>) (aLong, response) -> Platform.runLater(() -> {
         App.main.backRefresh();
-        App.warn.showAndWait("Change Due : " + getItem().changeProperty().get().toString());
+        App.notify.showAndWait("Change Due : " + getItem().changeProperty().get().toString());
     });
 
     /*****************************************************************************
@@ -327,11 +327,11 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
 
             new Action("Send", ActionType.FINISH, event -> {
                 if (getItem().getProductEntries().isEmpty()) {
-                    Platform.runLater(() -> App.warn.showAndWait("Nothing to send."));
+                    Platform.runLater(() -> App.notify.showAndWait("Nothing to send."));
                 } else if (App.apiIsBusy.compareAndSet(false, true)) {
                     App.api.postSalesOrder(getItem(), (AlertCallback<Long>) (aLong, response) -> {
                         App.main.backRefresh();
-                        App.warn.showAndWait("Sales Order " + aLong);
+                        App.notify.showAndWait("Sales Order " + aLong);
                     });
                 }
             }),
@@ -341,7 +341,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
                     App.main.backRefresh();
                     App.printer.printCheck(getItem());
                 } else {
-                    App.warn.showAndWait("Order must be sent before printing.");
+                    App.notify.showAndWait("Order must be sent before printing.");
                 }
             })),
 

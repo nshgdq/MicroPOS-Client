@@ -25,11 +25,9 @@ public class Employee {
 
     private StringProperty lastName = new SimpleStringProperty();
 
+    private StringProperty pin = new SimpleStringProperty();
+
     private ListProperty<Position> positions = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-    private IntegerProperty pin = new SimpleIntegerProperty();
-
-    private BooleanProperty archived = new SimpleBooleanProperty();
 
     private ListProperty<SalesOrder> salesOrders = new SimpleListProperty<>(FXCollections.observableArrayList());
 
@@ -81,29 +79,16 @@ public class Employee {
         this.positions.setAll(positions);
     }
 
-    public int getPin() {
+    public String getPin() {
         return pin.get();
     }
 
-    public IntegerProperty pinProperty() {
+    public StringProperty pinProperty() {
         return pin;
     }
 
-    public void setPin(int pin) {
+    public void setPin(String pin) {
         this.pin.set(pin);
-    }
-
-
-    public boolean getArchived() {
-        return archived.get();
-    }
-
-    public BooleanProperty archivedProperty() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived.set(archived);
     }
 
     public ListProperty<SalesOrder> salesOrdersProperty() {

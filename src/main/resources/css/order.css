@@ -1,4 +1,4 @@
-#editorWrapper, #gpMenu, #gpSalesOrder {
+#editorWrapper, #gpMenu, #gpSalesOrder, #gpCategories, #gpMenuItems, #paging {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
@@ -8,19 +8,24 @@
     -fx-padding: 0 5px 0 5px;
 }
 
-#backText {
-    -fx-font-weight: bolder;
-    -fx-padding: 40px;
+#vbOptions {
+    -fx-spacing: 10px;
 }
 
-#backButton {
+#sendOption, #backButton, #gratuityOption, #voidOption, #cancelOption, #printOption, #nextButton {
     -fx-background-color: #C01800;
 }
 
-#gpCategories, #gpMenuItems {
-    -fx-hgap: 10px;
-    -fx-vgap: 10px;
+#backText, #nextText, #sendText, #voidText, #printText, #cancelText, #gratuityText {
+    -fx-font-weight: bolder;
+    -fx-padding: 20px;
 }
+
+/******************************************************************
+ *                                                                *
+ * Categories and Menu Items
+ *                                                                *
+ ******************************************************************/
 
 #menuItemView, #categoryView {
     -fx-background-color: #C01800;

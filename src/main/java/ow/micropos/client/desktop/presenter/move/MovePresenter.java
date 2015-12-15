@@ -47,7 +47,7 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
 
                 if (mode.get() == Mode.REMOVE) {
                     if (order.getId() != null || !order.getProductEntries().isEmpty() || !entriesContext.isEmpty())
-                        App.warn.showAndWait("This order can not be removed.");
+                        App.notify.showAndWait("This order can not be removed.");
                     else
                         gvOrderGrid.getItems().remove(order);
                 } else if (mode.get() == Mode.MOVE) {
@@ -149,7 +149,7 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
             new Action("Send", ActionType.FINISH, event -> {
 
                 if (!entriesContext.isEmpty()) {
-                    Platform.runLater(() -> App.warn.showAndWait("There are still unassigned entries."));
+                    Platform.runLater(() -> App.notify.showAndWait("There are still unassigned entries."));
 
                 } else if (App.apiIsBusy.compareAndSet(false, true)) {
 
@@ -160,7 +160,7 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
 
                     App.api.postSalesOrders(nonEmpty, (AlertCallback<List<Long>>) (longs, response) -> {
                         App.main.backRefresh();
-                        App.warn.showAndWait("Sales Orders " + longs.toString());
+                        App.notify.showAndWait("Sales Orders " + longs.toString());
                     });
                 }
             }),

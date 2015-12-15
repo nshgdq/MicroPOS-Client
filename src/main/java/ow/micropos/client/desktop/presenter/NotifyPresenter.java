@@ -2,9 +2,9 @@ package ow.micropos.client.desktop.presenter;
 
 import javafx.scene.control.Alert;
 
-public class ErrorPresenter extends Alert {
+public class NotifyPresenter extends Alert {
 
-    public ErrorPresenter() {
+    public NotifyPresenter() {
         super(AlertType.WARNING);
     }
 
@@ -13,7 +13,7 @@ public class ErrorPresenter extends Alert {
     }
 
     public void showAndWait(String header, String content) {
-        showAndWait("ERROR", header, content);
+        showAndWait("ALERT", header, content);
     }
 
     public void showAndWait(String title, String header, String content) {

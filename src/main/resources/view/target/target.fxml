@@ -1,10 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import email.com.gmail.ttsai0509.javafx.control.GridView?>
-<GridView xmlns="http://javafx.com/javafx/8"
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
           xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ow.micropos.client.desktop.presenter.target.TargetPresenter"
-          fx:id="gvOrderGrid"
+          id="targetView"
           stylesheets="/css/target.css">
 
-</GridView>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="25"/>
+        <ColumnConstraints percentWidth="57"/>
+        <ColumnConstraints percentWidth="18"/>
+    </columnConstraints>
+
+    <GridView fx:id="gvOrderGrid"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="0"
+              GridPane.columnSpan="2"/>
+
+    <VBox id="vbOptions"
+          GridPane.rowIndex="0"
+          GridPane.columnIndex="2">
+
+        <StackPane fx:id="newOption">
+            <Label text="New"
+                   id="newText"/>
+        </StackPane>
+
+        <StackPane fx:id="cancelOption">
+            <Label text="Cancel"
+                   id="cancelText"/>
+        </StackPane>
+
+        <GridPane id="vbPage">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+
+            <StackPane fx:id="spBack"
+                       id="backButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0">
+                <Label text="&lt;"
+                       id="backText"/>
+            </StackPane>
+
+            <StackPane fx:id="spNext"
+                       id="nextButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="1">
+                <Label text="&gt;"
+                       id="nextText"/>
+            </StackPane>
+
+        </GridPane>
+    </VBox>
+
+
+</GridPane>

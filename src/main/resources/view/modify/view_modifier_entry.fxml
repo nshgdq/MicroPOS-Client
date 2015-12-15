@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<VBox fx:controller="ow.micropos.client.desktop.presenter.modify.ViewModifier"
-      xmlns="http://javafx.com/javafx/8.0.40"
-      xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.modify.ViewModifierEntry"
+          xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1"
+          id="modifierEntryView">
 
-    <Label fx:id="lblTag"/>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
 
-    <Label fx:id="lblName"/>
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="NEVER"/>
+    </columnConstraints>
 
-    <Label fx:id="lblPrice"/>
+    <Label fx:id="lblName"
+           GridPane.rowIndex="0"
+           GridPane.columnIndex="0"/>
 
-</VBox>
+    <Label fx:id="lblPrice"
+           GridPane.rowIndex="0"
+           GridPane.columnIndex="1"/>
+
+</GridPane>

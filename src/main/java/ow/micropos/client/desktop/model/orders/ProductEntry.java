@@ -12,7 +12,6 @@ import ow.micropos.client.desktop.model.menu.MenuItem;
 import ow.micropos.client.desktop.model.menu.Modifier;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,19 +25,15 @@ public class ProductEntry {
         setQuantity(productEntry.getQuantity());
         setMenuItem(productEntry.getMenuItem());
         setModifiers(productEntry.getModifiers());
-        setDate(productEntry.getDate());
     }
 
     public ProductEntry(MenuItem menuItem, BigDecimal quantity) {
         setMenuItem(menuItem);
         setQuantity(quantity);
         setStatus(ProductEntryStatus.REQUEST_SENT);
-        setDate(new Date());
     }
 
     private ObjectProperty<Long> id = new SimpleObjectProperty<>();
-
-    private ObjectProperty<Date> date = new SimpleObjectProperty<>();
 
     private ObjectProperty<ProductEntryStatus> status = new SimpleObjectProperty<>();
 
@@ -60,18 +55,6 @@ public class ProductEntry {
 
     public void setId(Long id) {
         this.id.set(id);
-    }
-
-    public Date getDate() {
-        return date.get();
-    }
-
-    public ObjectProperty<Date> dateProperty() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date.set(date);
     }
 
     public ProductEntryStatus getStatus() {
@@ -184,7 +167,9 @@ public class ProductEntry {
                 protected String computeValue() {
                     StringBuilder sb = new StringBuilder("");
                     for (Modifier modifier : modifiers)
-                        sb.append(modifier.getName())
+                        sb.append(modifier.getTag())
+                                .append(" ")
+                                .append(modifier.getName())
                                 .append(" ")
                                 .append(modifier.getPrice())
                                 .append('\n');

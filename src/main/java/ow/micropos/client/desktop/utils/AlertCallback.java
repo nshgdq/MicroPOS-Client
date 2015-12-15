@@ -30,13 +30,11 @@ public interface AlertCallback<T> extends Callback<T> {
     @Override
     public default void failure(RetrofitError error) {
         try {
-            System.out.println(error.getMessage());
             ErrorInfo info = (ErrorInfo) error.getBodyAs(ErrorInfo.class);
             final String status = info.getStatus();
             final String msg = info.getMessage();
 
             Platform.runLater(() -> {
-                System.out.println("AlertCallback Failure");
                 App.error.showAndWait(status, msg);
 
                 onFailure(error);

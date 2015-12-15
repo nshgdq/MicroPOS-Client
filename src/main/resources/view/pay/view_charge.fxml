@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<VBox xmlns="http://javafx.com/javafx/8"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ow.micropos.client.desktop.presenter.payment.ViewCharge">
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ow.micropos.client.desktop.presenter.payment.ViewCharge"
+          id="chargeView">
 
-    <Label fx:id="lblChargeName"/>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
 
-</VBox>
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <Label fx:id="lblChargeTag"
+           id="lblChargeTag"
+           GridPane.rowIndex="0"
+           GridPane.columnIndex="0"/>
+
+</GridPane>

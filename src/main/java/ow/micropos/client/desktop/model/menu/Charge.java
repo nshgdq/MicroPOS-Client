@@ -7,7 +7,6 @@ import ow.micropos.client.desktop.model.enums.ChargeType;
 import ow.micropos.client.desktop.model.orders.ChargeEntry;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 public class Charge {
@@ -15,12 +14,6 @@ public class Charge {
     public Charge() {}
 
     private ObjectProperty<Long> id = new SimpleObjectProperty<>();
-
-    private ObjectProperty<Date> date = new SimpleObjectProperty<>();
-
-    private BooleanProperty archived = new SimpleBooleanProperty();
-
-    private ObjectProperty<Date> archiveDate = new SimpleObjectProperty<>();
 
     private StringProperty name = new SimpleStringProperty();
 
@@ -42,42 +35,6 @@ public class Charge {
 
     public void setId(Long id) {
         this.id.set(id);
-    }
-
-    public Date getDate() {
-        return date.get();
-    }
-
-    public ObjectProperty<Date> dateProperty() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date.set(date);
-    }
-
-    public boolean getArchived() {
-        return archived.get();
-    }
-
-    public BooleanProperty archivedProperty() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived.set(archived);
-    }
-
-    public Date getArchiveDate() {
-        return archiveDate.get();
-    }
-
-    public ObjectProperty<Date> archiveDateProperty() {
-        return archiveDate;
-    }
-
-    public void setArchiveDate(Date archiveDate) {
-        this.archiveDate.set(archiveDate);
     }
 
     public String getName() {

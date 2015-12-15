@@ -1,21 +1,27 @@
-#editorWrapper {
-    -fx-padding: 10px;
-}
-
-#modifierGroupView, #modifierOptionsView {
-    -fx-background-color: #C01800;
-    -fx-alignment: center-left;
-}
-
-#modifiersView {
-    -fx-padding: 20px;
+#editorWrapper, #gpProductEntries, #gpEditor, #modifiersView {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
 
+#gpTop, #gpBottom {
+    -fx-border-color: #c01800;
+    -fx-padding: 0 5px 0 5px;
+}
+
+#vbModifierType {
+    -fx-border-color: #c01800;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+#modifierEntryView, #modifierGroupView, #modifierOptionsView {
+    -fx-background-color: #C01800;
+    -fx-alignment: center-left;
+}
+
 #modifierGroupTag {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #A80000;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 32px;
     -fx-font-weight: bolder;

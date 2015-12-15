@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 public class MenuItem {
@@ -20,12 +19,6 @@ public class MenuItem {
     private StringProperty tag = new SimpleStringProperty();
 
     private ObjectProperty<BigDecimal> price = new SimpleObjectProperty<>();
-
-    private ObjectProperty<Date> date = new SimpleObjectProperty<>();
-
-    private BooleanProperty archived = new SimpleBooleanProperty();
-
-    private ObjectProperty<Date> archiveDate = new SimpleObjectProperty<>();
 
     private ObjectProperty<Category> category = new SimpleObjectProperty<>();
 
@@ -79,42 +72,6 @@ public class MenuItem {
 
     public void setPrice(BigDecimal price) {
         this.price.set(price);
-    }
-
-    public Date getDate() {
-        return date.get();
-    }
-
-    public ObjectProperty<Date> dateProperty() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date.set(date);
-    }
-
-    public boolean getArchived() {
-        return archived.get();
-    }
-
-    public BooleanProperty archivedProperty() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived.set(archived);
-    }
-
-    public Date getArchiveDate() {
-        return archiveDate.get();
-    }
-
-    public ObjectProperty<Date> archiveDateProperty() {
-        return archiveDate;
-    }
-
-    public void setArchiveDate(Date archiveDate) {
-        this.archiveDate.set(archiveDate);
     }
 
     public Category getCategory() {

@@ -7,21 +7,17 @@ import ow.micropos.client.desktop.model.enums.ChargeType;
 import ow.micropos.client.desktop.model.menu.Charge;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class ChargeEntry {
 
     public ChargeEntry() {}
 
     public ChargeEntry(Charge charge) {
-        setDate(new Date());
         setCharge(charge);
         setStatus(ChargeEntryStatus.REQUEST_APPLY);
     }
 
     private ObjectProperty<Long> id = new SimpleObjectProperty<>();
-
-    private ObjectProperty<Date> date = new SimpleObjectProperty<>();
 
     private ObjectProperty<Charge> charge = new SimpleObjectProperty<>();
 
@@ -39,18 +35,6 @@ public class ChargeEntry {
 
     public void setId(Long id) {
         this.id.set(id);
-    }
-
-    public Date getDate() {
-        return date.get();
-    }
-
-    public ObjectProperty<Date> dateProperty() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date.set(date);
     }
 
     public Charge getCharge() {

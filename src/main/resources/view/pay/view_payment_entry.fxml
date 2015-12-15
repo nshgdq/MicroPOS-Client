@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<VBox fx:controller="ow.micropos.client.desktop.presenter.payment.ViewPaymentEntry"
-      xmlns="http://javafx.com/javafx/8.0.40"
-      xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.payment.ViewPaymentEntry"
+          xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1"
+          id="paymentEntryView">
 
-    <Label fx:id="lblType"/>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
 
-    <Label fx:id="lblAmount"/>
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="NEVER"/>
+    </columnConstraints>
 
-</VBox>
+    <Label fx:id="lblPaymentType"
+           id="lblPaymentType"
+           GridPane.rowIndex="0"
+           GridPane.columnIndex="0"
+           GridPane.columnSpan="2"/>
+
+    <Label fx:id="lblPaymentStatus"
+           id="lblPaymentStatus"
+           GridPane.rowIndex="1"
+           GridPane.columnIndex="0"/>
+
+    <Label fx:id="lblPaymentAmount"
+           id="lblPaymentAmount"
+           GridPane.rowIndex="1"
+           GridPane.columnIndex="1"/>
+
+</GridPane>

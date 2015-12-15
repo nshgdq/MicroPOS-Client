@@ -1,10 +1,12 @@
 package ow.micropos.client.desktop.presenter.payment;
 
+import email.com.gmail.ttsai0509.javafx.ListViewUtils;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import ow.micropos.client.desktop.model.enums.ChargeType;
 import ow.micropos.client.desktop.model.menu.Charge;
 import ow.micropos.client.desktop.model.orders.ChargeEntry;
@@ -26,9 +28,7 @@ public class ViewChargeEntry extends ItemPresenter<ChargeEntry> {
             if (charge != null) {
                 setLabel(lblChargeName, charge.nameProperty());
                 setLabel(lblChargeValue, new StringBinding() {
-                    {
-                        bind(charge.amountProperty(), charge.typeProperty());
-                    }
+                    {bind(charge.amountProperty(), charge.typeProperty());}
 
                     @Override
                     protected String computeValue() {
@@ -67,5 +67,15 @@ public class ViewChargeEntry extends ItemPresenter<ChargeEntry> {
     public void dispose() {
         unsetLabel(lblChargeName);
         getView().setOnMouseClicked(null);
+    }
+
+    /******************************************************************
+     *                                                                *
+     * Fit width of label to width of ListView
+     *                                                                *
+     ******************************************************************/
+
+    public final void fixWidth(ListView<?> lv) {
+        ListViewUtils.bindFitToListView(lblChargeName, lv);
     }
 }

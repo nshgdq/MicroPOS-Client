@@ -16,11 +16,11 @@ import org.comtel2000.keyboard.robot.FXRobotHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ow.micropos.client.desktop.model.employee.Employee;
-import ow.micropos.client.desktop.presenter.ErrorPresenter;
+import ow.micropos.client.desktop.model.enums.Permission;
+import ow.micropos.client.desktop.presenter.ConfirmPresenter;
 import ow.micropos.client.desktop.presenter.MainPresenter;
-import ow.micropos.client.desktop.presenter.PopupPresenter;
-import ow.micropos.client.desktop.presenter.WarnPresenter;
-import ow.micropos.client.desktop.presenter.database.DbMenuItemsPresenter;
+import ow.micropos.client.desktop.presenter.NotifyPresenter;
+import ow.micropos.client.desktop.presenter.database.*;
 import ow.micropos.client.desktop.presenter.dinein.DineInPresenter;
 import ow.micropos.client.desktop.presenter.finder.FinderPresenter;
 import ow.micropos.client.desktop.presenter.login.LoginPresenter;
@@ -65,9 +65,8 @@ public class App extends Application implements VkProperties {
 
     // StageScene Presenters
     public static MainPresenter main;
-    public static PopupPresenter popup;
-    public static WarnPresenter warn;
-    public static ErrorPresenter error;
+    public static NotifyPresenter notify;
+    public static ConfirmPresenter confirm;
 
     // Content Presenter
     public static Presenter homePresenter;
@@ -84,6 +83,13 @@ public class App extends Application implements VkProperties {
 
     // Database Presenters
     public static DbMenuItemsPresenter dbMenuItemsPresenter;
+    public static DbCategoryPresenter dbCategoriesPresenter;
+    public static DbSectionPresenter dbSectionPresenter;
+    public static DbSeatPresenter dbSeatPresenter;
+    public static DbModifierGroupPresenter dbModifierGroupPresenter;
+    public static DbModifierPresenter dbModifierPresenter;
+    public static DbChargePresenter dbChargePresenter;
+    public static DbCustomerPresenter dbCustomerPresenter;
 
     /******************************************************************
      *                                                                *
@@ -104,8 +110,12 @@ public class App extends Application implements VkProperties {
     }
 
     public static void exit() {
-        Platform.exit();
-        System.exit(0);
+        if (employee.hasPermission(Permission.CLOSE_CLIENT)) {
+            Platform.exit();
+            System.exit(0);
+        } else {
+            App.notify.showAndWait("Permission Required [CLOSE_CLIENT]");
+        }
     }
 
     /******************************************************************
@@ -146,7 +156,7 @@ public class App extends Application implements VkProperties {
                 .setEndpoint(server)
                 .setRequestInterceptor(request -> {
                     if (employee != null)
-                        request.addHeader(properties.getStr("header"), String.valueOf(employee.getPin()));
+                        request.addHeader(properties.getStr("header"), employee.getPin());
                 })
                 .build()
                 .create(AppApi.class);
@@ -185,8 +195,8 @@ public class App extends Application implements VkProperties {
         secondary = new StageScene(sConfig);
 
         main = Presenter.load("/view/main.fxml");
-        warn = new WarnPresenter();
-        error = new ErrorPresenter();
+        notify = new NotifyPresenter();
+        confirm = new ConfirmPresenter();
 
         loginPresenter = Presenter.load("/view/login/login.fxml");
         managerPresenter = Presenter.load("/view/manager/manager.fxml");
@@ -199,7 +209,14 @@ public class App extends Application implements VkProperties {
         targetPresenter = Presenter.load("/view/target/target.fxml");
         movePresenter = Presenter.load("/view/move/move.fxml");
 
-        dbMenuItemsPresenter = Presenter.load("/view/database/table_menu_items.fxml");
+        dbMenuItemsPresenter = new DbMenuItemsPresenter();
+        dbCategoriesPresenter = new DbCategoryPresenter();
+        dbModifierGroupPresenter = new DbModifierGroupPresenter();
+        dbModifierPresenter = new DbModifierPresenter();
+        dbSeatPresenter = new DbSeatPresenter();
+        dbSectionPresenter = new DbSectionPresenter();
+        dbChargePresenter = new DbChargePresenter();
+        dbCustomerPresenter = new DbCustomerPresenter();
 
         homePresenter = getHomePresenter(properties.getStr("home"));
 

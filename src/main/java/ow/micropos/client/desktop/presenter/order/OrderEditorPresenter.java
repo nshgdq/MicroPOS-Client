@@ -32,8 +32,14 @@ import java.util.List;
 
 public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
 
+    @FXML StackPane sendOption;
+    @FXML StackPane backButton;
+    @FXML StackPane gratuityOption;
+    @FXML StackPane voidOption;
+    @FXML StackPane cancelOption;
+    @FXML StackPane printOption;
+    @FXML StackPane nextButton;
     @FXML Label time;
-    @FXML StackPane spBack;
     @FXML StackPane spItems;
     @FXML GridView<Category> gvCategories;
     @FXML GridView<MenuItem> gvMenuItems;
@@ -65,7 +71,62 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         GridPane.setHalignment(taxTotal, HPos.RIGHT);
         GridPane.setHalignment(grandTotal, HPos.RIGHT);
 
-        spBack.setOnMouseClicked(event -> showCategories());
+        backButton.setOnMouseClicked(event -> Platform.runLater(this::showCategories));
+
+        cancelOption.setOnMouseClicked(event -> Platform.runLater(App.main::backRefresh));
+
+        sendOption.setOnMouseClicked(event -> {
+            if (getItem().getProductEntries().isEmpty()) {
+                Platform.runLater(() -> App.notify.showAndWait("Nothing to send."));
+            } else if (App.apiIsBusy.compareAndSet(false, true)) {
+                App.api.postSalesOrder(getItem(), (AlertCallback<Long>) (aLong, response) -> {
+                    Platform.runLater(() -> {
+                        App.main.backRefresh();
+                        App.notify.showAndWait("Sales Order " + aLong);
+                    });
+                });
+            }
+        });
+
+        gratuityOption.setOnMouseClicked(event -> {
+            if (getItem().canHaveGratuity() && !getItem().hasGratuity()) {
+                getItem().setGratuityPercent(App.properties.getBd("gratuity-percent"));
+            } else {
+                getItem().setGratuityPercent(BigDecimal.ZERO);
+            }
+        });
+
+        voidOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            if (App.apiIsBusy.compareAndSet(false, true)) {
+
+                SalesOrderStatus prevStatus = getItem().getStatus();
+                getItem().setStatus(SalesOrderStatus.REQUEST_VOID);
+
+                App.api.postSalesOrder(getItem(), new AlertCallback<Long>() {
+                    @Override
+                    public void onSuccess(Long aLong, Response response) {
+                        Platform.runLater(() -> {
+                            App.main.backRefresh();
+                            App.notify.showAndWait("Sales Order " + aLong + " Voided.");
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(RetrofitError error) {
+                        getItem().setStatus(prevStatus);
+                    }
+                });
+            }
+        }));
+
+        printOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            if (getItem().canPrint()) {
+                App.main.backRefresh();
+                App.printer.printCheck(getItem());
+            } else {
+                App.notify.showAndWait("Changes must be sent before printing.");
+            }
+        }));
 
         gvCategories.setPage(0);
         gvCategories.setRows(App.properties.getInt("order-category-rows"));
@@ -147,13 +208,6 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             setLabel(taxTotal, newItem.taxTotalProperty().asString());
             setListView(orderEntries, newItem.productEntriesProperty());
 
-            if (newItem.canHaveGratuity()) {
-                if (!menu.contains(gratuityToggle))
-                    menu.add(gratuityToggle);
-            } else {
-                if (menu.contains(gratuityToggle))
-                    menu.remove(gratuityToggle);
-            }
         }
     }
 
@@ -169,11 +223,6 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
                 showCategories();
             }
         });
-    }
-
-    @Override
-    public ObservableList<Action> menu() {
-        return menu;
     }
 
     @Override
@@ -198,77 +247,26 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
      *                                                                           *
      *****************************************************************************/
 
-    private final Action gratuityToggle = new Action("Gratuity", ActionType.BUTTON, event ->
-            Platform.runLater(() -> {
-                if (!getItem().hasGratuity()) {
-                    getItem().setGratuityPercent(App.properties.getBd("gratuity-percent"));
-                } else {
-                    getItem().setGratuityPercent(BigDecimal.ZERO);
-                }
-            })
-    );
+    @Override
+    public ObservableList<Action> menu() {
+        return menu;
+    }
 
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
-
-            new Action("Send", ActionType.FINISH, event -> {
-                if (getItem().getProductEntries().isEmpty()) {
-                    Platform.runLater(() -> App.warn.showAndWait("Nothing to send."));
-                } else if (App.apiIsBusy.compareAndSet(false, true)) {
-                    App.api.postSalesOrder(getItem(), (AlertCallback<Long>) (aLong, response) -> {
-                        Platform.runLater(() -> {
-                            App.main.backRefresh();
-                            App.warn.showAndWait("Sales Order " + aLong);
-                        });
-                    });
-                }
-            }),
-            new Action("Print", ActionType.FINISH, event -> Platform.runLater(() -> {
-                if (getItem().canPrint()) {
-                    App.main.backRefresh();
-                    App.printer.printCheck(getItem());
-                } else {
-                    App.warn.showAndWait("Changes must be sent before printing.");
-                }
-            })),
-            new Action("Cancel", ActionType.FINISH, event -> Platform.runLater(App.main::backRefresh)),
             new Action("Order", ActionType.TAB_SELECT, event -> Platform.runLater(() ->
                             App.main.setSwapRefresh(App.orderEditorPresenter, getItem())
             )),
             new Action("Pay", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                             App.main.setSwapRefresh(App.paymentEditorPresenter, getItem())
-            )),
-            new Action("Void", ActionType.FINISH, event -> Platform.runLater(() -> {
-                if (App.apiIsBusy.compareAndSet(false, true)) {
-
-                    SalesOrderStatus prevStatus = getItem().getStatus();
-                    getItem().setStatus(SalesOrderStatus.REQUEST_VOID);
-
-                    App.api.postSalesOrder(getItem(), new AlertCallback<Long>() {
-                        @Override
-                        public void onSuccess(Long aLong, Response response) {
-                            Platform.runLater(() -> {
-                                App.main.backRefresh();
-                                App.warn.showAndWait("Sales Order " + aLong + " Voided.");
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(RetrofitError error) {
-                            getItem().setStatus(prevStatus);
-                        }
-                    });
-                }
-            }))
+            ))
     );
 
     private void showCategories() {
-        spBack.setVisible(false);
         gvMenuItems.setItems(FXCollections.emptyObservableList());
         spItems.getChildren().setAll(gvCategories);
     }
 
     private void showMenuItems(Category category) {
-        spBack.setVisible(true);
         gvMenuItems.setItems(category.getMenuItems());
         spItems.getChildren().setAll(gvMenuItems);
     }

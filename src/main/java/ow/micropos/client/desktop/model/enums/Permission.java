@@ -3,6 +3,8 @@ package ow.micropos.client.desktop.model.enums;
 
 public enum Permission {
 
+    CLOSE_CLIENT,
+
     GET_EMPLOYEES,
     GET_CUSTOMERS,
     GET_SECTIONS,
@@ -46,7 +48,17 @@ public enum Permission {
     MIGRATION,
     GET_RECORDS,
     SIMPLE_REPORT,
-    CURRENT_REPORT
+    CURRENT_REPORT,
 
+    DB_MENU_ITEMS,
+    DB_CATEGORIES,
+    DB_MODIFIER_GROUPS,
+    DB_MODIFIERS,
+    DB_EMPLOYEES,
+    DB_POSITIONS,
+    DB_SEATS,
+    DB_SECTIONS,
+    DB_CUSTOMERS,
+    DB_CHARGES
 
 }
