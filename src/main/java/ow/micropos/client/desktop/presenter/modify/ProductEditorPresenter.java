@@ -18,15 +18,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import org.fxmisc.easybind.EasyBind;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.Action;
+import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.ModifierType;
 import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
 import ow.micropos.client.desktop.model.menu.Modifier;
 import ow.micropos.client.desktop.model.menu.ModifierGroup;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
-import ow.micropos.client.desktop.utils.Action;
-import ow.micropos.client.desktop.utils.ActionType;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.client.Response;
 
 import java.math.BigDecimal;
@@ -196,6 +196,8 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
             App.api.getModifierGroups(new AlertCallback<List<ModifierGroup>>() {
                 @Override
                 public void onSuccess(List<ModifierGroup> mgList, Response response) {
+                    mgList.sort((o1, o2) -> o1.getWeight() - o2.getWeight());
+                    mgList.forEach(mg -> mg.getModifiers().sort((o1, o2) -> o1.getWeight() - o2.getWeight()));
                     setListView(modifierGroups, FXCollections.observableList(mgList));
                 }
             });

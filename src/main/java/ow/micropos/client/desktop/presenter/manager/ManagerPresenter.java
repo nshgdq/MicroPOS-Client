@@ -7,13 +7,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.Action;
+import ow.micropos.client.desktop.common.ActionLabel;
+import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.report.CurrentSalesReport;
-import ow.micropos.client.desktop.utils.Action;
-import ow.micropos.client.desktop.utils.ActionLabel;
-import ow.micropos.client.desktop.utils.ActionType;
-import ow.micropos.client.desktop.utils.AlertCallback;
+import ow.micropos.client.desktop.model.report.DaySalesReport;
 import retrofit.client.Response;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class ManagerPresenter extends Presenter {
@@ -22,13 +24,11 @@ public class ManagerPresenter extends Presenter {
 
     @FXML
     public void initialize() {
-
         gvManagerLayout.setPage(0);
         gvManagerLayout.setCols(App.properties.getInt("manager-cols"));
         gvManagerLayout.setRows(App.properties.getInt("manager-rows"));
         gvManagerLayout.setCellFactory(params -> new ActionLabel());
         gvManagerLayout.setItems(managerMenu);
-
     }
 
     @Override
@@ -83,9 +83,26 @@ public class ManagerPresenter extends Presenter {
                         App.api.getCurrentReport(new AlertCallback<CurrentSalesReport>() {
                             @Override
                             public void onSuccess(CurrentSalesReport report, Response response) {
-                                App.printer.printReport(report);
+                                App.dispatcher.requestPrint("receipt", App.jobBuilder.report(report));
                             }
                         });
+                    }
+                });
+            }),
+            new Action("Day Report", ActionType.FINISH, event -> {
+                App.confirm.showAndWait("Generate Day Report?", () -> {
+                    if (App.apiIsBusy.compareAndSet(false, true)) {
+                        Calendar c = Calendar.getInstance();
+                        App.api.getDayReport(
+                                c.get(Calendar.YEAR),
+                                c.get(Calendar.MONTH),
+                                c.get(Calendar.DAY_OF_MONTH),
+                                new AlertCallback<DaySalesReport>() {
+                                    @Override
+                                    public void onSuccess(DaySalesReport report, Response response) {
+                                        App.dispatcher.requestPrint("receipt", App.jobBuilder.report(report));
+                                    }
+                                });
                     }
                 });
             }),
@@ -112,7 +129,13 @@ public class ManagerPresenter extends Presenter {
             })),
             new Action("Charges", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 App.main.nextRefresh(App.dbChargePresenter);
-            }))
+            })),
+            new Action("Sales Orders", ActionType.BUTTON, event -> {
+                App.confirm.showAndWait(
+                        "WARNING - Database maintenance only. Continue?",
+                        () -> App.main.nextRefresh(App.dbSalesOrderPresenter)
+                );
+            })
     );
 
     /******************************************************************

@@ -14,8 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import org.apache.commons.lang3.StringUtils;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.employee.Employee;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -44,7 +44,7 @@ public class LoginPresenter extends Presenter {
 
         rawPin = new SimpleStringProperty("");
 
-        imgLogo.setImage(new Image("/img/login-logo.png"));
+        imgLogo.setImage(new Image(App.properties.getStr("logo")));
         imgLogo.setFitWidth(500);
         imgLogo.setPreserveRatio(true);
         imgLogo.setSmooth(true);

@@ -1,7 +1,5 @@
 package email.com.gmail.ttsai0509.javafx;
 
-
-import email.com.gmail.ttsai0509.function.Procedure;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -103,6 +101,16 @@ public class StageScene {
     public void setShow(Presenter presenter) {
         set(presenter);
         show();
+    }
+
+    /******************************************************************
+     *                                                                *
+     * Event Handling
+     *                                                                *
+     ******************************************************************/
+
+    public static interface Procedure {
+        void invoke();
     }
 
     private Procedure onShow, onHide;

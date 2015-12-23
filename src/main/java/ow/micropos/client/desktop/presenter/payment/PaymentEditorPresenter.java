@@ -19,6 +19,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.Action;
+import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.*;
 import ow.micropos.client.desktop.model.menu.Charge;
 import ow.micropos.client.desktop.model.orders.ChargeEntry;
@@ -26,9 +29,6 @@ import ow.micropos.client.desktop.model.orders.PaymentEntry;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.presenter.order.ViewProductEntry;
-import ow.micropos.client.desktop.utils.Action;
-import ow.micropos.client.desktop.utils.ActionType;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.Callback;
 
 import java.math.BigDecimal;
@@ -154,8 +154,10 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         rawAmount.set("");
 
         if (App.apiIsBusy.compareAndSet(false, true)) {
-            App.api.getCharges((AlertCallback<List<Charge>>) (charges, response) ->
-                            lvCharges.setItems(FXCollections.observableList(charges))
+            App.api.getCharges((AlertCallback<List<Charge>>) (charges, response) -> {
+                        charges.sort((o1, o2) -> o1.getWeight() - o2.getWeight());
+                        lvCharges.setItems(FXCollections.observableList(charges));
+                    }
             );
         }
     }
@@ -339,7 +341,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             new Action("Print", ActionType.FINISH, event -> Platform.runLater(() -> {
                 if (getItem().canPrint()) {
                     App.main.backRefresh();
-                    App.printer.printCheck(getItem());
+                    App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
                 } else {
                     App.notify.showAndWait("Order must be sent before printing.");
                 }

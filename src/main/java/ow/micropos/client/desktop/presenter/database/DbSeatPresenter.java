@@ -8,9 +8,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.target.Seat;
 import ow.micropos.client.desktop.model.target.Section;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.client.Response;
 
 import java.util.List;

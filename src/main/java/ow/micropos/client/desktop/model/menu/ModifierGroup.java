@@ -12,11 +12,25 @@ public class ModifierGroup {
 
     private ObjectProperty<Long> id = new SimpleObjectProperty<>();
 
+    private IntegerProperty weight = new SimpleIntegerProperty();
+
     private StringProperty name = new SimpleStringProperty();
 
     private StringProperty tag = new SimpleStringProperty();
 
     private ListProperty<Modifier> modifiers = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    public int getWeight() {
+        return weight.get();
+    }
+
+    public IntegerProperty weightProperty() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight.set(weight);
+    }
 
     public Long getId() {
         return id.get();

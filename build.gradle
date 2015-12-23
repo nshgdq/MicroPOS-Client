@@ -5,6 +5,7 @@ mainClassName = 'ow.micropos.client.desktop.App"'
 sourceCompatibility = 1.8
 version = '1.0'
 
+// Package jar with dependencies
 task fatJar(type: Jar) {
     manifest {
         attributes 'Main-Class': 'ow.micropos.client.desktop.App'
@@ -14,12 +15,20 @@ task fatJar(type: Jar) {
     with jar
 }
 
+// Run app on local server
+task runLocal(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'ow.micropos.client.desktop.App'
+    args '--url=http://127.0.0.1'
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile files('libs/rxtx-2.1-7/RXTXcomm.jar')
+    compile files('libs/rxtx-2.2/RXTXcomm.jar')
+    compile files('libs/EscPos-0.1.jar')
     compile 'commons-io:commons-io:2.4'
     compile 'commons-codec:commons-codec:1.10'
     compile 'org.apache.commons:commons-lang3:3.4'

@@ -9,7 +9,7 @@ public class ListViewUtils {
         throw new RuntimeException(getClass().getSimpleName() + " is a utility class.");
     }
 
-    public static void bindFitToListView(Region n, ListView<?> lv) {
+    public static void fitToListView(Region n, ListView<?> lv) {
         n.maxWidthProperty().bind(lv.widthProperty());
         n.minWidthProperty().bind(lv.widthProperty());
         n.prefWidthProperty().bind(lv.widthProperty());

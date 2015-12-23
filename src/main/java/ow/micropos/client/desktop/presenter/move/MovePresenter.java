@@ -14,13 +14,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.Action;
+import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.presenter.common.ViewProductEntry;
 import ow.micropos.client.desktop.presenter.common.ViewSalesOrder;
-import ow.micropos.client.desktop.utils.Action;
-import ow.micropos.client.desktop.utils.ActionType;
-import ow.micropos.client.desktop.utils.AlertCallback;
 
 import java.util.ArrayList;
 import java.util.List;

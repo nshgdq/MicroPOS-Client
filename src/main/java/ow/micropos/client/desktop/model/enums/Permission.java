@@ -36,7 +36,6 @@ public enum Permission {
     HOLD_PRODUCT_ENTRY,
     VOID_PRODUCT_ENTRY,
 
-
     SPLIT_SALES_ORDER,
 
     ACCESS_ALL_EMPLOYEE_ORDER,
@@ -49,7 +48,9 @@ public enum Permission {
     GET_RECORDS,
     SIMPLE_REPORT,
     CURRENT_REPORT,
+    DAY_REPORT,
 
+    DB_SALES_ORDERS,
     DB_MENU_ITEMS,
     DB_CATEGORIES,
     DB_MODIFIER_GROUPS,

@@ -12,8 +12,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.utils.Action;
-import ow.micropos.client.desktop.utils.ActionLabel;
+import ow.micropos.client.desktop.common.Action;
+import ow.micropos.client.desktop.common.ActionLabel;
 
 import java.util.Stack;
 

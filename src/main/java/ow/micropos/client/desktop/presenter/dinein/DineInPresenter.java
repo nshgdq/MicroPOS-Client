@@ -7,12 +7,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.Action;
+import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.model.target.Seat;
 import ow.micropos.client.desktop.model.target.Section;
-import ow.micropos.client.desktop.utils.Action;
-import ow.micropos.client.desktop.utils.ActionType;
-import ow.micropos.client.desktop.utils.AlertCallback;
 
 import java.math.BigDecimal;
 import java.util.List;

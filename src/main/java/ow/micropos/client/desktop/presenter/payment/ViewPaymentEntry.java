@@ -79,6 +79,6 @@ public class ViewPaymentEntry extends ItemPresenter<PaymentEntry> {
      ******************************************************************/
 
     public final void fixWidth(ListView<?> lv) {
-        ListViewUtils.bindFitToListView(lblPaymentType, lv);
+        ListViewUtils.fitToListView(lblPaymentType, lv);
     }
 }

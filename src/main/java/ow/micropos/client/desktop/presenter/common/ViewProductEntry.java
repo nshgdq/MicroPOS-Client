@@ -66,8 +66,8 @@ public class ViewProductEntry extends ItemPresenter<ProductEntry> {
      ******************************************************************/
 
     public void fixWidth(ListView<?> lv) {
-        ListViewUtils.bindFitToListView(lblMenuItem, lv);
-        ListViewUtils.bindFitToListView(lblModifiers, lv);
+        ListViewUtils.fitToListView(lblMenuItem, lv);
+        ListViewUtils.fitToListView(lblModifiers, lv);
     }
 
 }

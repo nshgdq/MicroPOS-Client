@@ -18,6 +18,8 @@ public class MenuItem {
 
     private StringProperty tag = new SimpleStringProperty();
 
+    private IntegerProperty weight = new SimpleIntegerProperty();
+
     private ObjectProperty<BigDecimal> price = new SimpleObjectProperty<>();
 
     private ObjectProperty<Category> category = new SimpleObjectProperty<>();
@@ -25,6 +27,18 @@ public class MenuItem {
     private ListProperty<ProductEntry> salesOrderEntries = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     private ListProperty<String> printers = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    public int getWeight() {
+        return weight.get();
+    }
+
+    public IntegerProperty weightProperty() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight.set(weight);
+    }
 
     public Long getId() {
         return id.get();

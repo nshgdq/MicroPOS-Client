@@ -19,11 +19,25 @@ public class Charge {
 
     private StringProperty tag = new SimpleStringProperty();
 
+    private IntegerProperty weight = new SimpleIntegerProperty();
+
     private ObjectProperty<BigDecimal> amount = new SimpleObjectProperty<>();
 
     private ObjectProperty<ChargeType> type = new SimpleObjectProperty<>();
 
     private ListProperty<ChargeEntry> chargeEntries = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    public int getWeight() {
+        return weight.get();
+    }
+
+    public IntegerProperty weightProperty() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight.set(weight);
+    }
 
     public Long getId() {
         return id.get();

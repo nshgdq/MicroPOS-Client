@@ -1,7 +1,6 @@
 package email.com.gmail.ttsai0509.javafx.control;
 
 
-import email.com.gmail.ttsai0509.function.Procedure;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,6 +17,10 @@ import java.util.stream.Collectors;
 public final class ButtonFactory {
 
     private ButtonFactory() {
+    }
+
+    public static interface Procedure {
+        void invoke();
     }
 
     @Builder

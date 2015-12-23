@@ -1,21 +1,17 @@
 package ow.micropos.client.desktop.presenter.database;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.util.StringConverter;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.menu.Category;
 import ow.micropos.client.desktop.model.menu.MenuItem;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.client.Response;
 
-import java.math.BigDecimal;
-import java.util.Iterator;
 import java.util.List;
 
 public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
@@ -25,45 +21,38 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
     TextField tfPrice;
     TextField tfCategory;
     TextField tfPrinters;
+    TextField tfWeight;
 
     TableColumn<MenuItem, String> name;
     TableColumn<MenuItem, String> tag;
     TableColumn<MenuItem, String> price;
     TableColumn<MenuItem, String> category;
     TableColumn<MenuItem, String> printers;
+    TableColumn<MenuItem, String> weight;
 
     @Override
     Node[] getTextFields() {
-        tfName = new TextField("Name");
-        tfTag = new TextField("Tag");
-        tfPrice = new TextField("Price");
-        tfCategory = new TextField("Categories");
-        tfPrinters = new TextField("Printers");
+        tfName = createTextField("Name");
+        tfTag = createTextField("Tag");
+        tfPrice = createTextField("Price");
+        tfCategory = createTextField("Categories");
+        tfPrinters = createTextField("Printers");
+        tfWeight = createTextField("Weight");
 
-        tfName.setPromptText("Name");
-        tfTag.setPromptText("Tag");
-        tfPrice.setPromptText("Price");
-        tfCategory.setPromptText("Categories");
-        tfPrinters.setPromptText("Printers");
-
-        return new Node[]{new Label("Menu Item Information"), tfName, tfTag, tfPrice, tfCategory, tfPrinters};
+        return new Node[]{new Label("Menu Item Information"), tfName, tfTag, tfPrice, tfCategory, tfPrinters, tfWeight};
     }
 
     @Override
     TableColumn<MenuItem, String>[] getTableColumns() {
-        name = new TableColumn<>("Name");
-        tag = new TableColumn<>("Tag");
-        price = new TableColumn<>("Price");
-        category = new TableColumn<>("Category");
-        printers = new TableColumn<>("Printers");
 
-        name.setCellValueFactory(param -> param.getValue().nameProperty());
-        tag.setCellValueFactory(param -> param.getValue().tagProperty());
-        price.setCellValueFactory(param -> param.getValue().priceProperty().asString());
-        category.setCellValueFactory(param -> param.getValue().getCategory().nameProperty());
-        printers.setCellValueFactory(param -> param.getValue().printersProperty().asString());
+        name = createTableColumn("Name", param -> param.getValue().nameProperty());
+        tag = createTableColumn("Tag", param -> param.getValue().tagProperty());
+        price = createTableColumn("Price", param -> param.getValue().priceProperty().asString());
+        category = createTableColumn("Category", param -> param.getValue().getCategory().nameProperty());
+        printers = createTableColumn("Printers", param -> param.getValue().printersProperty().asString());
+        weight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
 
-        return new TableColumn[]{name, tag, price, category, printers};
+        return new TableColumn[]{name, tag, price, category, printers, weight};
     }
 
     @Override
@@ -73,6 +62,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         tfPrice.textProperty().unbindBidirectional(currentItem.priceProperty());
         tfCategory.textProperty().unbindBidirectional(currentItem.getCategory().idProperty());
         tfPrinters.textProperty().unbindBidirectional(currentItem.printersProperty());
+        tfWeight.textProperty().unbindBidirectional(currentItem.weightProperty());
     }
 
     @Override
@@ -82,6 +72,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         tfPrice.textProperty().bindBidirectional(newItem.priceProperty(), priceConverter);
         tfCategory.textProperty().bindBidirectional(newItem.getCategory().idProperty(), idConverter);
         tfPrinters.textProperty().bindBidirectional(newItem.printersProperty(), listConverter);
+        tfWeight.textProperty().bindBidirectional(newItem.weightProperty(), numberConverter);
     }
 
     @Override
@@ -91,6 +82,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         tfPrice.setText("");
         tfCategory.setText("");
         tfPrinters.setText("");
+        tfWeight.setText("");
     }
 
     @Override
@@ -128,65 +120,5 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
             App.notify.showAndWait("Removed Menu Item.");
         });
     }
-
-    /******************************************************************
-     *                                                                *
-     * Bindings
-     *                                                                *
-     ******************************************************************/
-
-    // TODO : Import Apache Commons Validator instead of relying on Exceptions
-    private final StringConverter<Long> idConverter = new StringConverter<Long>() {
-        @Override
-        public String toString(Long object) {
-            return (object == null) ? "" : object.toString();
-        }
-
-        @Override
-        public Long fromString(String string) {
-            try {
-                return Long.parseLong(string);
-            } catch (NumberFormatException e) {
-                return 0L;
-            }
-        }
-    };
-
-    private final StringConverter<BigDecimal> priceConverter = new StringConverter<BigDecimal>() {
-        @Override
-        public String toString(BigDecimal object) {
-            return (object == null) ? "" : object.toString();
-        }
-
-        @Override
-        public BigDecimal fromString(String string) {
-            try {
-                return new BigDecimal(string);
-            } catch (NumberFormatException e) {
-                return BigDecimal.ZERO;
-            }
-        }
-    };
-
-    private final StringConverter<ObservableList<String>> listConverter = new StringConverter<ObservableList<String>>() {
-        @Override
-        public String toString(ObservableList<String> object) {
-            StringBuilder sb = new StringBuilder("");
-
-            Iterator<String> itr = object.iterator();
-            if (itr.hasNext()) {
-                sb.append(itr.next());
-                while (itr.hasNext())
-                    sb.append(",").append(itr.next());
-            }
-
-            return sb.toString();
-        }
-
-        @Override
-        public ObservableList<String> fromString(String string) {
-            return FXCollections.observableArrayList(string.split(","));
-        }
-    };
 
 }

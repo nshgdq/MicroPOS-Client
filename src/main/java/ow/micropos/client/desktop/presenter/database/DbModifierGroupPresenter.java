@@ -7,8 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.menu.ModifierGroup;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.client.Response;
 
 import java.util.List;
@@ -17,49 +17,51 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
 
     private TextField tfName;
     private TextField tfTag;
+    private TextField tfWeight;
 
     private TableColumn<ModifierGroup, String> tcId;
     private TableColumn<ModifierGroup, String> tcName;
     private TableColumn<ModifierGroup, String> tcTag;
+    private TableColumn<ModifierGroup, String> tcWeight;
 
     @Override
     Node[] getTextFields() {
-        tfName = new TextField();
-        tfTag = new TextField();
+        tfName = createTextField("Name");
+        tfTag = createTextField("Tag");
+        tfWeight = createTextField("Weight");
 
-        tfName.setPromptText("Name");
-        tfTag.setPromptText("Tag");
-        return new Node[]{new Label("Modifier Group Information"), tfName, tfTag};
+        return new Node[]{new Label("Modifier Group Information"), tfName, tfTag, tfWeight};
     }
 
     @Override
     TableColumn<ModifierGroup, String>[] getTableColumns() {
-        tcId = new TableColumn<>("ID");
-        tcName = new TableColumn<>("Name");
-        tcTag = new TableColumn<>("Tag");
+        tcId = createTableColumn("ID", param -> param.getValue().idProperty().asString());
+        tcName = createTableColumn("Name", param -> param.getValue().nameProperty());
+        tcTag = createTableColumn("Tag", param -> param.getValue().tagProperty());
+        tcWeight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
 
-        tcId.setCellValueFactory(param -> param.getValue().idProperty().asString());
-        tcName.setCellValueFactory(param -> param.getValue().nameProperty());
-        tcTag.setCellValueFactory(param -> param.getValue().tagProperty());
-        return new TableColumn[]{tcId, tcName, tcTag};
+        return new TableColumn[]{tcId, tcName, tcTag, tcWeight};
     }
 
     @Override
     void unbindItem(ModifierGroup currentItem) {
         tfName.textProperty().unbindBidirectional(currentItem.nameProperty());
         tfTag.textProperty().unbindBidirectional(currentItem.tagProperty());
+        tfWeight.textProperty().unbindBidirectional(currentItem.weightProperty());
     }
 
     @Override
     void bindItem(ModifierGroup newItem) {
         tfName.textProperty().bindBidirectional(newItem.nameProperty());
         tfTag.textProperty().bindBidirectional(newItem.tagProperty());
+        tfWeight.textProperty().bindBidirectional(newItem.weightProperty(), numberConverter);
     }
 
     @Override
     void clearFields() {
         tfName.setText("");
         tfTag.setText("");
+        tfWeight.setText("");
     }
 
     @Override

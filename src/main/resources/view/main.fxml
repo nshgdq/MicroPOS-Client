@@ -47,9 +47,9 @@
                   fx:id="vbDateTime"
                   id="datetime">
                 <Label fx:id="lblDate"
-                       id="menuText"/>
+                       id="dateText"/>
                 <Label fx:id="lblTime"
-                       id="menuText"/>
+                       id="timeText"/>
             </VBox>
         </GridPane>
     </top>

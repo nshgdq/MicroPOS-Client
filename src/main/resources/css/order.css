@@ -71,8 +71,19 @@
     -fx-background-color: #C01800;
 }
 
-#lblPeMenuItem {
+#lblPeMenuItemWrapper {
     -fx-background-color: #A80000;
+}
+
+#lblPeMenuItem {
+    -fx-background-color: transparent;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblPeTotal {
+    -fx-background-color: #A80000;
+    -fx-text-fill: #FFEF0F;
+    -fx-font-weight: bolder;
     -fx-padding: 0 10px 0 10px;
 }
 
@@ -82,11 +93,5 @@
 
 #lblPeStatus {
     -fx-text-fill: #FFEF0F;
-    -fx-padding: 0 10px 0 10px;
-}
-
-#lblPeTotal {
-    -fx-text-fill: #FFEF0F;
-    -fx-font-weight: bolder;
     -fx-padding: 0 10px 0 10px;
 }

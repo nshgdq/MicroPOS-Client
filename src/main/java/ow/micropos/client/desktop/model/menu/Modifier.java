@@ -17,6 +17,8 @@ public class Modifier {
 
     private StringProperty tag = new SimpleStringProperty();
 
+    private IntegerProperty weight = new SimpleIntegerProperty();
+
     private ObjectProperty<BigDecimal> price = new SimpleObjectProperty<>();
 
     private ObjectProperty<ModifierType> type = new SimpleObjectProperty<>();
@@ -24,6 +26,18 @@ public class Modifier {
     private ObjectProperty<ModifierGroup> modifierGroup = new SimpleObjectProperty<>();
 
     private ListProperty<ProductEntry> salesOrderEntries = new SimpleListProperty<>();
+
+    public int getWeight() {
+        return weight.get();
+    }
+
+    public IntegerProperty weightProperty() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight.set(weight);
+    }
 
     public Long getId() {
         return id.get();

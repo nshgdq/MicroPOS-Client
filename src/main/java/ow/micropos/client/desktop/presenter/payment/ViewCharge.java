@@ -35,6 +35,6 @@ public class ViewCharge extends ItemPresenter<Charge> {
      ******************************************************************/
 
     public final void fixWidth(ListView<?> lv) {
-        ListViewUtils.bindFitToListView(lblChargeTag, lv);
+        ListViewUtils.fitToListView(lblChargeTag, lv);
     }
 }

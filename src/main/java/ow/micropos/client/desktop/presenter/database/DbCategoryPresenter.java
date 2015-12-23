@@ -7,8 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.menu.Category;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.client.Response;
 
 import java.util.List;
@@ -17,50 +17,50 @@ public class DbCategoryPresenter extends DbEntityPresenter<Category> {
 
     TextField tfName;
     TextField tfTag;
+    TextField tfWeight;
     TableColumn<Category, String> id;
     TableColumn<Category, String> name;
     TableColumn<Category, String> tag;
+    TableColumn<Category, String> weight;
 
     @Override
     Node[] getTextFields() {
-        tfName = new TextField();
-        tfTag = new TextField();
+        tfName = createTextField("Name");
+        tfTag = createTextField("Tag");
+        tfWeight = createTextField("Weight");
 
-        tfName.setPromptText("Name");
-        tfTag.setPromptText("Tag");
-
-        return new Node[]{new Label("Category Information"), tfName, tfTag};
+        return new Node[]{new Label("Category Information"), tfName, tfTag, tfWeight};
     }
 
     @Override
     TableColumn<Category, String>[] getTableColumns() {
-        id = new TableColumn<>("ID");
-        name = new TableColumn<>("Name");
-        tag = new TableColumn<>("Tag");
+        id = createTableColumn("ID", param -> param.getValue().idProperty().asString());
+        name = createTableColumn("Name", param -> param.getValue().nameProperty());
+        tag = createTableColumn("Tag", param -> param.getValue().tagProperty());
+        weight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
 
-        id.setCellValueFactory(param -> param.getValue().idProperty().asString());
-        name.setCellValueFactory(param -> param.getValue().nameProperty());
-        tag.setCellValueFactory(param -> param.getValue().tagProperty());
-
-        return new TableColumn[]{id, name, tag};
+        return new TableColumn[]{id, name, tag, weight};
     }
 
     @Override
     void unbindItem(Category currentItem) {
         tfName.textProperty().unbindBidirectional(currentItem.nameProperty());
         tfTag.textProperty().unbindBidirectional(currentItem.tagProperty());
+        tfWeight.textProperty().unbindBidirectional(currentItem.weightProperty());
     }
 
     @Override
     void bindItem(Category newItem) {
         tfName.textProperty().bindBidirectional(newItem.nameProperty());
         tfTag.textProperty().bindBidirectional(newItem.tagProperty());
+        tfWeight.textProperty().bindBidirectional(newItem.weightProperty(), numberConverter);
     }
 
     @Override
     void clearFields() {
         tfName.setText("");
         tfTag.setText("");
+        tfWeight.setText("");
     }
 
     @Override

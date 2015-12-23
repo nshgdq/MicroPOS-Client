@@ -1,7 +1,7 @@
 package email.com.gmail.ttsai0509.javafx.control;
 
-import email.com.gmail.ttsai0509.function.Procedure;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
+import email.com.gmail.ttsai0509.utils.Procedure;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;

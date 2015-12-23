@@ -15,15 +15,15 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.Action;
+import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.menu.Category;
 import ow.micropos.client.desktop.model.menu.MenuItem;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import ow.micropos.client.desktop.utils.Action;
-import ow.micropos.client.desktop.utils.ActionType;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -73,7 +73,9 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
 
         backButton.setOnMouseClicked(event -> Platform.runLater(this::showCategories));
 
-        cancelOption.setOnMouseClicked(event -> Platform.runLater(App.main::backRefresh));
+        cancelOption.setOnMouseClicked(
+                event -> App.confirm.showAndWait("Are you sure? Any changes will not be saved.", App.main::backRefresh)
+        );
 
         sendOption.setOnMouseClicked(event -> {
             if (getItem().getProductEntries().isEmpty()) {
@@ -96,33 +98,35 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             }
         });
 
-        voidOption.setOnMouseClicked(event -> Platform.runLater(() -> {
-            if (App.apiIsBusy.compareAndSet(false, true)) {
+        voidOption.setOnMouseClicked(event -> {
+            App.confirm.showAndWait("Void Sales Order?", () -> {
+                if (App.apiIsBusy.compareAndSet(false, true)) {
 
-                SalesOrderStatus prevStatus = getItem().getStatus();
-                getItem().setStatus(SalesOrderStatus.REQUEST_VOID);
+                    SalesOrderStatus prevStatus = getItem().getStatus();
+                    getItem().setStatus(SalesOrderStatus.REQUEST_VOID);
 
-                App.api.postSalesOrder(getItem(), new AlertCallback<Long>() {
-                    @Override
-                    public void onSuccess(Long aLong, Response response) {
-                        Platform.runLater(() -> {
-                            App.main.backRefresh();
-                            App.notify.showAndWait("Sales Order " + aLong + " Voided.");
-                        });
-                    }
+                    App.api.postSalesOrder(getItem(), new AlertCallback<Long>() {
+                        @Override
+                        public void onSuccess(Long aLong, Response response) {
+                            Platform.runLater(() -> {
+                                App.main.backRefresh();
+                                App.notify.showAndWait("Sales Order " + aLong + " Voided.");
+                            });
+                        }
 
-                    @Override
-                    public void onFailure(RetrofitError error) {
-                        getItem().setStatus(prevStatus);
-                    }
-                });
-            }
-        }));
+                        @Override
+                        public void onFailure(RetrofitError error) {
+                            getItem().setStatus(prevStatus);
+                        }
+                    });
+                }
+            });
+        });
 
         printOption.setOnMouseClicked(event -> Platform.runLater(() -> {
             if (getItem().canPrint()) {
                 App.main.backRefresh();
-                App.printer.printCheck(getItem());
+                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
             } else {
                 App.notify.showAndWait("Changes must be sent before printing.");
             }
@@ -219,6 +223,8 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         App.api.getCategories(new AlertCallback<List<Category>>() {
             @Override
             public void onSuccess(List<Category> categories, Response response) {
+                categories.sort((o1, o2) -> o1.getWeight() - o2.getWeight());
+                categories.forEach(c -> c.getMenuItems().sort((o1, o2) -> o1.getWeight() - o2.getWeight()));
                 gvCategories.setItems(FXCollections.observableList(categories));
                 showCategories();
             }

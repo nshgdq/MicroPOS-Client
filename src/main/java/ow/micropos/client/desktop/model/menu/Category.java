@@ -16,7 +16,21 @@ public class Category {
 
     private StringProperty tag = new SimpleStringProperty();
 
+    private IntegerProperty weight = new SimpleIntegerProperty();
+
     private ListProperty<MenuItem> menuItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    public int getWeight() {
+        return weight.get();
+    }
+
+    public IntegerProperty weightProperty() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight.set(weight);
+    }
 
     public Long getId() {
         return id.get();

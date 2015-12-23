@@ -18,12 +18,6 @@
 #keypadButton {
     -fx-background-color: #A80000;
     -fx-text-fill: #D8AD00;
-    -fx-min-width: 160px;
-    -fx-max-width: 160px;
-    -fx-pref-width: 160px;
-    -fx-min-height: 160px;
-    -fx-max-height: 160px;
-    -fx-pref-height: 160px;
     -fx-font-size: 3em;
     -fx-font-weight: bolder;
 }

@@ -16,11 +16,25 @@ public class Section {
 
     private ListProperty<Seat> seats = new SimpleListProperty<>(FXCollections.observableArrayList());
 
+    private IntegerProperty weight = new SimpleIntegerProperty();
+
     private StringProperty tag = new SimpleStringProperty();
 
     private IntegerProperty rows = new SimpleIntegerProperty();
 
     private IntegerProperty cols = new SimpleIntegerProperty();
+
+    public int getWeight() {
+        return weight.get();
+    }
+
+    public IntegerProperty weightProperty() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight.set(weight);
+    }
 
     public int getRows() {
         return rows.get();

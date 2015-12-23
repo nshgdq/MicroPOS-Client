@@ -3,15 +3,22 @@ package ow.micropos.client.desktop.presenter.database;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.utils.Action;
-import ow.micropos.client.desktop.utils.ActionType;
+import ow.micropos.client.desktop.common.Action;
+import ow.micropos.client.desktop.common.ActionType;
+
+import java.math.BigDecimal;
+import java.util.Iterator;
 
 public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
@@ -20,6 +27,8 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
     protected DbEntityPresenter() {
         GridPane root = new GridPane();
         root.getStylesheets().add("/css/database.css");
+        root.setHgap(10);
+        root.setVgap(10);
 
         RowConstraints rc1 = new RowConstraints();
         rc1.setVgrow(Priority.ALWAYS);
@@ -92,6 +101,103 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
     /******************************************************************
      *                                                                *
+     * Node Factory Methods
+     *                                                                *
+     ******************************************************************/
+
+    protected final TextField createTextField(String prompt) {
+        TextField tf = new TextField();
+        tf.setPromptText(prompt);
+        return tf;
+    }
+
+    protected final TableColumn<T, String> createTableColumn(
+            String name,
+            Callback<TableColumn.CellDataFeatures<T, String>, ObservableValue<String>> callback
+    ) {
+        TableColumn<T, String> tc = new TableColumn<>(name);
+        tc.setCellValueFactory(callback);
+        return tc;
+    }
+
+    /******************************************************************
+     *                                                                *
+     * Common Converters
+     *                                                                *
+     ******************************************************************/
+
+    // TODO : Import Apache Commons Validator instead of relying on Exceptions
+    protected static final StringConverter<Long> idConverter = new StringConverter<Long>() {
+        @Override
+        public String toString(Long object) {
+            return (object == null) ? "" : object.toString();
+        }
+
+        @Override
+        public Long fromString(String string) {
+            try {
+                return Long.parseLong(string);
+            } catch (NumberFormatException e) {
+                return 0L;
+            }
+        }
+    };
+
+    protected static final StringConverter<BigDecimal> priceConverter = new StringConverter<BigDecimal>() {
+        @Override
+        public String toString(BigDecimal object) {
+            return (object == null) ? "" : object.toString();
+        }
+
+        @Override
+        public BigDecimal fromString(String string) {
+            try {
+                return new BigDecimal(string);
+            } catch (NumberFormatException e) {
+                return BigDecimal.ZERO;
+            }
+        }
+    };
+
+    protected static final StringConverter<ObservableList<String>> listConverter = new StringConverter<ObservableList<String>>() {
+        @Override
+        public String toString(ObservableList<String> object) {
+            StringBuilder sb = new StringBuilder("");
+
+            Iterator<String> itr = object.iterator();
+            if (itr.hasNext()) {
+                sb.append(itr.next());
+                while (itr.hasNext())
+                    sb.append(",").append(itr.next());
+            }
+
+            return sb.toString();
+        }
+
+        @Override
+        public ObservableList<String> fromString(String string) {
+            return FXCollections.observableArrayList(string.split(","));
+        }
+    };
+
+    protected static final StringConverter<Number> numberConverter = new StringConverter<Number>() {
+        @Override
+        public String toString(Number object) {
+            return (object == null) ? "" : Integer.toString(object.intValue());
+        }
+
+        @Override
+        public Number fromString(String string) {
+            try {
+                return Integer.parseInt(string);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+    };
+
+    /******************************************************************
+     *                                                                *
      * Menu
      *                                                                *
      ******************************************************************/
@@ -103,7 +209,10 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
             new Action("Done", ActionType.FINISH, event -> Platform.runLater(App.main::backRefresh)),
-            new Action("New", ActionType.BUTTON, event -> Platform.runLater(() -> setItem(createNew()))),
+            new Action("New", ActionType.BUTTON, event -> Platform.runLater(() -> {
+                table.getSelectionModel().clearSelection();
+                setItem(createNew());
+            })),
             new Action("Submit", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 if (getItem() == null)
                     return;
@@ -112,14 +221,16 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
                     submitItem(getItem());
                 }
             })),
-            new Action("Delete", ActionType.BUTTON, event -> Platform.runLater(() -> {
+            new Action("Delete", ActionType.BUTTON, event -> {
                 if (getItem() == null)
                     return;
 
-                if (App.apiIsBusy.compareAndSet(false, true)) {
-                    deleteItem(getItem());
-                }
-            }))
+                App.confirm.showAndWait("Are you sure you want to delete this item?", () -> {
+                    if (App.apiIsBusy.compareAndSet(false, true)) {
+                        deleteItem(getItem());
+                    }
+                });
+            })
     );
 
 }

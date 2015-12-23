@@ -6,10 +6,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.util.StringConverter;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.target.Section;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.client.Response;
 
 import java.util.List;
@@ -20,42 +19,36 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
     TextField tfTag;
     TextField tfRows;
     TextField tfCols;
+    TextField tfWeight;
+
     TableColumn<Section, String> id;
     TableColumn<Section, String> name;
     TableColumn<Section, String> tag;
     TableColumn<Section, String> rows;
     TableColumn<Section, String> cols;
+    TableColumn<Section, String> weight;
 
     @Override
     Node[] getTextFields() {
-        tfName = new TextField();
-        tfTag = new TextField();
-        tfRows = new TextField();
-        tfCols = new TextField();
+        tfName = createTextField("Name");
+        tfTag = createTextField("Tag");
+        tfRows = createTextField("Rows");
+        tfCols = createTextField("Cols");
+        tfWeight = createTextField("Weight");
 
-        tfName.setPromptText("Name");
-        tfTag.setPromptText("Tag");
-        tfRows.setPromptText("Rows");
-        tfCols.setPromptText("Cols");
-
-        return new Node[]{new Label("Section Information"), tfName, tfTag, tfRows, tfCols};
+        return new Node[]{new Label("Section Information"), tfName, tfTag, tfRows, tfCols, tfWeight};
     }
 
     @Override
     TableColumn<Section, String>[] getTableColumns() {
-        id = new TableColumn<>("ID");
-        name = new TableColumn<>("Name");
-        tag = new TableColumn<>("Tag");
-        rows = new TableColumn<>("Rows");
-        cols = new TableColumn<>("Cols");
+        id = createTableColumn("ID", param -> param.getValue().idProperty().asString());
+        name = createTableColumn("Name", param -> param.getValue().nameProperty());
+        tag = createTableColumn("Tag", param -> param.getValue().tagProperty());
+        rows = createTableColumn("Rows", param -> param.getValue().rowsProperty().asString());
+        cols = createTableColumn("Cols", param -> param.getValue().colsProperty().asString());
+        weight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
 
-        id.setCellValueFactory(param -> param.getValue().idProperty().asString());
-        name.setCellValueFactory(param -> param.getValue().nameProperty());
-        tag.setCellValueFactory(param -> param.getValue().tagProperty());
-        rows.setCellValueFactory(param -> param.getValue().rowsProperty().asString());
-        cols.setCellValueFactory(param -> param.getValue().colsProperty().asString());
-
-        return new TableColumn[]{id, name, tag, rows, cols};
+        return new TableColumn[]{id, name, tag, rows, cols, weight};
     }
 
     @Override
@@ -64,48 +57,16 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
         tfTag.textProperty().unbindBidirectional(currentItem.tagProperty());
         tfRows.textProperty().unbindBidirectional(currentItem.rowsProperty());
         tfCols.textProperty().unbindBidirectional(currentItem.colsProperty());
+        tfWeight.textProperty().unbindBidirectional(currentItem.weightProperty());
     }
 
     @Override
     void bindItem(Section newItem) {
         tfName.textProperty().bindBidirectional(newItem.nameProperty());
         tfTag.textProperty().bindBidirectional(newItem.tagProperty());
-        tfRows.textProperty().bindBidirectional(newItem.rowsProperty(), new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                if (object == null)
-                    return "";
-                else
-                    return Integer.toString(object.intValue());
-            }
-
-            @Override
-            public Number fromString(String string) {
-                try {
-                    return Integer.parseInt(string);
-                } catch (NumberFormatException e) {
-                    return 0;
-                }
-            }
-        });
-        tfCols.textProperty().bindBidirectional(newItem.colsProperty(), new StringConverter<Number>() {
-            @Override
-            public String toString(Number object) {
-                if (object == null)
-                    return "";
-                else
-                    return Integer.toString(object.intValue());
-            }
-
-            @Override
-            public Number fromString(String string) {
-                try {
-                    return Integer.parseInt(string);
-                } catch (NumberFormatException e) {
-                    return 0;
-                }
-            }
-        });
+        tfRows.textProperty().bindBidirectional(newItem.rowsProperty(), numberConverter);
+        tfCols.textProperty().bindBidirectional(newItem.colsProperty(), numberConverter);
+        tfWeight.textProperty().bindBidirectional(newItem.weightProperty(), numberConverter);
     }
 
     @Override
@@ -114,6 +75,7 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
         tfTag.setText("");
         tfRows.setText("");
         tfCols.setText("");
+        tfWeight.setText("");
     }
 
     @Override

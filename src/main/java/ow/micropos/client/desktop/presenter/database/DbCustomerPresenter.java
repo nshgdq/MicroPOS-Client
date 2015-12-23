@@ -7,8 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.target.Customer;
-import ow.micropos.client.desktop.utils.AlertCallback;
 import retrofit.client.Response;
 
 import java.util.List;
@@ -25,26 +25,19 @@ public class DbCustomerPresenter extends DbEntityPresenter<Customer> {
 
     @Override
     Node[] getTextFields() {
-        tfFirst = new TextField();
-        tfLast = new TextField();
-        tfPhone = new TextField();
-
-        tfFirst.setPromptText("First Name");
-        tfLast.setPromptText("Last Name");
-        tfPhone.setPromptText("Phone Number");
+        tfFirst = createTextField("First Name");
+        tfLast = createTextField("Last Name");
+        tfPhone = createTextField("Phone Number");
 
         return new Node[]{new Label("Customer Information"), tfFirst, tfLast, tfPhone};
     }
 
     @Override
     TableColumn<Customer, String>[] getTableColumns() {
-        first = new TableColumn<>("First Name");
-        last = new TableColumn<>("Last Name");
-        phone = new TableColumn<>("Phone Number");
+        first = createTableColumn("First Name", param -> param.getValue().firstNameProperty());
+        last = createTableColumn("Last Name", param -> param.getValue().lastNameProperty());
+        phone = createTableColumn("Phone Number", param -> param.getValue().phoneNumberProperty());
 
-        first.setCellValueFactory(param -> param.getValue().firstNameProperty());
-        last.setCellValueFactory(param -> param.getValue().lastNameProperty());
-        phone.setCellValueFactory(param -> param.getValue().phoneNumberProperty());
         return new TableColumn[]{first, last, phone};
     }
 
