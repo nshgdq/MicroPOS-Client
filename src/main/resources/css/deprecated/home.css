@@ -5,7 +5,7 @@
 
 #sectionTag, #salesOrderId, #salesOrderPay {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 32px;
     -fx-font-weight: bolder;
@@ -39,11 +39,11 @@
     -fx-min-height: 130px;
     -fx-max-height: 130px;
     -fx-pref-height: 130px;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #seatViewV2 {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #restaurantLayoutGrid {
@@ -64,7 +64,7 @@
 }
 
 #seatSalesOrders {
-    -fx-text-fill: #FFEF0F;
+    -fx-text-fill: #FFFF0F;
     -fx-font-size: 30px;
     -fxfont-weight: bolder;
     -fx-min-width: inherit;

@@ -15,35 +15,17 @@
             </rowConstraints>
 
             <columnConstraints>
-                <ColumnConstraints/>
                 <ColumnConstraints hgrow="ALWAYS"/>
-                <ColumnConstraints/>
                 <ColumnConstraints/>
             </columnConstraints>
 
-            <StackPane GridPane.rowIndex="0"
-                       GridPane.columnIndex="0"
-                       fx:id="back"
-                       id="paging">
-                <Label text="&lt;"
-                       id="menuText"/>
-            </StackPane>
-
             <GridView GridPane.rowIndex="0"
-                      GridPane.columnIndex="1"
+                      GridPane.columnIndex="0"
                       fx:id="gvVisibleMenu"
                       id="menu"/>
 
-            <StackPane GridPane.rowIndex="0"
-                       GridPane.columnIndex="2"
-                       fx:id="fore"
-                       id="paging">
-                <Label text="&gt;"
-                       id="menuText"/>
-            </StackPane>
-
             <VBox GridPane.rowIndex="0"
-                  GridPane.columnIndex="3"
+                  GridPane.columnIndex="1"
                   fx:id="vbDateTime"
                   id="datetime">
                 <Label fx:id="lblDate"
@@ -51,6 +33,7 @@
                 <Label fx:id="lblTime"
                        id="timeText"/>
             </VBox>
+
         </GridPane>
     </top>
 

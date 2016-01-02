@@ -34,11 +34,15 @@
     -fx-padding: 0 10px 0 10px;
 }
 
+#datetime {
+    -fx-padding: 10px 10px 5px 10px;
+}
+
 #timeText, #dateText {
     -fx-background-color: transparent;
     -fx-text-fill: #222222;
-    -fx-font-size: 1.5em;
-    -fx-padding: 0 10px 0 10px;
+    -fx-font-size: 1.8em;
+    -fx-font-weight: bolder;
 }
 
 /******************************************************************
@@ -63,6 +67,6 @@
 }
 
 #finishItem {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-padding: 2px;
 }

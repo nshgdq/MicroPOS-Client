@@ -1,6 +1,9 @@
 package ow.micropos.client.desktop.presenter;
 
 import javafx.scene.control.Alert;
+import ow.micropos.client.desktop.model.enums.Permission;
+
+import java.util.Arrays;
 
 public class NotifyPresenter extends Alert {
 
@@ -21,6 +24,10 @@ public class NotifyPresenter extends Alert {
         setHeaderText(header);
         setContentText(content);
         showAndWait();
+    }
+
+    public void showAndWait(Permission... permissions) {
+        showAndWait("Requires Permissions : " + Arrays.toString(permissions));
     }
 
 }

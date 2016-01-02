@@ -8,7 +8,7 @@
 }
 
 #newOption, #cancelOption, #backButton, #nextButton {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #newText, #cancelText, #backText, #nextText {
@@ -22,7 +22,7 @@
 
 #salesOrderId {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 32px;
     -fx-font-weight: bolder;
@@ -37,7 +37,7 @@
 
 #salesOrderTotalWrapper {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #salesOrderTotal {

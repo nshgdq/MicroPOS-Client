@@ -1,6 +1,7 @@
 /* Gap between logo & keypad */
 #gpLogin {
     -fx-hgap: 80px;
+    -fx-vgap: 80px;
 }
 
 /******************************************************************
@@ -17,6 +18,10 @@
 
 #keypadButton {
     -fx-background-color: #A80000;
+}
+
+#keypadText {
+    -fx-background-color: transparent;
     -fx-text-fill: #D8AD00;
     -fx-font-size: 3em;
     -fx-font-weight: bolder;

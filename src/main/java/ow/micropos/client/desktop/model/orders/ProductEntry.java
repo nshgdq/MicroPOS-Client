@@ -284,7 +284,9 @@ public class ProductEntry {
 
                 @Override
                 protected BigDecimal computeValue() {
-                    if (status.get() == ProductEntryStatus.VOID || status.get() == ProductEntryStatus.REQUEST_VOID)
+                    if (hasStatus(ProductEntryStatus.VOID)
+                            || hasStatus(ProductEntryStatus.REQUEST_VOID)
+                            || hasStatus(ProductEntryStatus.REQUEST_HOLD_VOID))
                         return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
 
                     if (modifierTotal.get() == null || menuItem.get() == null || menuItem.get().getPrice() == null)

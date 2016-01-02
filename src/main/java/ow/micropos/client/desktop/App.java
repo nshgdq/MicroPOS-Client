@@ -35,6 +35,7 @@ import ow.micropos.client.desktop.presenter.MainPresenter;
 import ow.micropos.client.desktop.presenter.NotifyPresenter;
 import ow.micropos.client.desktop.presenter.database.*;
 import ow.micropos.client.desktop.presenter.dinein.DineInPresenter;
+import ow.micropos.client.desktop.presenter.dinein.DineInPromptPresenter;
 import ow.micropos.client.desktop.presenter.finder.FinderPresenter;
 import ow.micropos.client.desktop.presenter.login.LoginPresenter;
 import ow.micropos.client.desktop.presenter.manager.ManagerPresenter;
@@ -92,6 +93,7 @@ public class App extends Application implements VkProperties {
     public static LoginPresenter loginPresenter;
     public static ManagerPresenter managerPresenter;
     public static DineInPresenter dineInPresenter;
+    public static DineInPromptPresenter dineInPromptPresenter;
     public static TakeOutPresenter takeOutPresenter;
     public static FinderPresenter finderPresenter;
     public static OrderEditorPresenter orderEditorPresenter;
@@ -110,6 +112,7 @@ public class App extends Application implements VkProperties {
     public static DbChargePresenter dbChargePresenter;
     public static DbCustomerPresenter dbCustomerPresenter;
     public static DbSalesOrderPresenter dbSalesOrderPresenter;
+    public static DbPropertyPresenter dbPropertyPresenter;
 
     /******************************************************************
      *                                                                *
@@ -130,7 +133,7 @@ public class App extends Application implements VkProperties {
     }
 
     public static void exit() {
-        if (employee.hasPermission(Permission.CLOSE_CLIENT)) {
+        if (employee.hasPermission(Permission.CLIENT_CLOSE)) {
             dispatcher.requestClose(true);
             Platform.exit();
             System.exit(0);
@@ -188,12 +191,10 @@ public class App extends Application implements VkProperties {
 
         pConfig = StageScene.Config.builder()
                 .css("/css/app.css")
-                .maximized(false)
-                .width(1000.0)
-                .height(750.0)
+                .maximized(true)
                 .onClose(event -> {})
                 .modality(null)
-                .style(StageStyle.DECORATED)
+                .style(StageStyle.UNDECORATED)
                 .build();
 
         sConfig = StageScene.Config.builder()
@@ -222,6 +223,7 @@ public class App extends Application implements VkProperties {
         loginPresenter = Presenter.load("/view/login/login.fxml");
         managerPresenter = Presenter.load("/view/manager/manager.fxml");
         dineInPresenter = Presenter.load("/view/dinein/dine_in.fxml");
+        dineInPromptPresenter = Presenter.load("/view/dinein/dine_in_prompt.fxml");
         takeOutPresenter = Presenter.load("/view/takeout/take_out.fxml");
         finderPresenter = Presenter.load("/view/finder/finder.fxml");
         orderEditorPresenter = Presenter.load("/view/order/order_editor.fxml");
@@ -239,6 +241,7 @@ public class App extends Application implements VkProperties {
         dbChargePresenter = new DbChargePresenter();
         dbCustomerPresenter = new DbCustomerPresenter();
         dbSalesOrderPresenter = new DbSalesOrderPresenter();
+        dbPropertyPresenter = new DbPropertyPresenter();
 
         homePresenter = getHomePresenter(properties.getStr("home"));
 
@@ -288,8 +291,6 @@ public class App extends Application implements VkProperties {
                 return dineInPresenter;
             case "take-out":
                 return takeOutPresenter;
-            case "manager":
-                return managerPresenter;
             case "finder":
             default:
                 return finderPresenter;

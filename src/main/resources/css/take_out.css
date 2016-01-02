@@ -17,7 +17,7 @@
 
 /* Customer Entry */
 #vbCustomerEntry {
-    -fx-border-color: #c01800;
+    -fx-border-color: #8C1200;
     -fx-padding: 10px;
     -fx-spacing: 10px;
 }
@@ -29,7 +29,7 @@
  ******************************************************************/
 
 #backButton, #nextButton, #resetButton, #createButton {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #backText, #nextText, #resetText, #createText {
@@ -49,7 +49,7 @@
  ******************************************************************/
 
 #customerView {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #customerFullName, #customerPhoneNumber {

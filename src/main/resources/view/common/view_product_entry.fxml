@@ -4,39 +4,37 @@
 <?import javafx.scene.layout.*?>
 <GridPane fx:controller="ow.micropos.client.desktop.presenter.common.ViewProductEntry"
           xmlns="http://javafx.com/javafx/8.0.40"
-          xmlns:fx="http://javafx.com/fxml/1">
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:id="gpParent"
+          id="productEntryView">
 
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>
-        <RowConstraints vgrow="NEVER"/>
-        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints/>
     </rowConstraints>
 
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
-        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints/>
     </columnConstraints>
 
-    <Label GridPane.rowIndex="0"
-           GridPane.columnIndex="0"
-           GridPane.columnSpan="2"
-           fx:id="lblMenuItem"
-           id="peItem"/>
+    <StackPane id="lblPeMenuItemWrapper"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="0">
+        <Label fx:id="lblMenuItem"
+               styleClass="tertiary-info"/>
+    </StackPane>
 
-    <Label GridPane.rowIndex="1"
-           GridPane.columnIndex="0"
-           GridPane.columnSpan="2"
-           fx:id="lblModifiers"
-           id="peModifiers"/>
+    <Label fx:id="lblTotal"
+           styleClass="tertiary-info"
+           GridPane.rowIndex="0"
+           GridPane.columnIndex="1"/>
 
-    <Label GridPane.rowIndex="2"
+    <Label fx:id="lblModifiers"
+           id="lblModifiers"
+           styleClass="tertiary-info"
+           GridPane.rowIndex="1"
            GridPane.columnIndex="0"
-           fx:id="lblStatus"
-           id="peStatus"/>
-
-    <Label GridPane.rowIndex="2"
-           GridPane.columnIndex="1"
-           fx:id="lblTotal"
-           id="peTotal"/>
+           GridPane.columnSpan="2"/>
 
 </GridPane>

@@ -14,28 +14,26 @@
     </rowConstraints>
 
     <columnConstraints>
-        <ColumnConstraints percentWidth="25"/>
-        <ColumnConstraints percentWidth="57"/>
-        <ColumnConstraints percentWidth="18"/>
+        <ColumnConstraints percentWidth="80"/>
+        <ColumnConstraints percentWidth="20"/>
     </columnConstraints>
 
     <GridView fx:id="gvOrderGrid"
               GridPane.rowIndex="0"
-              GridPane.columnIndex="0"
-              GridPane.columnSpan="2"/>
+              GridPane.columnIndex="0"/>
 
     <VBox id="vbOptions"
           GridPane.rowIndex="0"
-          GridPane.columnIndex="2">
+          GridPane.columnIndex="1">
+
+        <StackPane fx:id="cancelOption">
+            <Label text="Done"
+                   id="cancelText"/>
+        </StackPane>
 
         <StackPane fx:id="newOption">
             <Label text="New"
                    id="newText"/>
-        </StackPane>
-
-        <StackPane fx:id="cancelOption">
-            <Label text="Cancel"
-                   id="cancelText"/>
         </StackPane>
 
         <GridPane id="vbPage">
@@ -62,7 +60,7 @@
             </StackPane>
 
         </GridPane>
-    </VBox>
 
+    </VBox>
 
 </GridPane>

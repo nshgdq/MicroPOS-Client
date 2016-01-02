@@ -6,7 +6,9 @@ import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -23,9 +25,6 @@ public class MainPresenter extends Presenter {
 
     @FXML GridPane topBar;
 
-    @FXML StackPane fore;
-    @FXML StackPane back;
-
     @FXML GridView<Action> gvVisibleMenu;
 
     @FXML VBox vbDateTime;
@@ -38,8 +37,8 @@ public class MainPresenter extends Presenter {
     public void initialize() {
 
         vbDateTime.setAlignment(Pos.CENTER);
-        fore.setAlignment(Pos.CENTER);
-        back.setAlignment(Pos.CENTER);
+        GridPane.setHalignment(vbDateTime, HPos.CENTER);
+        GridPane.setValignment(vbDateTime, VPos.CENTER);
 
         setLabel(lblTime, App.clock.timeProperty());
         setLabel(lblDate, App.clock.dateProperty());
@@ -48,9 +47,6 @@ public class MainPresenter extends Presenter {
             App.employee = null;
             App.main.clearToRefresh(App.loginPresenter);
         }));
-
-        back.setOnMouseClicked(event -> Platform.runLater(gvVisibleMenu::prevPage));
-        fore.setOnMouseClicked(event -> Platform.runLater(gvVisibleMenu::nextPage));
 
         gvVisibleMenu.setPage(0);
         gvVisibleMenu.setRows(1);
@@ -214,6 +210,11 @@ public class MainPresenter extends Presenter {
     public <T> void setSwapRefresh(ItemPresenter<T> presenter, T item) {
         presenter.setItem(item);
         swapRefresh(presenter);
+    }
+
+    public <T> void setSkipRefresh(ItemPresenter<T> presenter, T item) {
+        presenter.setItem(item);
+
     }
 
 }

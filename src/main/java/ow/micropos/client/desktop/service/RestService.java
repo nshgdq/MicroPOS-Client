@@ -5,7 +5,7 @@ import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.menu.*;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import ow.micropos.client.desktop.model.report.CurrentSalesReport;
+import ow.micropos.client.desktop.model.report.ActiveSalesReport;
 import ow.micropos.client.desktop.model.report.DaySalesReport;
 import ow.micropos.client.desktop.model.target.Customer;
 import ow.micropos.client.desktop.model.target.Seat;
@@ -110,7 +110,7 @@ public interface RestService {
      ******************************************************************/
 
     @GET("/reports/current")
-    void getCurrentReport(Callback<CurrentSalesReport> callback);
+    void getCurrentReport(Callback<ActiveSalesReport> callback);
 
     @GET("/reports/day")
     void getDayReport(@Query("y") int year, @Query("m") int month, @Query("d") int day, Callback<DaySalesReport> callback);

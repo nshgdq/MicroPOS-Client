@@ -20,6 +20,7 @@ import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
 import ow.micropos.client.desktop.common.AlertCallback;
+import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
@@ -106,6 +107,13 @@ public class FinderPresenter extends Presenter {
         cbStatusVoid.setSelected(false);
         orders.setPage(0);
 
+        if (App.employee == null)
+            menu.remove(manager);
+        else if (!App.employee.hasPermission(Permission.CLIENT_MANAGER) && menu.contains(manager))
+            menu.remove(manager);
+        else if (App.employee.hasPermission(Permission.CLIENT_MANAGER) && !menu.contains(manager))
+            menu.add(manager);
+
         App.api.getSalesOrders((AlertCallback<List<SalesOrder>>) (salesOrders, response) ->
                 Platform.runLater(() -> {
                     filteredSalesOrders = new FilteredList<>(FXCollections.observableList(salesOrders));
@@ -184,21 +192,19 @@ public class FinderPresenter extends Presenter {
         return menu;
     }
 
+    private final Action manager = new Action("Manager", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
+            App.main.swapRefresh(App.managerPresenter))
+    );
+
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
             new Action("Dine In", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.dineInPresenter))
             ),
-
             new Action("Take Out", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.takeOutPresenter))
             ),
-
             new Action("Finder", ActionType.TAB_SELECT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.finderPresenter))
-            ),
-
-            new Action("Manager", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
-                    App.main.swapRefresh(App.managerPresenter))
             )
     );
 

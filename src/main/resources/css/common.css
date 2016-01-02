@@ -1,56 +1,32 @@
-#gpTop {
-    -fx-hgap: 10px;
-}
-
 #salesOrderView {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
-#salesOrderId {
-    -fx-alignment: center;
-    -fx-background-color: #A80000;
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 32px;
-    -fx-font-weight: bolder;
+#gpTop {
     -fx-padding: 5px;
-    -fx-min-width: 80px;
-    -fx-max-width: 80px;
-    -fx-pref-width: 80px;
-    -fx-min-height: 80px;
-    -fx-max-height: 80px;
-    -fx-pref-height: 80px;
-}
-
-#salesOrderTotalWrapper {
-    -fx-alignment: center;
     -fx-background-color: #A80000;
 }
 
-#salesOrderTotal {
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 26px;
+.primary-info {
+    -fx-font-size: 1.8em;
     -fx-font-weight: bolder;
-    -fx-padding: 4px 0 4px 0;
-
+    -fx-text-fill: #FFFF0F;
 }
 
-#salesOrderTarget, #salesOrderTargetDetails, #salesOrderDate {
-    -fx-text-fill: #D8AD00;
-    -fx-font-size: 19px;
-    -fx-font-weight: bold;
-    -fx-text-alignment: center;
-    -fx-alignment: center;
+.secondary-info {
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bolder;
 }
 
-#salesOrderStatus, #salesOrderEmployee {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 12px;
+.tertiary-info {
+    -fx-font-size: 1.5em;
 }
 
-#peItem, #peStatus, #peTotal, #peModifiers {
-    -fx-font-size: 18px;
+#lblModifiers {
+    -fx-padding: 0 0 0 20px;
 }
 
-#peModifiers {
-    -fx-padding: 0 0 0 10px;
+#productEntryView {
+    -fx-padding: 5px;
 }
+

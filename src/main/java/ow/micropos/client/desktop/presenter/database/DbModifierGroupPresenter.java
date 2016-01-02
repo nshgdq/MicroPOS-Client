@@ -25,7 +25,7 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
     private TableColumn<ModifierGroup, String> tcWeight;
 
     @Override
-    Node[] getTextFields() {
+    Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfWeight = createTextField("Weight");
@@ -58,7 +58,7 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
     }
 
     @Override
-    void clearFields() {
+    void clearControls() {
         tfName.setText("");
         tfTag.setText("");
         tfWeight.setText("");

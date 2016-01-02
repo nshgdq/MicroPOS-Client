@@ -1,12 +1,31 @@
-#gpEntries, #gvPaymentEditor, #paymentWrapper, #gpSalesOrder, #gpChargeEntries, #gpPaymentEntries {
+#gpEntries, #gvPaymentEditor, #paymentWrapper, #gpSalesOrder, #gpChargeEntries, #gpPaymentEntries, #gpOptions {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
 
 #gpTop, #gpBottom {
-    -fx-border-color: #c01800;
+    -fx-border-color: #8C1200;
     -fx-padding: 0 5px 0 5px;
 }
+
+#optionButton {
+    -fx-background-color: #8C1200;
+}
+
+#optionText {
+    -fx-font-weight: bolder;
+    -fx-padding: 20px;
+}
+
+.primary-info {
+    -fx-font-size: 2em;
+    -fx-font-weight: bolder;
+}
+
+.secondary-info {
+    -fx-font-size: 1.5em;
+}
+
 
 /******************************************************************
  *                                                                *
@@ -15,7 +34,7 @@
  ******************************************************************/
 
 #chargeView {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #lblChargeTag {
@@ -33,28 +52,36 @@
 }
 
 #productEntryView {
-    -fx-background-color: #C01800;
+    -fx-background-color: transparent;
+}
+
+#lblPeMenuItemWrapper {
+    -fx-background-color: transparent;
 }
 
 #lblPeMenuItem {
-    -fx-background-color: #A80000;
+    -fx-background-color: transparent;
+    -fx-padding: 0 10px 0 10px;
+    -fx-font-size: 1.8em;
+}
+
+#lblPeTotal {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFF0F;
+    -fx-font-weight: bolder;
     -fx-padding: 0 10px 0 10px;
 }
 
 #lblPeModifiers {
+    -fx-font-size: 1.5em;
     -fx-padding: 0 20px 0 20px;
 }
 
 #lblPeStatus {
-    -fx-text-fill: #FFEF0F;
+    -fx-text-fill: #FFFF0F;
     -fx-padding: 0 10px 0 10px;
 }
 
-#lblPeTotal {
-    -fx-text-fill: #FFEF0F;
-    -fx-font-weight: bolder;
-    -fx-padding: 0 10px 0 10px;
-}
 
 /******************************************************************
  *                                                                *
@@ -63,7 +90,7 @@
  ******************************************************************/
 
 #chargeEntryView {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #lblChargeName {
@@ -72,12 +99,12 @@
 }
 
 #lblChargeStatus {
-    -fx-text-fill: #FFEF0F;
+    -fx-text-fill: #FFFF0F;
     -fx-padding: 0 10px 0 10px;
 }
 
 #lblChargeValue {
-    -fx-text-fill: #FFEF0F;
+    -fx-text-fill: #FFFF0F;
     -fx-font-weight: bolder;
     -fx-padding: 0 10px 0 10px;
 }
@@ -89,7 +116,7 @@
  ******************************************************************/
 
 #paymentEntryView {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #lblPaymentType {
@@ -98,12 +125,12 @@
 }
 
 #lblPaymentStatus {
-    -fx-text-fill: #FFEF0F;
+    -fx-text-fill: #FFFF0F;
     -fx-padding: 0 10px 0 10px;
 }
 
 #lblPaymentAmount {
-    -fx-text-fill: #FFEF0F;
+    -fx-text-fill: #FFFF0F;
     -fx-font-weight: bolder;
     -fx-padding: 0 10px 0 10px;
 }
@@ -135,7 +162,7 @@
     -fx-min-height: 110px;
     -fx-max-height: 110px;
     -fx-pref-height: 110px;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #keypadRegularButton {
@@ -145,5 +172,5 @@
     -fx-min-height: 110px;
     -fx-max-height: 110px;
     -fx-pref-height: 110px;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }

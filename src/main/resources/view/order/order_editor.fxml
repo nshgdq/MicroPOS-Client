@@ -10,18 +10,20 @@
           fx:controller="ow.micropos.client.desktop.presenter.order.OrderEditorPresenter">
 
     <rowConstraints>
-        <RowConstraints percentHeight="100"/>
+        <RowConstraints percentHeight="90"/>
+        <RowConstraints percentHeight="10"/>
     </rowConstraints>
 
     <columnConstraints>
         <ColumnConstraints percentWidth="25"/>
-        <ColumnConstraints percentWidth="57"/>
-        <ColumnConstraints percentWidth="18"/>
+        <ColumnConstraints percentWidth="75"/>
     </columnConstraints>
 
+    <!-- Order Summary -->
     <GridPane id="gpSalesOrder"
               GridPane.rowIndex="0"
-              GridPane.columnIndex="0">
+              GridPane.columnIndex="0"
+              GridPane.rowSpan="2">
 
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
@@ -43,23 +45,28 @@
             </columnConstraints>
 
             <Label fx:id="info"
+                   styleClass="primary-info"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="0"
                    GridPane.columnSpan="2"/>
 
             <Label fx:id="employee"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="1"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="status"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="1"
                    GridPane.columnIndex="1"/>
 
             <Label fx:id="target"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="2"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="time"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="2"
                    GridPane.columnIndex="1"/>
 
@@ -85,48 +92,59 @@
             </columnConstraints>
 
             <Label text="Product Total"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="productTotal"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="1"/>
 
             <Label text="Discount"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="1"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="chargeTotal"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="1"
                    GridPane.columnIndex="1"/>
 
             <Label text="Gratuity"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="2"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="gratuityTotal"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="2"
                    GridPane.columnIndex="1"/>
 
             <Label text="Sales Tax"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="3"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="taxTotal"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="3"
                    GridPane.columnIndex="1"/>
 
             <Label text="Grand Total"
+                   styleClass="primary-info"
                    GridPane.rowIndex="4"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="grandTotal"
+                   styleClass="primary-info"
                    GridPane.rowIndex="4"
                    GridPane.columnIndex="1"/>
         </GridPane>
 
     </GridPane>
 
+    <!-- Menu -->
     <StackPane fx:id="spItems"
                GridPane.rowIndex="0"
                GridPane.columnIndex="1">
@@ -136,58 +154,72 @@
                   id="gpMenuItems"/>
     </StackPane>
 
-    <VBox id="vbOptions"
-          GridPane.rowIndex="0"
-          GridPane.columnIndex="2">
+    <!-- Options -->
+    <GridPane id="gpOptions"
+              GridPane.rowIndex="1"
+              GridPane.columnIndex="1">
 
-        <StackPane fx:id="gratuityOption">
-            <Label text="Toggle Gratuity"
-                   id="gratuityText"/>
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+        </columnConstraints>
+
+        <StackPane fx:id="categoriesOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0">
+            <Label text="Back"
+                   id="optionText"/>
         </StackPane>
 
-        <StackPane fx:id="voidOption">
-            <Label text="Void"
-                   id="voidText"/>
+        <StackPane fx:id="backOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="1">
+            <Label text="Prev Pg."
+                   id="optionText"/>
         </StackPane>
 
-        <StackPane fx:id="printOption">
+        <StackPane fx:id="nextOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="2">
+            <Label text="Next Pg."
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="printOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="3">
             <Label text="Print"
-                   id="printText"/>
+                   id="optionText"/>
         </StackPane>
 
-        <StackPane fx:id="cancelOption">
+        <StackPane fx:id="cancelOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="4">
             <Label text="Cancel"
-                   id="cancelText"/>
+                   id="optionText"/>
         </StackPane>
 
-        <StackPane fx:id="sendOption">
+        <StackPane fx:id="sendOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="5">
             <Label text="Send"
-                   id="sendText"/>
+                   id="optionText"/>
         </StackPane>
 
-        <GridPane id="paging">
-
-            <columnConstraints>
-                <ColumnConstraints percentWidth="50"/>
-                <ColumnConstraints percentWidth="50"/>
-            </columnConstraints>
-
-            <StackPane fx:id="backButton"
-                       GridPane.rowIndex="0"
-                       GridPane.columnIndex="0">
-                <Label text="&lt;"
-                       id="backText"/>
-            </StackPane>
-
-            <StackPane fx:id="nextButton"
-                       GridPane.rowIndex="0"
-                       GridPane.columnIndex="1">
-                <Label text="&gt;"
-                       id="nextText"/>
-            </StackPane>
-
-        </GridPane>
-
-    </VBox>
+    </GridPane>
 
 </GridPane>

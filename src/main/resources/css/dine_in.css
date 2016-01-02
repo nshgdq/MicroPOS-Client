@@ -1,6 +1,20 @@
-#restaurantLayoutGrid {
+#restaurantLayoutGrid, #dineInPromptView {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Keypad
+ *                                                                *
+ ******************************************************************/
+
+.keypad-button {
+    -fx-background-color: #8C1200;
+}
+
+.keypad-text {
+    -fx-background-color: transparent;
 }
 
 /******************************************************************
@@ -11,7 +25,7 @@
 
 #seatView0 {
     -fx-border-width: 2px;
-    -fx-border-color: #C01800;
+    -fx-border-color: #8C1200;
     -fx-background-color: transparent;
 }
 
@@ -44,7 +58,7 @@
 }
 
 #seatView4 {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #seatTag4 {

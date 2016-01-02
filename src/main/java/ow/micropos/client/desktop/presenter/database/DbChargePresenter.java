@@ -30,7 +30,7 @@ public class DbChargePresenter extends DbEntityPresenter<Charge> {
     TableColumn<Charge, String> weight;
 
     @Override
-    Node[] getTextFields() {
+    Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfType = createTextField("Type");
@@ -70,7 +70,7 @@ public class DbChargePresenter extends DbEntityPresenter<Charge> {
     }
 
     @Override
-    void clearFields() {
+    void clearControls() {
         tfName.setText("");
         tfTag.setText("");
         tfType.setText("");

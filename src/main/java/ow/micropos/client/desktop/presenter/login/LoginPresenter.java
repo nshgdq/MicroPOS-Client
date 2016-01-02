@@ -4,14 +4,14 @@ import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import org.apache.commons.lang3.StringUtils;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.AlertCallback;
@@ -21,21 +21,23 @@ import retrofit.client.Response;
 
 public class LoginPresenter extends Presenter {
 
-    @FXML ImageView imgLogo;
-    @FXML Label lblPin;
-    @FXML GridPane gpKeypad;
-    @FXML Button btn0;
-    @FXML Button btn1;
-    @FXML Button btn2;
-    @FXML Button btn3;
-    @FXML Button btn4;
-    @FXML Button btn5;
-    @FXML Button btn6;
-    @FXML Button btn7;
-    @FXML Button btn8;
-    @FXML Button btn9;
-    @FXML Button btnClear;
-    @FXML Button btnLogin;
+
+    @FXML public ImageView imgLogo;
+    @FXML public Label lblPin;
+    @FXML public GridPane gpKeypad;
+    @FXML public StackPane btn0;
+    @FXML public StackPane btn1;
+    @FXML public StackPane btn2;
+    @FXML public StackPane btn3;
+    @FXML public StackPane btn4;
+    @FXML public StackPane btn5;
+    @FXML public StackPane btn6;
+    @FXML public StackPane btn7;
+    @FXML public StackPane btn8;
+    @FXML public StackPane btn9;
+    @FXML public StackPane btnClear;
+    @FXML public StackPane btnLogin;
+    @FXML public GridPane gpLogin;
 
     private StringProperty rawPin;
 
@@ -45,7 +47,7 @@ public class LoginPresenter extends Presenter {
         rawPin = new SimpleStringProperty("");
 
         imgLogo.setImage(new Image(App.properties.getStr("logo")));
-        imgLogo.setFitWidth(500);
+        imgLogo.setFitWidth(App.properties.getDbl("logo-size"));
         imgLogo.setPreserveRatio(true);
         imgLogo.setSmooth(true);
         imgLogo.setCache(true);
@@ -61,34 +63,34 @@ public class LoginPresenter extends Presenter {
             }
         });
 
-        btn0.setOnAction(event -> rawPin.set(rawPin.get() + "0"));
-        btn1.setOnAction(event -> rawPin.set(rawPin.get() + "1"));
-        btn2.setOnAction(event -> rawPin.set(rawPin.get() + "2"));
-        btn3.setOnAction(event -> rawPin.set(rawPin.get() + "3"));
-        btn4.setOnAction(event -> rawPin.set(rawPin.get() + "4"));
-        btn5.setOnAction(event -> rawPin.set(rawPin.get() + "5"));
-        btn6.setOnAction(event -> rawPin.set(rawPin.get() + "6"));
-        btn7.setOnAction(event -> rawPin.set(rawPin.get() + "7"));
-        btn8.setOnAction(event -> rawPin.set(rawPin.get() + "8"));
-        btn9.setOnAction(event -> rawPin.set(rawPin.get() + "9"));
-        btnClear.setOnAction(event -> rawPin.set(""));
-        btnLogin.setOnAction(loginEvent);
+        btn0.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "0"));
+        btn1.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "1"));
+        btn2.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "2"));
+        btn3.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "3"));
+        btn4.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "4"));
+        btn5.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "5"));
+        btn6.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "6"));
+        btn7.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "7"));
+        btn8.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "8"));
+        btn9.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "9"));
+        btnClear.setOnMouseClicked(event -> rawPin.set(""));
+        btnLogin.setOnMouseClicked(loginEvent);
     }
 
     @Override
     public void dispose() {
-        btn0.setOnAction(null);
-        btn1.setOnAction(null);
-        btn2.setOnAction(null);
-        btn3.setOnAction(null);
-        btn4.setOnAction(null);
-        btn5.setOnAction(null);
-        btn6.setOnAction(null);
-        btn7.setOnAction(null);
-        btn8.setOnAction(null);
-        btn9.setOnAction(null);
-        btnClear.setOnAction(null);
-        btnLogin.setOnAction(null);
+        btn0.setOnMouseClicked(null);
+        btn1.setOnMouseClicked(null);
+        btn2.setOnMouseClicked(null);
+        btn3.setOnMouseClicked(null);
+        btn4.setOnMouseClicked(null);
+        btn5.setOnMouseClicked(null);
+        btn6.setOnMouseClicked(null);
+        btn7.setOnMouseClicked(null);
+        btn8.setOnMouseClicked(null);
+        btn9.setOnMouseClicked(null);
+        btnClear.setOnMouseClicked(null);
+        btnLogin.setOnMouseClicked(null);
     }
 
     @Override
@@ -96,24 +98,21 @@ public class LoginPresenter extends Presenter {
         rawPin.set("");
     }
 
-    private final EventHandler<ActionEvent> loginEvent = (event) -> {
-            App.api.getEmployee(
-                    rawPin.get(),
-                    new AlertCallback<Employee>() {
-                        @Override
-                        public void onSuccess(Employee employee, Response response) {
-                            if (employee != null) {
-                                App.employee = employee;
-                                App.main.nextRefresh(App.homePresenter);
-                            }
-                        }
+    private final EventHandler<MouseEvent> loginEvent = (event) -> App.api.getEmployee(
+            rawPin.get(),
+            new AlertCallback<Employee>() {
+                @Override
+                public void onSuccess(Employee employee, Response response) {
+                    if (employee != null) {
+                        App.employee = employee;
+                        App.main.nextRefresh(App.homePresenter);
+                    }
+                }
 
-                        @Override
-                        public void onFailure(RetrofitError error) {
-                            refresh();
-                        }
-                    });
-    };
-
+                @Override
+                public void onFailure(RetrofitError error) {
+                    refresh();
+                }
+            });
 
 }

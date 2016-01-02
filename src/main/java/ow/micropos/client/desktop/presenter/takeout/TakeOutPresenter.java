@@ -14,6 +14,7 @@ import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
 import ow.micropos.client.desktop.common.AlertCallback;
+import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.model.target.Customer;
 
@@ -31,12 +32,13 @@ public class TakeOutPresenter extends Presenter {
     @FXML TextField tfFirstName;
     @FXML TextField tfLastName;
 
-    private FilteredList<Customer> filteredCustomers;
+    private FilteredList<Customer> filteredCustomers = new FilteredList<>(FXCollections.observableArrayList());
+    ;
 
     @FXML
     public void initialize() {
 
-        spReset.setOnMouseClicked(event -> Platform.runLater(this::clear));
+        spReset.setOnMouseClicked(event -> Platform.runLater(this::refresh));
         spBack.setOnMouseClicked(event -> Platform.runLater(gvCustomers::prevPage));
         spNext.setOnMouseClicked(event -> Platform.runLater(gvCustomers::nextPage));
         spCreate.setOnMouseClicked(event -> {
@@ -98,11 +100,19 @@ public class TakeOutPresenter extends Presenter {
         tfFirstName.clear();
         tfPhoneNumber.clear();
 
-        App.api.getCustomers((AlertCallback<List<Customer>>) (cList, response) -> {
-            filteredCustomers = new FilteredList<>(FXCollections.observableList(cList));
-            updateCustomerFilter();
-            gvCustomers.setItems(filteredCustomers);
-        });
+        if (App.employee == null)
+            menu.remove(manager);
+        else if (!App.employee.hasPermission(Permission.CLIENT_MANAGER) && menu.contains(manager))
+            menu.remove(manager);
+        else if (App.employee.hasPermission(Permission.CLIENT_MANAGER) && !menu.contains(manager))
+            menu.add(manager);
+
+        App.api.getCustomers((AlertCallback<List<Customer>>) (cList, response) ->
+                Platform.runLater(() -> {
+                    filteredCustomers = new FilteredList<>(FXCollections.observableList(cList));
+                    updateCustomerFilter();
+                    gvCustomers.setItems(filteredCustomers);
+                }));
     }
 
     @Override
@@ -139,6 +149,10 @@ public class TakeOutPresenter extends Presenter {
         return menu;
     }
 
+    private final Action manager = new Action("Manager", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
+            App.main.swapRefresh(App.managerPresenter))
+    );
+
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
             new Action("Dine In", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.dineInPresenter))
@@ -148,9 +162,6 @@ public class TakeOutPresenter extends Presenter {
             ),
             new Action("Finder", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.finderPresenter))
-            ),
-            new Action("Manager", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
-                    App.main.swapRefresh(App.managerPresenter))
             )
     );
 

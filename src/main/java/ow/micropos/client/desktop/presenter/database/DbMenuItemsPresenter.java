@@ -31,7 +31,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
     TableColumn<MenuItem, String> weight;
 
     @Override
-    Node[] getTextFields() {
+    Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfPrice = createTextField("Price");
@@ -76,7 +76,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
     }
 
     @Override
-    void clearFields() {
+    void clearControls() {
         tfName.setText("");
         tfTag.setText("");
         tfPrice.setText("");

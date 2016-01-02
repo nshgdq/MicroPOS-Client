@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<HBox fx:controller="ow.micropos.client.desktop.presenter.modify.ViewModifierGroup"
-      xmlns="http://javafx.com/javafx/8.0.40"
-      xmlns:fx="http://javafx.com/fxml/1"
-      id="modifierGroupView">
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.modify.ViewModifierGroup"
+          xmlns="http://javafx.com/javafx/8.0.40"
+          xmlns:fx="http://javafx.com/fxml/1"
+          id="modifierGroupView">
 
-    <Label fx:id="lblTag"
-           id="modifierGroupTag"/>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
 
-    <Label fx:id="lblName"
-           id="modifierGroupName"/>
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
 
-</HBox>
+    <StackPane GridPane.rowIndex="0"
+               GridPane.columnIndex="0"
+               id="modifierGroupTagPane">
+        <Label fx:id="lblTag"
+               id="modifierGroupTag"/>
+    </StackPane>
+
+    <StackPane GridPane.rowIndex="1"
+               GridPane.columnIndex="0"
+               id="modifierGroupNamePane">
+        <Label fx:id="lblName"
+               id="modifierGroupName"/>
+    </StackPane>
+
+</GridPane>

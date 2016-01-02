@@ -89,7 +89,7 @@
 
 #tag {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 32px;
     -fx-font-weight: bolder;
@@ -113,8 +113,8 @@
 }
 
 #name {
-    -fx-background-color: #C01800;
-    -fx-text-fill: #FFEF0F;
+    -fx-background-color: #8C1200;
+    -fx-text-fill: #FFFF0F;
     -fx-font-size: 22px;
     -fx-alignment: center;
     -fx-text-alignment: center;
@@ -124,7 +124,7 @@
 
 #amount {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-text-fill: #000000;
 }
 
@@ -145,8 +145,8 @@
 }
 
 #lblMenuItemName {
-    -fx-background-color: #C01800;
-    -fx-text-fill: #FFEF0F;
+    -fx-background-color: #8C1200;
+    -fx-text-fill: #FFFF0F;
     -fx-font-size: 22px;
     -fx-alignment: center;
     -fx-text-alignment: center;
@@ -156,7 +156,7 @@
 
 #lblMenuItemPrice {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-text-fill: #000000;
 }
 
@@ -169,7 +169,7 @@
 
 #lblSectionTag {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 32px;
     -fx-font-weight: bolder;
@@ -193,8 +193,8 @@
 }
 
 #lblSeatTag {
-    -fx-background-color: #C01800;
-    -fx-text-fill: #FFEF0F;
+    -fx-background-color: #8C1200;
+    -fx-text-fill: #FFFF0F;
     -fx-font-size: 22px;
     -fx-alignment: center;
     -fx-text-alignment: center;
@@ -204,7 +204,7 @@
 
 #lblPartySize {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-text-fill: #000000;
 }
 

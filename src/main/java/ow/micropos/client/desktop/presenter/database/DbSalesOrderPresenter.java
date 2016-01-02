@@ -18,7 +18,7 @@ public class DbSalesOrderPresenter extends DbEntityPresenter<SalesOrder> {
     TableColumn<SalesOrder, String> total;
 
     @Override
-    Node[] getTextFields() {
+    Node[] getEditControls() {
         return new Node[0];
     }
 
@@ -52,7 +52,7 @@ public class DbSalesOrderPresenter extends DbEntityPresenter<SalesOrder> {
     }
 
     @Override
-    void clearFields() {
+    void clearControls() {
 
     }
 

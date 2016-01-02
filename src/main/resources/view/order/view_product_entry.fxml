@@ -10,7 +10,7 @@
 
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>
-        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints/>
     </rowConstraints>
 
     <columnConstraints>

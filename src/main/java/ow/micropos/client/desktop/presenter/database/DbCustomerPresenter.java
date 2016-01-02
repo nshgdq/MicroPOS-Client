@@ -24,7 +24,7 @@ public class DbCustomerPresenter extends DbEntityPresenter<Customer> {
     TableColumn<Customer, String> phone;
 
     @Override
-    Node[] getTextFields() {
+    Node[] getEditControls() {
         tfFirst = createTextField("First Name");
         tfLast = createTextField("Last Name");
         tfPhone = createTextField("Phone Number");
@@ -56,7 +56,7 @@ public class DbCustomerPresenter extends DbEntityPresenter<Customer> {
     }
 
     @Override
-    void clearFields() {
+    void clearControls() {
         tfFirst.setText("");
         tfLast.setText("");
         tfPhone.setText("");

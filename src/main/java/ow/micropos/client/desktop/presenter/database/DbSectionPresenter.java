@@ -29,7 +29,7 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
     TableColumn<Section, String> weight;
 
     @Override
-    Node[] getTextFields() {
+    Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfRows = createTextField("Rows");
@@ -70,7 +70,7 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
     }
 
     @Override
-    void clearFields() {
+    void clearControls() {
         tfName.setText("");
         tfTag.setText("");
         tfRows.setText("");

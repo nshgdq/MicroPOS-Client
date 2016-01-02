@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ow.micropos.client.desktop.presenter.dinein.DineInPromptPresenter"
+          stylesheets="/css/dine_in.css"
+          id="dineInPromptView">
+
+    <rowConstraints>
+        <RowConstraints percentHeight="20"/>
+        <RowConstraints percentHeight="20"/>
+        <RowConstraints percentHeight="20"/>
+        <RowConstraints percentHeight="20"/>
+        <RowConstraints percentHeight="20"/>
+    </rowConstraints>
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="20"/>
+    </columnConstraints>
+
+    <StackPane GridPane.rowIndex="0"
+               GridPane.columnIndex="1"
+               GridPane.columnSpan="2">
+        <Label text="Party Size?"/>
+    </StackPane>
+
+    <StackPane GridPane.rowIndex="0"
+               GridPane.columnIndex="3">
+        <TextField fx:id="tfPartySize"
+                   text="0"
+                   editable="false"
+                   focusTraversable="false"/>
+    </StackPane>
+
+    <StackPane fx:id="btn7"
+               styleClass="keypad-button"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="1">
+        <Label styleClass="keypad-text"
+               text="7"/>
+    </StackPane>
+
+    <StackPane fx:id="btn8"
+               styleClass="keypad-button"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="2">
+        <Label styleClass="keypad-text"
+               text="8"/>
+    </StackPane>
+
+    <StackPane fx:id="btn9"
+               styleClass="keypad-button"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="3">
+        <Label styleClass="keypad-text"
+               text="9"/>
+    </StackPane>
+
+
+    <StackPane fx:id="btn4"
+               styleClass="keypad-button"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="1">
+        <Label styleClass="keypad-text"
+               text="4"/>
+    </StackPane>
+
+    <StackPane fx:id="btn5"
+               styleClass="keypad-button"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="2">
+        <Label styleClass="keypad-text"
+               text="5"/>
+    </StackPane>
+
+    <StackPane fx:id="btn6"
+               styleClass="keypad-button"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="3">
+        <Label styleClass="keypad-text"
+               text="6"/>
+    </StackPane>
+
+    <StackPane fx:id="btn1"
+               styleClass="keypad-button"
+               GridPane.rowIndex="3"
+               GridPane.columnIndex="1">
+        <Label styleClass="keypad-text"
+               text="1"/>
+    </StackPane>
+
+    <StackPane fx:id="btn2"
+               styleClass="keypad-button"
+               GridPane.rowIndex="3"
+               GridPane.columnIndex="2">
+        <Label styleClass="keypad-text"
+               text="2"/>
+    </StackPane>
+
+    <StackPane fx:id="btn3"
+               styleClass="keypad-button"
+               GridPane.rowIndex="3"
+               GridPane.columnIndex="3">
+        <Label styleClass="keypad-text"
+               text="3"/>
+    </StackPane>
+
+    <StackPane fx:id="btn0"
+               styleClass="keypad-button"
+               GridPane.rowIndex="4"
+               GridPane.columnIndex="1">
+        <Label styleClass="keypad-text"
+               text="0"/>
+    </StackPane>
+
+    <StackPane fx:id="btnCancel"
+               styleClass="keypad-button"
+               GridPane.rowIndex="4"
+               GridPane.columnIndex="2">
+        <Label styleClass="keypad-text"
+               text="Cancel"/>
+    </StackPane>
+
+    <StackPane fx:id="btnOk"
+               styleClass="keypad-button"
+               GridPane.rowIndex="4"
+               GridPane.columnIndex="3">
+        <Label styleClass="keypad-text"
+               text="OK"/>
+    </StackPane>
+
+</GridPane>

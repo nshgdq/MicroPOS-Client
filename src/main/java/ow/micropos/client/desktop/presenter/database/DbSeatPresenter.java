@@ -27,7 +27,7 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
     TableColumn<Seat, String> col;
 
     @Override
-    Node[] getTextFields() {
+    Node[] getEditControls() {
         tfSection = new TextField();
         tfTag = new TextField();
         tfRow = new TextField();
@@ -121,7 +121,7 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
     }
 
     @Override
-    void clearFields() {
+    void clearControls() {
         tfSection.setText("");
         tfTag.setText("");
         tfRow.setText("");

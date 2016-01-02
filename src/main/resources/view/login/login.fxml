@@ -7,6 +7,7 @@
           xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="ow.micropos.client.desktop.presenter.login.LoginPresenter"
           stylesheets="/css/login.css"
+          fx:id="gpLogin"
           id="gpLogin">
 
     <rowConstraints>
@@ -14,10 +15,10 @@
     </rowConstraints>
 
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS"/>
-        <ColumnConstraints/>
-        <ColumnConstraints/>
-        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints percentWidth="10"/>
+        <ColumnConstraints percentWidth="40"/>
+        <ColumnConstraints percentWidth="40"/>
+        <ColumnConstraints percentWidth="10"/>
     </columnConstraints>
 
     <StackPane GridPane.rowIndex="0"
@@ -32,18 +33,18 @@
               id="keypad">
 
         <columnConstraints>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
-            <ColumnConstraints/>
+            <ColumnConstraints percentWidth="33.33"/>
+            <ColumnConstraints percentWidth="33.33"/>
+            <ColumnConstraints percentWidth="33.33"/>
         </columnConstraints>
 
         <rowConstraints>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
-            <RowConstraints/>
+            <RowConstraints percentHeight="16.66"/>
+            <RowConstraints percentHeight="16.66"/>
+            <RowConstraints percentHeight="16.66"/>
+            <RowConstraints percentHeight="16.66"/>
+            <RowConstraints percentHeight="16.66"/>
+            <RowConstraints percentHeight="16.66"/>
         </rowConstraints>
 
         <StackPane GridPane.rowIndex="0"
@@ -52,77 +53,101 @@
             <Label fx:id="lblPin"/>
         </StackPane>
 
-        <Button fx:id="btn1"
-                id="keypadButton"
-                text="1"
-                GridPane.rowIndex="1"
-                GridPane.columnIndex="0"/>
+        <StackPane fx:id="btn1"
+                   id="keypadButton"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="0">
+            <Label id="keypadText"
+                   text="1"/>
+        </StackPane>
 
-        <Button fx:id="btn2"
-                id="keypadButton"
-                text="2"
-                GridPane.rowIndex="1"
-                GridPane.columnIndex="1"/>
+        <StackPane fx:id="btn2"
+                   id="keypadButton"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="1">
+            <Label id="keypadText"
+                   text="2"/>
+        </StackPane>
 
-        <Button fx:id="btn3"
-                id="keypadButton"
-                text="3"
-                GridPane.rowIndex="1"
-                GridPane.columnIndex="2"/>
+        <StackPane fx:id="btn3"
+                   id="keypadButton"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="2">
+            <Label id="keypadText"
+                   text="3"/>
+        </StackPane>
 
-        <Button fx:id="btn4"
-                id="keypadButton"
-                text="4"
-                GridPane.rowIndex="2"
-                GridPane.columnIndex="0"/>
+        <StackPane fx:id="btn4"
+                   id="keypadButton"
+                   GridPane.rowIndex="2"
+                   GridPane.columnIndex="0">
+            <Label id="keypadText"
+                   text="4"/>
+        </StackPane>
 
-        <Button fx:id="btn5"
-                id="keypadButton"
-                text="5"
-                GridPane.rowIndex="2"
-                GridPane.columnIndex="1"/>
+        <StackPane fx:id="btn5"
+                   id="keypadButton"
+                   GridPane.rowIndex="2"
+                   GridPane.columnIndex="1">
+            <Label id="keypadText"
+                   text="5"/>
+        </StackPane>
 
-        <Button fx:id="btn6"
-                id="keypadButton"
-                text="6"
-                GridPane.rowIndex="2"
-                GridPane.columnIndex="2"/>
+        <StackPane fx:id="btn6"
+                   id="keypadButton"
+                   GridPane.rowIndex="2"
+                   GridPane.columnIndex="2">
+            <Label id="keypadText"
+                   text="6"/>
+        </StackPane>
 
-        <Button fx:id="btn7"
-                id="keypadButton"
-                text="7"
-                GridPane.rowIndex="3"
-                GridPane.columnIndex="0"/>
+        <StackPane fx:id="btn7"
+                   id="keypadButton"
+                   GridPane.rowIndex="3"
+                   GridPane.columnIndex="0">
+            <Label id="keypadText"
+                   text="7"/>
+        </StackPane>
 
-        <Button fx:id="btn8"
-                id="keypadButton"
-                text="8"
-                GridPane.rowIndex="3"
-                GridPane.columnIndex="1"/>
+        <StackPane fx:id="btn8"
+                   id="keypadButton"
+                   GridPane.rowIndex="3"
+                   GridPane.columnIndex="1">
+            <Label id="keypadText"
+                   text="8"/>
+        </StackPane>
 
-        <Button fx:id="btn9"
-                id="keypadButton"
-                text="9"
-                GridPane.rowIndex="3"
-                GridPane.columnIndex="2"/>
+        <StackPane fx:id="btn9"
+                   id="keypadButton"
+                   GridPane.rowIndex="3"
+                   GridPane.columnIndex="2">
+            <Label id="keypadText"
+                   text="9"/>
+        </StackPane>
 
-        <Button fx:id="btnClear"
-                id="keypadButton"
-                text="Clear"
-                GridPane.rowIndex="4"
-                GridPane.columnIndex="0"/>
+        <StackPane fx:id="btnClear"
+                   id="keypadButton"
+                   GridPane.rowIndex="4"
+                   GridPane.columnIndex="0">
+            <Label id="keypadText"
+                   text="Clear"/>
+        </StackPane>
 
-        <Button fx:id="btn0"
-                id="keypadButton"
-                text="0"
-                GridPane.rowIndex="4"
-                GridPane.columnIndex="1"/>
+        <StackPane fx:id="btn0"
+                   id="keypadButton"
+                   GridPane.rowIndex="4"
+                   GridPane.columnIndex="1">
+            <Label id="keypadText"
+                   text="0"/>
+        </StackPane>
 
-        <Button fx:id="btnLogin"
-                id="keypadButton"
-                text="Login"
-                GridPane.rowIndex="4"
-                GridPane.columnIndex="2"/>
+        <StackPane fx:id="btnLogin"
+                   id="keypadButton"
+                   GridPane.rowIndex="4"
+                   GridPane.columnIndex="2">
+            <Label id="keypadText"
+                   text="Login"/>
+        </StackPane>
 
     </GridPane>
 

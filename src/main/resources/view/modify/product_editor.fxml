@@ -9,19 +9,20 @@
           stylesheets="/css/modify.css"
           id="editorWrapper">
 
+    <rowConstraints>
+        <RowConstraints percentHeight="90"/>
+        <RowConstraints percentHeight="10"/>
+    </rowConstraints>
+
     <columnConstraints>
         <ColumnConstraints percentWidth="25"/>
-        <ColumnConstraints percentWidth="57"/>
-        <ColumnConstraints percentWidth="18"/>
+        <ColumnConstraints percentWidth="75"/>
     </columnConstraints>
-
-    <rowConstraints>
-        <RowConstraints vgrow="ALWAYS"/>
-    </rowConstraints>
 
     <GridPane id="gpProductEntries"
               GridPane.rowIndex="0"
-              GridPane.columnIndex="0">
+              GridPane.columnIndex="0"
+              GridPane.rowSpan="2">
 
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
@@ -48,15 +49,18 @@
             </columnConstraints>
 
             <Label fx:id="lblMenuItem"
+                   styleClass="primary-info"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="0"
                    GridPane.columnSpan="2"/>
 
             <Label fx:id="lblUnitPrice"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="1"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="lblStatus"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="1"
                    GridPane.columnIndex="1"/>
 
@@ -81,18 +85,22 @@
             </columnConstraints>
 
             <Label text="Base Price"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="4"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="lblBasePrice"
+                   styleClass="secondary-info"
                    GridPane.rowIndex="4"
                    GridPane.columnIndex="1"/>
 
             <Label text="Total Price"
+                   styleClass="primary-info"
                    GridPane.rowIndex="5"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="lblTotalPrice"
+                   styleClass="primary-info"
                    GridPane.rowIndex="5"
                    GridPane.columnIndex="1"/>
 
@@ -100,48 +108,66 @@
 
     </GridPane>
 
-    <GridView fx:id="modifiers"
-              id="modifiersView"
-              GridPane.rowIndex="0"
-              GridPane.columnIndex="1"/>
+    <StackPane fx:id="spItems"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="1">
+        <GridView fx:id="gpModifierGroups"
+                  id="gpModifierGroups"/>
+        <GridView fx:id="gpModifiers"
+                  id="gpModifiers"/>
+    </StackPane>
 
-    <GridPane GridPane.rowIndex="0"
-              GridPane.columnIndex="2">
+    <GridPane id="gpOptions"
+              GridPane.rowIndex="1"
+              GridPane.columnIndex="1">
 
         <rowConstraints>
             <RowConstraints vgrow="ALWAYS"/>
-            <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
         </columnConstraints>
 
-        <StackPane GridPane.rowIndex="0"
+        <StackPane fx:id="modGroupOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
                    GridPane.columnIndex="0">
-            <ListView fx:id="modifierGroups"
-                      AnchorPane.bottomAnchor="0"
-                      AnchorPane.leftAnchor="0"
-                      AnchorPane.topAnchor="0"
-                      AnchorPane.rightAnchor="0"/>
+            <Label text="Back"
+                   id="optionText"/>
         </StackPane>
 
-        <VBox id="vbModifierType"
-              GridPane.rowIndex="1"
-              GridPane.columnIndex="0">
-            <RadioButton fx:id="rbAll"
-                         text="All"/>
-            <RadioButton fx:id="rbAdd"
-                         text="Addition"/>
-            <RadioButton fx:id="rbExc"
-                         text="Exclusion"/>
-            <RadioButton fx:id="rbSub"
-                         text="Substitution"/>
-            <RadioButton fx:id="rbIns"
-                         text="Instruction"/>
-            <RadioButton fx:id="rbVar"
-                         text="Variation"/>
-        </VBox>
+        <StackPane fx:id="voidOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="2">
+            <Label text="Void"
+                   fx:id="voidOptionLabel"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="holdOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="3">
+            <Label text="Hold"
+                   fx:id="holdOptionLabel"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="doneOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="4">
+            <Label text="Done"
+                   id="optionText"/>
+        </StackPane>
+
 
     </GridPane>
 

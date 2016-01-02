@@ -16,6 +16,20 @@
     -fx-font-size: 2em;
 }
 
+.list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+/*
+.list-cell:even {
+    -fx-background-color: #8C1200;
+}
+
+.list-cell:odd {
+    -fx-background-color: #A80000;
+}
+*/
+
 /* Resize Radio Buttons */
 /*
 .radio-button > .radio,

@@ -119,4 +119,8 @@ public class Modifier {
         this.salesOrderEntries.setAll(salesOrderEntries);
     }
 
+    public boolean hasType(ModifierType type) {
+        return getType() == type;
+    }
+
 }

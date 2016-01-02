@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import ow.micropos.client.desktop.App;
@@ -49,7 +50,7 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
         VBox side = new VBox(10);
         side.setId("side");
-        side.getChildren().addAll(getTextFields());
+        side.getChildren().addAll(getEditControls());
         GridPane.setConstraints(side, 1, 0);
 
         root.getChildren().setAll(table, side);
@@ -58,7 +59,7 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
     }
 
-    abstract Node[] getTextFields();
+    abstract Node[] getEditControls();
 
     abstract TableColumn<T, String>[] getTableColumns();
 
@@ -68,7 +69,7 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
     abstract void bindItem(T newItem);
 
-    abstract void clearFields();
+    abstract void clearControls();
 
     abstract T createNew();
 
@@ -76,13 +77,17 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
     abstract void deleteItem(T item);
 
+    protected void onDone() {
+        App.main.backRefresh();
+    }
+
     @Override
     protected void updateItem(T currentItem, T newItem) {
         if (currentItem != null)
             unbindItem(currentItem);
 
         if (newItem == null) {
-            clearFields();
+            clearControls();
         } else {
             bindItem(newItem);
         }
@@ -196,6 +201,21 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
         }
     };
 
+    protected static final StringConverter<Color> colorConverter = new StringConverter<Color>() {
+        @Override
+        public String toString(Color object) {
+            return String.format("#%02X%02X%02X",
+                    (int) (object.getRed() * 255),
+                    (int) (object.getGreen() * 255),
+                    (int) (object.getBlue() * 255));
+        }
+
+        @Override
+        public Color fromString(String string) {
+            return Color.web(string);
+        }
+    };
+
     /******************************************************************
      *                                                                *
      * Menu
@@ -208,7 +228,7 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
     }
 
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
-            new Action("Done", ActionType.FINISH, event -> Platform.runLater(App.main::backRefresh)),
+            new Action("Done", ActionType.FINISH, event -> Platform.runLater(this::onDone)),
             new Action("New", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 table.getSelectionModel().clearSelection();
                 setItem(createNew());

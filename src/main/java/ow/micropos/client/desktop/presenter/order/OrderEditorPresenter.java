@@ -19,44 +19,56 @@ import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
 import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
-import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.menu.Category;
 import ow.micropos.client.desktop.model.menu.MenuItem;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
 
-    @FXML StackPane sendOption;
-    @FXML StackPane backButton;
-    @FXML StackPane gratuityOption;
-    @FXML StackPane voidOption;
-    @FXML StackPane cancelOption;
-    @FXML StackPane printOption;
-    @FXML StackPane nextButton;
-    @FXML Label time;
-    @FXML StackPane spItems;
-    @FXML GridView<Category> gvCategories;
-    @FXML GridView<MenuItem> gvMenuItems;
-    @FXML ListView<ProductEntry> orderEntries;
+    @FXML public StackPane categoriesOption;
+    @FXML public StackPane sendOption;
+    @FXML public StackPane backOption;
+    @FXML public StackPane cancelOption;
+    @FXML public StackPane printOption;
+    @FXML public StackPane nextOption;
+    @FXML public Label time;
+    @FXML public StackPane spItems;
+    @FXML public GridView<Category> gvCategories;
+    @FXML public GridView<MenuItem> gvMenuItems;
+    @FXML public ListView<ProductEntry> orderEntries;
 
-    @FXML Label employee;
-    @FXML Label target;
-    @FXML Label info;
-    @FXML Label status;
-    @FXML Label productTotal;
-    @FXML Label chargeTotal;
-    @FXML Label gratuityTotal;
-    @FXML Label taxTotal;
-    @FXML Label grandTotal;
+    @FXML public Label employee;
+    @FXML public Label target;
+    @FXML public Label info;
+    @FXML public Label status;
+    @FXML public Label productTotal;
+    @FXML public Label chargeTotal;
+    @FXML public Label gratuityTotal;
+    @FXML public Label taxTotal;
+    @FXML public Label grandTotal;
+
+    private int sentWeight;
+    private int holdWeight;
+    private int voidWeight;
+    private int rSentWeight;
+    private int rEditWeight;
+    private int rHoldWeight;
+    private int rVoidWeight;
 
     @FXML
     public void initialize() {
+
+        sentWeight = App.properties.getInt("pe-status-weight-sent");
+        holdWeight = App.properties.getInt("pe-status-weight-hold");
+        voidWeight = App.properties.getInt("pe-status-weight-void");
+        rSentWeight = App.properties.getInt("pe-status-weight-request-sent");
+        rEditWeight = App.properties.getInt("pe-status-weight-request-edit");
+        rHoldWeight = App.properties.getInt("pe-status-weight-request-hold");
+        rVoidWeight = App.properties.getInt("pe-status-weight-request-void");
 
         spItems.getChildren().clear();
 
@@ -71,7 +83,23 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         GridPane.setHalignment(taxTotal, HPos.RIGHT);
         GridPane.setHalignment(grandTotal, HPos.RIGHT);
 
-        backButton.setOnMouseClicked(event -> Platform.runLater(this::showCategories));
+        categoriesOption.setOnMouseClicked(event -> Platform.runLater(this::showCategories));
+
+        backOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            if (spItems.getChildren().contains(gvCategories)) {
+                gvCategories.prevPage();
+            } else if (spItems.getChildren().contains(gvMenuItems)) {
+                gvMenuItems.prevPage();
+            }
+        }));
+
+        nextOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            if (spItems.getChildren().contains(gvCategories)) {
+                gvCategories.nextPage();
+            } else if (spItems.getChildren().contains(gvMenuItems)) {
+                gvMenuItems.nextPage();
+            }
+        }));
 
         cancelOption.setOnMouseClicked(
                 event -> App.confirm.showAndWait("Are you sure? Any changes will not be saved.", App.main::backRefresh)
@@ -88,39 +116,6 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
                     });
                 });
             }
-        });
-
-        gratuityOption.setOnMouseClicked(event -> {
-            if (getItem().canHaveGratuity() && !getItem().hasGratuity()) {
-                getItem().setGratuityPercent(App.properties.getBd("gratuity-percent"));
-            } else {
-                getItem().setGratuityPercent(BigDecimal.ZERO);
-            }
-        });
-
-        voidOption.setOnMouseClicked(event -> {
-            App.confirm.showAndWait("Void Sales Order?", () -> {
-                if (App.apiIsBusy.compareAndSet(false, true)) {
-
-                    SalesOrderStatus prevStatus = getItem().getStatus();
-                    getItem().setStatus(SalesOrderStatus.REQUEST_VOID);
-
-                    App.api.postSalesOrder(getItem(), new AlertCallback<Long>() {
-                        @Override
-                        public void onSuccess(Long aLong, Response response) {
-                            Platform.runLater(() -> {
-                                App.main.backRefresh();
-                                App.notify.showAndWait("Sales Order " + aLong + " Voided.");
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(RetrofitError error) {
-                            getItem().setStatus(prevStatus);
-                        }
-                    });
-                }
-            });
         });
 
         printOption.setOnMouseClicked(event -> Platform.runLater(() -> {
@@ -152,6 +147,7 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
                 getItem().addMenuItem(presenter.getItem());
                 int lastIdx = getItem().productEntriesProperty().size() - 1;
                 orderEntries.scrollTo(lastIdx);
+                sortProductEntries(orderEntries.getItems());
             }));
             return presenter;
         });
@@ -161,7 +157,8 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             presenter.fixWidth(orderEntries);
             presenter.onClick(event -> {
                 if (presenter.getItem().getStatus() != ProductEntryStatus.VOID
-                        && presenter.getItem().getStatus() != ProductEntryStatus.REQUEST_VOID) {
+                        && presenter.getItem().getStatus() != ProductEntryStatus.REQUEST_VOID
+                        && presenter.getItem().getStatus() != ProductEntryStatus.REQUEST_HOLD_VOID) {
                     Platform.runLater(() -> {
                         App.productEditorPresenter.setContextList(getItem().getProductEntries());
                         App.main.setNextRefresh(App.productEditorPresenter, presenter.getItem());
@@ -186,6 +183,7 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             unsetLabel(taxTotal);
             unsetLabel(grandTotal);
             unsetListView(orderEntries);
+
         } else {
             setLabel(info, new StringBinding() {
                 {bind(newItem.idProperty());}
@@ -210,13 +208,15 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             setLabel(grandTotal, newItem.grandTotalProperty().asString());
             setLabel(gratuityTotal, newItem.gratuityTotalProperty().asString());
             setLabel(taxTotal, newItem.taxTotalProperty().asString());
-            setListView(orderEntries, newItem.productEntriesProperty());
+            setListView(orderEntries, newItem.getProductEntries());
 
+            sortProductEntries(orderEntries.getItems());
         }
     }
 
     @Override
     public void refresh() {
+        sortProductEntries(orderEntries.getItems());
         gvCategories.setItems(FXCollections.emptyObservableList());
         gvMenuItems.setItems(FXCollections.emptyObservableList());
 
@@ -269,12 +269,46 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
 
     private void showCategories() {
         gvMenuItems.setItems(FXCollections.emptyObservableList());
+        gvMenuItems.setPage(0);
         spItems.getChildren().setAll(gvCategories);
     }
 
     private void showMenuItems(Category category) {
         gvMenuItems.setItems(category.getMenuItems());
+        gvMenuItems.setPage(0);
         spItems.getChildren().setAll(gvMenuItems);
+    }
+
+    private int getWeight(ProductEntry pe) {
+        switch (pe.getStatus()) {
+            case SENT:
+                return sentWeight;
+            case HOLD:
+                return holdWeight;
+            case VOID:
+                return voidWeight;
+            case REQUEST_SENT:
+                return rSentWeight;
+            case REQUEST_EDIT:
+                return rEditWeight;
+            case REQUEST_HOLD:
+                return rHoldWeight;
+            case REQUEST_VOID:
+            case REQUEST_HOLD_VOID:
+                return rVoidWeight;
+            default:
+                return 0;
+        }
+    }
+
+    private void sortProductEntries(ObservableList<ProductEntry> entries) {
+        entries.sort((pe1, pe2) -> {
+            if (pe1.getStatus() == pe2.getStatus()) {
+                return pe1.getMenuItem().getWeight() - pe2.getMenuItem().getWeight();
+            } else {
+                return getWeight(pe1) - getWeight(pe2);
+            }
+        });
     }
 
 }

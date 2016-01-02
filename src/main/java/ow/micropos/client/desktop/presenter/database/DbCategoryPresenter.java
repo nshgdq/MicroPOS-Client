@@ -24,7 +24,7 @@ public class DbCategoryPresenter extends DbEntityPresenter<Category> {
     TableColumn<Category, String> weight;
 
     @Override
-    Node[] getTextFields() {
+    Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfWeight = createTextField("Weight");
@@ -57,7 +57,7 @@ public class DbCategoryPresenter extends DbEntityPresenter<Category> {
     }
 
     @Override
-    void clearFields() {
+    void clearControls() {
         tfName.setText("");
         tfTag.setText("");
         tfWeight.setText("");

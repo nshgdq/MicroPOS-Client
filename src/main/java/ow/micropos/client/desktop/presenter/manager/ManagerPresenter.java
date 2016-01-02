@@ -11,12 +11,11 @@ import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionLabel;
 import ow.micropos.client.desktop.common.ActionType;
 import ow.micropos.client.desktop.common.AlertCallback;
-import ow.micropos.client.desktop.model.report.CurrentSalesReport;
+import ow.micropos.client.desktop.model.report.ActiveSalesReport;
 import ow.micropos.client.desktop.model.report.DaySalesReport;
 import retrofit.client.Response;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class ManagerPresenter extends Presenter {
 
@@ -52,37 +51,12 @@ public class ManagerPresenter extends Presenter {
             new Action("Shutdown", ActionType.FINISH, event -> {
                 App.confirm.showAndWait("Exit Application?", App::exit);
             }),
-
-            new Action("Migration", ActionType.FINISH, event -> {
-                App.confirm.showAndWait("Perform Migration?", () -> {
-                    if (App.apiIsBusy.compareAndSet(false, true)) {
-                        App.api.migrateSalesOrders(new AlertCallback<Integer>() {
-                            @Override
-                            public void onSuccess(Integer aInt, Response response) {
-                                App.notify.showAndWait("Migrated " + aInt + " Sales Orders.");
-                            }
-                        });
-                    }
-                });
-            }),
-            new Action("Close Unpaid", ActionType.FINISH, event -> {
-                App.confirm.showAndWait("Close All Unpaid Orders?", () -> {
-                    if (App.apiIsBusy.compareAndSet(false, true)) {
-                        App.api.closeUnpaidSalesOrders(new AlertCallback<List<Long>>() {
-                            @Override
-                            public void onSuccess(List<Long> longs, Response response) {
-                                App.notify.showAndWait("Closed Orders : " + longs.toString());
-                            }
-                        });
-                    }
-                });
-            }),
             new Action("Current Report", ActionType.FINISH, event -> {
                 App.confirm.showAndWait("Generate Current Report?", () -> {
                     if (App.apiIsBusy.compareAndSet(false, true)) {
-                        App.api.getCurrentReport(new AlertCallback<CurrentSalesReport>() {
+                        App.api.getCurrentReport(new AlertCallback<ActiveSalesReport>() {
                             @Override
-                            public void onSuccess(CurrentSalesReport report, Response response) {
+                            public void onSuccess(ActiveSalesReport report, Response response) {
                                 App.dispatcher.requestPrint("receipt", App.jobBuilder.report(report));
                             }
                         });
@@ -103,6 +77,18 @@ public class ManagerPresenter extends Presenter {
                                         App.dispatcher.requestPrint("receipt", App.jobBuilder.report(report));
                                     }
                                 });
+                    }
+                });
+            }),
+            new Action("Migration", ActionType.FINISH, event -> {
+                App.confirm.showAndWait("Migration can not be undone. Please check that all open orders have been processed appropriately. Continue Migrating?", () -> {
+                    if (App.apiIsBusy.compareAndSet(false, true)) {
+                        App.api.migrateSalesOrders(new AlertCallback<Integer>() {
+                            @Override
+                            public void onSuccess(Integer aInt, Response response) {
+                                App.notify.showAndWait("Migrated " + aInt + " Sales Orders.");
+                            }
+                        });
                     }
                 });
             }),
@@ -130,12 +116,18 @@ public class ManagerPresenter extends Presenter {
             new Action("Charges", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 App.main.nextRefresh(App.dbChargePresenter);
             })),
-            new Action("Sales Orders", ActionType.BUTTON, event -> {
+            new Action("Sales Orders", ActionType.TAB_DEFAULT, event -> {
                 App.confirm.showAndWait(
                         "WARNING - Database maintenance only. Continue?",
                         () -> App.main.nextRefresh(App.dbSalesOrderPresenter)
                 );
-            })
+            }),
+            new Action("Properties", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
+                App.confirm.showAndWait(
+                        "WARNING - Database maintenance only. Continue?",
+                        () -> App.main.nextRefresh(App.dbPropertyPresenter)
+                );
+            }))
     );
 
     /******************************************************************

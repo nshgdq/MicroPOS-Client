@@ -16,10 +16,15 @@
 }
 
 /* Info, Type, Status Entry */
-#vbInfo, #vbType, #vbStatus {
-    -fx-border-color: #c01800;
+#vbInfo {
+    -fx-border-color: #8C1200;
     -fx-padding: 10px;
     -fx-spacing: 10px;
+}
+
+#vbType, #vbStatus {
+    -fx-border-color: #8C1200;
+    -fx-padding: 10px;
 }
 
 /******************************************************************
@@ -29,7 +34,7 @@
  ******************************************************************/
 
 #backButton, #nextButton, #resetButton {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #backText, #nextText, #resetText {

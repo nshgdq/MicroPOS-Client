@@ -41,7 +41,7 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.retrofit:converter-jackson:1.9.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.1'
-    compile 'org.comtel2000:fx-onscreen-keyboard:8.2.1'
+    compile 'org.comtel2000:fx-onscreen-keyboard:8.2.3'
     //compile 'org.controlsfx:controlsfx:8.40.9'
     //compile 'com.google.inject:guice:4.0'
     //compile 'org.jfxtras:jfxtras-labs:8.0-r3'

@@ -11,83 +11,66 @@
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="ALWAYS"/>
-        <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
     </columnConstraints>
 
-    <GridPane GridPane.rowIndex="0"
+    <!-- Info Grid -->
+    <GridPane fx:id="gpTop"
+              id="gpTop"
+              GridPane.rowIndex="0"
               GridPane.columnIndex="0"
-              fx:id="gpTop">
+              GridPane.columnSpan="2">
 
         <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints/>
         </columnConstraints>
 
-        <Label GridPane.rowIndex="0"
-               GridPane.columnIndex="0"
-               fx:id="lblId"
-               id="salesOrderId"/>
+        <Label fx:id="lblSoId"
+               styleClass="primary-info"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="0"/>
 
-        <VBox GridPane.rowIndex="0"
-              GridPane.columnIndex="1">
-            <Label fx:id="lblTarget"
-                   id="salesOrderTarget"/>
+        <Label fx:id="lblSoTotal"
+               styleClass="primary-info"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="1"/>
 
-            <Label fx:id="lblTargetDetails"
-                   id="salesOrderTargetDetails"/>
+        <Label fx:id="lblSoTarget"
+               styleClass="secondary-info"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="0"/>
 
-            <Label fx:id="lblDate"
-                   id="salesOrderDate"/>
-        </VBox>
+        <Label fx:id="lblSoDetails"
+               styleClass="secondary-info"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="0"/>
+
+        <Label fx:id="lblSoStatus"
+               styleClass="secondary-info"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="1"/>
+
+        <Label fx:id="lblSoTime"
+               styleClass="secondary-info"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="1"/>
 
     </GridPane>
 
-    <ListView GridPane.rowIndex="1"
-              GridPane.columnIndex="0"
-              fx:id="lvOrderSummary"
-              id="salesOrderSummary"/>
-
-    <GridPane GridPane.rowIndex="2"
-              GridPane.columnIndex="0"
-              fx:id="gpBottom">
-
-        <rowConstraints>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-        </rowConstraints>
-
-        <columnConstraints>
-            <ColumnConstraints percentWidth="50"/>
-            <ColumnConstraints percentWidth="50"/>
-        </columnConstraints>
-
-        <Label GridPane.rowIndex="0"
-               GridPane.columnIndex="0"
-               fx:id="lblStatus"
-               id="salesOrderStatus"/>
-
-        <Label GridPane.rowIndex="1"
-               GridPane.columnIndex="0"
-               fx:id="lblEmployee"
-               id="salesOrderEmployee"/>
-
-        <StackPane GridPane.rowIndex="0"
-                   GridPane.columnIndex="1"
-                   GridPane.rowSpan="2"
-                   fx:id="spTotalWrapper"
-                   id="salesOrderTotalWrapper">
-            <Label fx:id="lblTotal"
-                   id="salesOrderTotal"/>
-        </StackPane>
-
-    </GridPane>
+    <!-- Content List -->
+    <ListView fx:id="lvSoSummary"
+              id="salesOrderSummary"
+              GridPane.rowIndex="1"
+              GridPane.columnIndex="0"/>
 
 </GridPane>

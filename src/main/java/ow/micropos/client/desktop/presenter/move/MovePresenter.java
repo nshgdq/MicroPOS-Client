@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
@@ -28,13 +29,47 @@ import java.util.stream.Collectors;
 
 public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
 
-    @FXML ListView<ProductEntry> lvContext;
-    @FXML GridView<SalesOrder> gvOrderGrid;
+    @FXML public StackPane doneOption;
+    @FXML public StackPane cancelOption;
+    @FXML public StackPane newOption;
+    @FXML public StackPane spNext;
+    @FXML public StackPane spBack;
+    @FXML public ListView<ProductEntry> lvContext;
+    @FXML public GridView<SalesOrder> gvOrderGrid;
 
     @Override
     public void initialize() {
 
-        mode.set(Mode.MOVE);
+        // Adding an order is based off the first sales order.
+        newOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            SalesOrder salesOrder = SalesOrder.fromModel(App.employee, gvOrderGrid.getItems().get(0));
+            gvOrderGrid.getItems().add(salesOrder);
+        }));
+
+        // TODO : Verify no empty sent orders.
+        doneOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            if (!entriesContext.isEmpty()) {
+                Platform.runLater(() -> App.notify.showAndWait("There are still unassigned entries."));
+
+            } else if (App.apiIsBusy.compareAndSet(false, true)) {
+
+                List<SalesOrder> nonEmpty = getItem()
+                        .stream()
+                        .filter(so -> so.getId() != null || !so.getProductEntries().isEmpty())
+                        .collect(Collectors.toList());
+
+                App.api.postSalesOrders(nonEmpty, (AlertCallback<List<Long>>) (longs, response) -> {
+                    App.main.backToRefresh(2);
+                    App.notify.showAndWait("Sales Orders " + longs.toString());
+                });
+            }
+        }));
+
+        cancelOption.setOnMouseClicked(event -> Platform.runLater(() -> App.main.backToRefresh(2)));
+
+        spNext.setOnMouseClicked(event -> Platform.runLater(gvOrderGrid::nextPage));
+
+        spBack.setOnMouseClicked(event -> Platform.runLater(gvOrderGrid::prevPage));
 
         gvOrderGrid.setPage(0);
         gvOrderGrid.setRows(App.properties.getInt("multi-rows"));
@@ -44,34 +79,24 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
             ViewSalesOrder presenter = Presenter.load("/view/common/view_sales_order.fxml");
             presenter.onAnyClick(event -> Platform.runLater(() -> {
                 SalesOrder order = presenter.getItem();
-
-                if (mode.get() == Mode.REMOVE) {
-                    if (order.getId() != null || !order.getProductEntries().isEmpty() || !entriesContext.isEmpty())
-                        App.notify.showAndWait("This order can not be removed.");
-                    else
-                        gvOrderGrid.getItems().remove(order);
-                } else if (mode.get() == Mode.MOVE) {
-                    if (orderContext.get() != order && !entriesContext.isEmpty()) {
-                        order.getProductEntries().addAll(entriesContext.get());
-                        entriesContext.get().clear();
-                        orderContext.set(null);
-                    }
-
+                if (orderContext.get() != order && !entriesContext.isEmpty()) {
+                    order.getProductEntries().addAll(entriesContext.get());
+                    entriesContext.get().clear();
+                    orderContext.set(null);
                 }
             }));
             presenter.onSubItemClick((sop, pep) -> Platform.runLater(() -> {
-                if (mode.get() == Mode.MOVE) {
-                    SalesOrder order = sop.getItem();
-                    ProductEntry entry = pep.getItem();
-                    if (orderContext.get() == null) {
-                        orderContext.set(order);
-                        entriesContext.add(entry);
-                        order.getProductEntries().remove(entry);
-                    } else if (orderContext.get() == order) {
-                        entriesContext.add(entry);
-                        order.getProductEntries().remove(entry);
-                    }
+                SalesOrder order = sop.getItem();
+                ProductEntry entry = pep.getItem();
+                if (orderContext.get() == null) {
+                    orderContext.set(order);
+                    entriesContext.add(entry);
+                    order.getProductEntries().remove(entry);
+                } else if (orderContext.get() == order) {
+                    entriesContext.add(entry);
+                    order.getProductEntries().remove(entry);
                 }
+
             }));
             return presenter;
         });
@@ -81,12 +106,10 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
             ViewProductEntry presenter = Presenter.load("/view/common/view_product_entry.fxml");
             presenter.fixWidth(lvContext);
             presenter.onClick(event -> Platform.runLater(() -> {
-                if (mode.get() == Mode.MOVE) {
-                    orderContext.get().getProductEntries().add(presenter.getItem());
-                    entriesContext.remove(presenter.getItem());
-                    if (entriesContext.isEmpty())
-                        orderContext.set(null);
-                }
+                orderContext.get().getProductEntries().add(presenter.getItem());
+                entriesContext.remove(presenter.getItem());
+                if (entriesContext.isEmpty())
+                    orderContext.set(null);
             }));
             return new PresenterCellAdapter<>(presenter);
         });
@@ -107,18 +130,13 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
     }
 
     @Override
-    public ObservableList<Action> menu() {
-        return menu;
-    }
-
-    @Override
     public void dispose() {
 
     }
 
     /*=======================================================================*
      =                                                                       =
-     = Edit Context =
+     = Edit Context
      =                                                                       =
      *=======================================================================*/
 
@@ -128,58 +146,18 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
 
     /*=======================================================================*
      =                                                                       =
-     = Mode =
+     = Menu
      =                                                                       =
      *=======================================================================*/
 
-    private final ObjectProperty<Mode> mode = new SimpleObjectProperty<>();
-
-    private static enum Mode {
-        MOVE, REMOVE
+    @Override
+    public ObservableList<Action> menu() {
+        return menu;
     }
 
-    /*=======================================================================*
-     =                                                                       =
-     = Menu =
-     =                                                                       =
-     *=======================================================================*/
-
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
-
-            new Action("Send", ActionType.FINISH, event -> {
-
-                if (!entriesContext.isEmpty()) {
-                    Platform.runLater(() -> App.notify.showAndWait("There are still unassigned entries."));
-
-                } else if (App.apiIsBusy.compareAndSet(false, true)) {
-
-                    List<SalesOrder> nonEmpty = getItem()
-                            .stream()
-                            .filter(so -> so.getId() != null || !so.getProductEntries().isEmpty())
-                            .collect(Collectors.toList());
-
-                    App.api.postSalesOrders(nonEmpty, (AlertCallback<List<Long>>) (longs, response) -> {
-                        App.main.backRefresh();
-                        App.notify.showAndWait("Sales Orders " + longs.toString());
-                    });
-                }
-            }),
-
-            new Action("Cancel", ActionType.FINISH, event -> Platform.runLater(App.main::backRefresh)),
-
-            new Action("Move", ActionType.TAB_SELECT, event -> Platform.runLater(() -> mode.set(Mode.MOVE))),
-
-            new Action("Remove", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> mode.set(Mode.REMOVE))),
-
-            new Action("Add", ActionType.BUTTON, event -> Platform.runLater(() -> {
-                SalesOrder salesOrder = SalesOrder.fromModel(App.employee, gvOrderGrid.getItems().get(0));
-                gvOrderGrid.getItems().add(salesOrder);
-            })),
-
-            new Action("Prev Pg", ActionType.BUTTON, event -> Platform.runLater(gvOrderGrid::prevPage)),
-
-            new Action("Next Pg", ActionType.BUTTON, event -> Platform.runLater(gvOrderGrid::nextPage))
-
+            new Action("View", ActionType.TAB_DEFAULT, event -> Platform.runLater(App.main::backRefresh)),
+            new Action("Split", ActionType.TAB_SELECT, event -> {})
     );
 
 }

@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
@@ -30,49 +31,58 @@ import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.presenter.order.ViewProductEntry;
 import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
 
-    @FXML Label time;
-    @FXML ListView<ProductEntry> orderEntries;
-    @FXML Label employee;
-    @FXML Label target;
-    @FXML Label info;
-    @FXML Label status;
-    @FXML Label productTotal;
-    @FXML Label chargeTotal;
-    @FXML Label gratuityTotal;
-    @FXML Label taxTotal;
-    @FXML Label grandTotal;
-    //@FXML Label lblPaidAmount;
-    //@FXML Label lblChangeAmount;
+    @FXML public Label time;
+    @FXML public ListView<ProductEntry> orderEntries;
+    @FXML public Label employee;
+    @FXML public Label target;
+    @FXML public Label info;
+    @FXML public Label status;
+    @FXML public Label productTotal;
+    @FXML public Label chargeTotal;
+    @FXML public Label gratuityTotal;
+    @FXML public Label taxTotal;
+    @FXML public Label grandTotal;
+    //@FXML public Label lblPaidAmount;
+    //@FXML public Label lblChangeAmount;
 
-    @FXML ListView<Charge> lvCharges;
+    @FXML public ListView<Charge> lvCharges;
 
-    @FXML TextField tfAmount;
-    @FXML Button btn7;
-    @FXML Button btn8;
-    @FXML Button btn9;
-    @FXML Button btn4;
-    @FXML Button btn5;
-    @FXML Button btn6;
-    @FXML Button btn1;
-    @FXML Button btn2;
-    @FXML Button btn3;
-    @FXML Button btn0;
-    @FXML Button btn00;
-    @FXML Button btnEvenTender;
-    @FXML Button btnClear;
-    @FXML Button btnCash;
-    @FXML Button btnCredit;
-    @FXML Button btnCheck;
-    @FXML Button btnGiftCard;
+    @FXML public TextField tfAmount;
+    @FXML public Button btn7;
+    @FXML public Button btn8;
+    @FXML public Button btn9;
+    @FXML public Button btn4;
+    @FXML public Button btn5;
+    @FXML public Button btn6;
+    @FXML public Button btn1;
+    @FXML public Button btn2;
+    @FXML public Button btn3;
+    @FXML public Button btn0;
+    @FXML public Button btn00;
+    @FXML public Button btnEvenTender;
+    @FXML public Button btnClear;
+    @FXML public Button btnCash;
+    @FXML public Button btnCredit;
+    @FXML public Button btnCheck;
+    @FXML public Button btnGiftCard;
 
-    @FXML ListView<ChargeEntry> lvChargeEntries;
-    @FXML ListView<PaymentEntry> lvPaymentEntries;
+    @FXML public StackPane gratuityOption;
+    @FXML public StackPane printOption;
+    @FXML public StackPane cancelOption;
+    @FXML public StackPane sendOption;
+    @FXML public StackPane voidOption;
+
+    @FXML public ListView<ChargeEntry> lvChargeEntries;
+    @FXML public ListView<PaymentEntry> lvPaymentEntries;
+    @FXML public Label voidText;
 
     private StringProperty rawAmount = new SimpleStringProperty("");
     private CentStringBinding amountFormatter = new CentStringBinding(rawAmount);
@@ -90,6 +100,91 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         GridPane.setHalignment(gratuityTotal, HPos.RIGHT);
         GridPane.setHalignment(taxTotal, HPos.RIGHT);
         GridPane.setHalignment(grandTotal, HPos.RIGHT);
+
+        cancelOption.setOnMouseClicked(
+                event -> App.confirm.showAndWait("Are you sure? Any changes will not be saved.", App.main::backRefresh)
+        );
+
+        sendOption.setOnMouseClicked(event -> {
+            if (getItem().getProductEntries().isEmpty()) {
+                Platform.runLater(() -> App.notify.showAndWait("Nothing to send."));
+            } else if (App.apiIsBusy.compareAndSet(false, true)) {
+                getItem().setStatus(SalesOrderStatus.REQUEST_CLOSE);
+                App.api.postSalesOrder(getItem(), (AlertCallback<Long>) (aLong, response) -> {
+                    Platform.runLater(() -> {
+                        App.main.backRefresh();
+                        App.notify.showAndWait("Change Due: " + getItem().changeProperty().get().toString());
+                    });
+                });
+            }
+        });
+
+        gratuityOption.setOnMouseClicked(event -> {
+            if (getItem().canHaveGratuity() && !getItem().hasGratuity()) {
+                getItem().setGratuityPercent(App.properties.getBd("gratuity-percent"));
+            } else {
+                getItem().setGratuityPercent(BigDecimal.ZERO);
+            }
+        });
+
+        printOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            if (getItem().canPrint()) {
+                App.main.backRefresh();
+                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+            } else {
+                App.notify.showAndWait("Changes must be sent before printing.");
+            }
+        }));
+
+        voidOption.setOnMouseClicked(event -> {
+            if (getItem().hasStatus(SalesOrderStatus.VOID) || getItem().hasStatus(SalesOrderStatus.CLOSED)) {
+                App.confirm.showAndWait("Reopen Sales Order?", () -> {
+                    if (App.apiIsBusy.compareAndSet(false, true)) {
+
+                        SalesOrderStatus prevStatus = getItem().getStatus();
+                        getItem().setStatus(SalesOrderStatus.REQUEST_OPEN);
+
+                        App.api.postSalesOrder(getItem(), new AlertCallback<Long>() {
+                            @Override
+                            public void onSuccess(Long aLong, Response response) {
+                                Platform.runLater(() -> {
+                                    App.main.backRefresh();
+                                    App.notify.showAndWait("Sales Order " + aLong + " Reopened.");
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(RetrofitError error) {
+                                getItem().setStatus(prevStatus);
+                            }
+                        });
+                    }
+                });
+            } else {
+                App.confirm.showAndWait("Void Sales Order?", () -> {
+                    if (App.apiIsBusy.compareAndSet(false, true)) {
+
+                        SalesOrderStatus prevStatus = getItem().getStatus();
+                        getItem().setStatus(SalesOrderStatus.REQUEST_VOID);
+
+                        App.api.postSalesOrder(getItem(), new AlertCallback<Long>() {
+                            @Override
+                            public void onSuccess(Long aLong, Response response) {
+                                Platform.runLater(() -> {
+                                    App.main.backRefresh();
+                                    App.notify.showAndWait("Sales Order " + aLong + " Voided.");
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(RetrofitError error) {
+                                getItem().setStatus(prevStatus);
+                            }
+                        });
+                    }
+                });
+            }
+        });
 
         orderEntries.setCellFactory(param -> {
             ViewProductEntry presenter = Presenter.load("/view/order/view_product_entry.fxml");
@@ -171,14 +266,10 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             //unsetLabel(lblPaidAmount);
 
         } else {
+            enableKeypad();
             setListView(lvPaymentEntries, newItem.getPaymentEntries());
             //setLabel(lblChangeAmount, newItem.changeProperty().asString());
             //setLabel(lblPaidAmount, newItem.paymentTotalProperty().asString());
-
-            if (newItem.changeProperty().get().compareTo(BigDecimal.ZERO) >= 0)
-                disableKeypad();
-            else
-                enableKeypad();
         }
 
         if (newItem == null) {
@@ -220,12 +311,11 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             setListView(orderEntries, newItem.productEntriesProperty());
             setListView(lvChargeEntries, newItem.chargeEntriesProperty());
             setListView(lvPaymentEntries, newItem.paymentEntriesProperty());
+            if (newItem.hasStatus(SalesOrderStatus.CLOSED) || newItem.hasStatus(SalesOrderStatus.VOID))
+                voidText.setText("Reopen");
+            else
+                voidText.setText("Void");
         }
-    }
-
-    @Override
-    public ObservableList<Action> menu() {
-        return menu;
     }
 
     @Override
@@ -247,6 +337,28 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         unsetListView(orderEntries);
     }
 
+    /*****************************************************************************
+     *                                                                           *
+     * Menu Buttons
+     *                                                                           *
+     *****************************************************************************/
+
+    @Override
+    public ObservableList<Action> menu() {
+        return menu;
+    }
+
+    private final ObservableList<Action> menu = FXCollections.observableArrayList(
+            new Action("Order", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
+                            App.main.setSwapRefresh(App.orderEditorPresenter, getItem())
+            )),
+
+            new Action("Pay", ActionType.TAB_SELECT, event -> Platform.runLater(() ->
+                            App.main.setSwapRefresh(App.paymentEditorPresenter, getItem())
+            ))
+
+    );
+
     private void addPaymentEntry(PaymentEntryType type) {
 
         String strAmount = amountFormatter.get().isEmpty() ? "0.00" : amountFormatter.get();
@@ -260,10 +372,12 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             App.notify.showAndWait("You must enter a payment amount.");
         }
 
+        /* Auto-post on full payment
         if (getItem().changeProperty().get().compareTo(BigDecimal.ZERO) >= 0) {
             getItem().setStatus(SalesOrderStatus.REQUEST_CLOSE);
             App.api.postSalesOrder(getItem(), onPost);
         }
+        */
     }
 
     private void enableKeypad() {
@@ -294,7 +408,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     }
 
     private void disableKeypad() {
-        unsetTextProperty(tfAmount.textProperty(), "Already Paid");
+        unsetTextProperty(tfAmount.textProperty(), "Disabled");
         btnEvenTender.setOnAction(null);
         btnClear.setOnAction(null);
         btn00.setOnAction(null);
@@ -318,45 +432,5 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         App.main.backRefresh();
         App.notify.showAndWait("Change Due : " + getItem().changeProperty().get().toString());
     });
-
-    /*****************************************************************************
-     *                                                                           *
-     * Menu Buttons
-     *                                                                           *
-     *****************************************************************************/
-
-    private final ObservableList<Action> menu = FXCollections.observableArrayList(
-
-            new Action("Send", ActionType.FINISH, event -> {
-                if (getItem().getProductEntries().isEmpty()) {
-                    Platform.runLater(() -> App.notify.showAndWait("Nothing to send."));
-                } else if (App.apiIsBusy.compareAndSet(false, true)) {
-                    App.api.postSalesOrder(getItem(), (AlertCallback<Long>) (aLong, response) -> {
-                        App.main.backRefresh();
-                        App.notify.showAndWait("Sales Order " + aLong);
-                    });
-                }
-            }),
-
-            new Action("Print", ActionType.FINISH, event -> Platform.runLater(() -> {
-                if (getItem().canPrint()) {
-                    App.main.backRefresh();
-                    App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
-                } else {
-                    App.notify.showAndWait("Order must be sent before printing.");
-                }
-            })),
-
-            new Action("Cancel", ActionType.FINISH, event -> Platform.runLater(App.main::backRefresh)),
-
-            new Action("Order", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
-                            App.main.setSwapRefresh(App.orderEditorPresenter, getItem())
-            )),
-
-            new Action("Pay", ActionType.TAB_SELECT, event -> Platform.runLater(() ->
-                            App.main.setSwapRefresh(App.paymentEditorPresenter, getItem())
-            ))
-
-    );
 
 }

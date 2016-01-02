@@ -10,11 +10,11 @@ import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
 import ow.micropos.client.desktop.common.AlertCallback;
+import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.model.target.Seat;
 import ow.micropos.client.desktop.model.target.Section;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class DineInPresenter extends Presenter {
@@ -32,15 +32,7 @@ public class DineInPresenter extends Presenter {
             presenter.onClick(event -> {
                 List<SalesOrder> orders = presenter.getItem().getSalesOrders();
                 if (orders.size() == 0) {
-                    App.main.setNextRefresh(
-                            App.orderEditorPresenter,
-                            SalesOrder.forSeat(
-                                    App.employee,
-                                    presenter.getItem(),
-                                    App.properties.getBd("tax-percent"),
-                                    BigDecimal.ZERO
-                            )
-                    );
+                    App.main.setNextRefresh(App.dineInPromptPresenter, presenter.getItem());
                 } else {
                     App.targetPresenter.setItem(presenter.getItem());
                     App.main.nextRefresh(App.targetPresenter);
@@ -57,6 +49,13 @@ public class DineInPresenter extends Presenter {
         // Oriental Wok does not use sections feature, so all seats belong to one section.
         long id = App.properties.getLng("default-section");
 
+        if (App.employee == null)
+            menu.remove(manager);
+        else if (!App.employee.hasPermission(Permission.CLIENT_MANAGER) && menu.contains(manager))
+            menu.remove(manager);
+        else if (App.employee.hasPermission(Permission.CLIENT_MANAGER) && !menu.contains(manager))
+            menu.add(manager);
+
         App.api.getSection(id, (AlertCallback<Section>) (section, response) -> {
             gvRestaurantLayout.setRows(section.getRows());
             gvRestaurantLayout.setCols(section.getCols());
@@ -69,16 +68,20 @@ public class DineInPresenter extends Presenter {
         gvRestaurantLayout.getChildren().clear();
     }
 
-    /*****************************************************************************
-     *                                                                           *
-     * Menu                                                                      *
-     *                                                                           *
-     *****************************************************************************/
+    /******************************************************************
+     *                                                                *
+     * Menu
+     *                                                                *
+     ******************************************************************/
 
     @Override
     public ObservableList<Action> menu() {
         return menu;
     }
+
+    private final Action manager = new Action("Manager", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
+            App.main.swapRefresh(App.managerPresenter))
+    );
 
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
             new Action("Dine In", ActionType.TAB_SELECT, event -> Platform.runLater(() ->
@@ -91,10 +94,6 @@ public class DineInPresenter extends Presenter {
 
             new Action("Finder", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.finderPresenter))
-            ),
-
-            new Action("Manager", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
-                    App.main.swapRefresh(App.managerPresenter))
             )
     );
 

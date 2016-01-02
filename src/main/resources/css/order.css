@@ -1,24 +1,29 @@
-#editorWrapper, #gpMenu, #gpSalesOrder, #gpCategories, #gpMenuItems, #paging {
+#editorWrapper, #gpMenu, #gpSalesOrder, #gpCategories, #gpMenuItems, #gpOptions {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
 
 #gpTop, #gpBottom {
-    -fx-border-color: #c01800;
+    -fx-border-color: #8C1200;
     -fx-padding: 0 5px 0 5px;
 }
 
-#vbOptions {
-    -fx-spacing: 10px;
+#optionButton {
+    -fx-background-color: #8C1200;
 }
 
-#sendOption, #backButton, #gratuityOption, #voidOption, #cancelOption, #printOption, #nextButton {
-    -fx-background-color: #C01800;
-}
-
-#backText, #nextText, #sendText, #voidText, #printText, #cancelText, #gratuityText {
+#optionText {
     -fx-font-weight: bolder;
     -fx-padding: 20px;
+}
+
+.primary-info {
+    -fx-font-size: 2em;
+    -fx-font-weight: bolder;
+}
+
+.secondary-info {
+    -fx-font-size: 1.5em;
 }
 
 /******************************************************************
@@ -28,7 +33,7 @@
  ******************************************************************/
 
 #menuItemView, #categoryView {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #menuItemTagPane, #categoryTagPane {
@@ -43,7 +48,7 @@
 }
 
 #menuItemName, #categoryName {
-    -fx-text-fill: #FFEF0F;
+    -fx-text-fill: #FFFF0F;
     -fx-font-size: 20px;
     -fx-alignment: center;
     -fx-text-alignment: center;
@@ -54,7 +59,7 @@
 #menuItemPrice {
     -fx-text-alignment: center;
     -fx-alignment: center;
-    -fx-text-fill: #000000;
+    -fx-text-fill: #111111;
 }
 
 /******************************************************************
@@ -68,30 +73,32 @@
 }
 
 #productEntryView {
-    -fx-background-color: #C01800;
+    -fx-background-color: transparent;
 }
 
 #lblPeMenuItemWrapper {
-    -fx-background-color: #A80000;
+    -fx-background-color: transparent;
 }
 
 #lblPeMenuItem {
     -fx-background-color: transparent;
     -fx-padding: 0 10px 0 10px;
+    -fx-font-size: 1.8em;
 }
 
 #lblPeTotal {
-    -fx-background-color: #A80000;
-    -fx-text-fill: #FFEF0F;
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFF0F;
     -fx-font-weight: bolder;
     -fx-padding: 0 10px 0 10px;
 }
 
 #lblPeModifiers {
+    -fx-font-size: 1.5em;
     -fx-padding: 0 20px 0 20px;
 }
 
 #lblPeStatus {
-    -fx-text-fill: #FFEF0F;
+    -fx-text-fill: #FFFF0F;
     -fx-padding: 0 10px 0 10px;
 }

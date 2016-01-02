@@ -1,7 +1,19 @@
-#gvOrderGrid {
-    -fx-padding: 10px;
+#moveView, #gvOrderGrid, #targetView, #gvOrderGrid, #vbPage {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
+}
+
+#vbOptions {
+    -fx-spacing: 10px;
+}
+
+#newOption, #cancelOption, #backButton, #nextButton, #doneOption {
+    -fx-background-color: #8C1200;
+}
+
+#newText, #cancelText, #backText, #nextText, #doneText {
+    -fx-font-weight: bolder;
+    -fx-padding: 20px;
 }
 
 #salesOrderView {
@@ -10,7 +22,7 @@
 
 #salesOrderId {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 32px;
     -fx-font-weight: bolder;
@@ -25,7 +37,7 @@
 
 #salesOrderTotalWrapper {
     -fx-alignment: center;
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
 }
 
 #salesOrderTotal {

@@ -1,59 +1,56 @@
-#editorWrapper, #gpProductEntries, #gpEditor, #modifiersView {
+#editorWrapper, #gpProductEntries, #gpEditor, #gpOptions, #gpModifierGroups, #gpModifiers {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
 
+#optionButton {
+    -fx-background-color: #8C1200;
+}
+
+#optionText {
+    -fx-font-weight: bolder;
+    -fx-padding: 20px;
+}
+
+.primary-info {
+    -fx-font-size: 2em;
+    -fx-font-weight: bolder;
+}
+
+.secondary-info {
+    -fx-font-size: 1.5em;
+}
+
+
 #gpTop, #gpBottom {
-    -fx-border-color: #c01800;
+    -fx-border-color: #8C1200;
     -fx-padding: 0 5px 0 5px;
 }
 
 #vbModifierType {
-    -fx-border-color: #c01800;
+    -fx-border-color: #8C1200;
     -fx-padding: 10px;
     -fx-spacing: 10px;
 }
 
 #modifierEntryView, #modifierGroupView, #modifierOptionsView {
-    -fx-background-color: #C01800;
+    -fx-background-color: #8C1200;
     -fx-alignment: center-left;
 }
 
-#modifierGroupTag {
-    -fx-alignment: center;
-    -fx-background-color: #A80000;
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 32px;
-    -fx-font-weight: bolder;
-    -fx-padding: 5px;
-    -fx-min-width: 80px;
-    -fx-max-width: 80px;
-    -fx-pref-width: 80px;
-    -fx-min-height: 80px;
-    -fx-max-height: 80px;
-    -fx-pref-height: 80px;
-}
-
-#modifierGroupName {
-    -fx-text-fill: #D8AD00;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-padding: 10px;
-}
-
-#modifierTagPane {
+#modifierTagPane, #modifierGroupTagPane {
     -fx-background-color: #A80000;
 }
 
-#modifierTag {
+#modifierTag, #modifierGroupTag {
     -fx-text-alignment: center;
     -fx-alignment: center;
     -fx-font-weight: bolder;
     -fx-text-fill: #FFFFFF;
 }
 
-#modifierName {
-    -fx-text-fill: #FFEF0F;
+#modifierName, #modifierGroupName {
+    -fx-text-fill: #FFFF0F;
     -fx-font-size: 20px;
     -fx-alignment: center;
     -fx-text-alignment: center;

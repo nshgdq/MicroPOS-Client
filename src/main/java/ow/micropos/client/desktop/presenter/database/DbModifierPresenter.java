@@ -33,7 +33,7 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
     TableColumn<Modifier, String> weight;
 
     @Override
-    Node[] getTextFields() {
+    Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfPrice = createTextField("Price");
@@ -77,7 +77,7 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
     }
 
     @Override
-    void clearFields() {
+    void clearControls() {
         tfName.setText("");
         tfTag.setText("");
         tfPrice.setText("");
