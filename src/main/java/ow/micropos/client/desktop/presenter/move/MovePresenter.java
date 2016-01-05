@@ -18,6 +18,7 @@ import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
 import ow.micropos.client.desktop.common.AlertCallback;
+import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.presenter.common.ViewProductEntry;
@@ -46,7 +47,6 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
             gvOrderGrid.getItems().add(salesOrder);
         }));
 
-        // TODO : Verify no empty sent orders.
         doneOption.setOnMouseClicked(event -> Platform.runLater(() -> {
             if (!entriesContext.isEmpty()) {
                 Platform.runLater(() -> App.notify.showAndWait("There are still unassigned entries."));
@@ -56,6 +56,12 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
                 List<SalesOrder> nonEmpty = getItem()
                         .stream()
                         .filter(so -> so.getId() != null || !so.getProductEntries().isEmpty())
+                        .map(so -> {
+                            // Void empty sales orders
+                            if (so.getId() != null && so.getProductEntries().isEmpty())
+                                so.setStatus(SalesOrderStatus.REQUEST_VOID);
+                            return so;
+                        })
                         .collect(Collectors.toList());
 
                 App.api.postSalesOrders(nonEmpty, (AlertCallback<List<Long>>) (longs, response) -> {

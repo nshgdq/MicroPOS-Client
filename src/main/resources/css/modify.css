@@ -1,4 +1,4 @@
-#editorWrapper, #gpProductEntries, #gpEditor, #gpOptions, #gpModifierGroups, #gpModifiers {
+#editorWrapper, #gpProductEntries, #gpEditor, #gpOptions, #gpModifierGroups, #gpModifiers, #gpQuantity {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }

@@ -483,14 +483,27 @@ public class SalesOrder {
     public ReadOnlyObjectProperty<BigDecimal> paymentTotalProperty() {
         if (paymentTotal == null) {
             paymentTotal = new ReadOnlyObjectWrapper<>();
-            paymentTotal.bind(EasyBind.combine(
-                    EasyBind.map(getPaymentEntries(), PaymentEntry::amountProperty),
-                    bigDecimalStream -> BigDecimalUtils.asDollars(
-                            bigDecimalStream
-                                    .reduce(BigDecimal.ZERO, BigDecimal::add)
-                                    .max(BigDecimal.ZERO)
-                    )
-            ));
+            paymentTotal.bind(new ObjectBinding<BigDecimal>() {
+                {
+                    bind(paymentEntriesProperty());
+                    paymentEntries.forEach(pe -> bind(pe.statusProperty()));
+                    paymentEntries.addListener((obs, oldVal, newVal) -> {
+                        oldVal.forEach(pe -> unbind(pe.statusProperty()));
+                        newVal.forEach(pe -> bind(pe.statusProperty()));
+                    });
+                }
+
+                @Override
+                protected BigDecimal computeValue() {
+                    return paymentEntriesProperty()
+                            .stream()
+                            .filter(pe -> pe.hasStatus(PaymentEntryStatus.PAID) || pe.hasStatus(PaymentEntryStatus.REQUEST_PAID))
+                            .map(PaymentEntry::getAmount)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add)
+                            .max(BigDecimal.ZERO)
+                            .setScale(2, BigDecimal.ROUND_HALF_UP);
+                }
+            });
         }
         return paymentTotal.getReadOnlyProperty();
     }

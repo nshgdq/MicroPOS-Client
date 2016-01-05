@@ -30,12 +30,13 @@ public class ViewProductEntry extends ItemPresenter<ProductEntry> {
 
     @Override
     protected void updateItem(ProductEntry currentItem, ProductEntry newItem) {
+        if (currentItem != null)
+            currentItem.statusProperty().removeListener(backgroundUpdater);
+
         if (newItem == null) {
             unsetLabel(lblSoeMenuItem);
             unsetLabel(lblSoeModifiers);
             unsetLabel(lblSoeTotal);
-            if (currentItem != null)
-                currentItem.statusProperty().removeListener(backgroundUpdater);
 
         } else {
             setLabel(lblSoeTotal, newItem.totalProperty().asString());
@@ -48,8 +49,8 @@ public class ViewProductEntry extends ItemPresenter<ProductEntry> {
             ));
             setLabel(lblSoeModifiers, newItem.modifiersTextProperty());
 
-            newItem.statusProperty().addListener(backgroundUpdater);
             updateBackground(newItem.getStatus());
+            newItem.statusProperty().addListener(backgroundUpdater);
         }
 
     }

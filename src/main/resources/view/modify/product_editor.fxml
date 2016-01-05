@@ -126,12 +126,14 @@
         </rowConstraints>
 
         <columnConstraints>
-            <ColumnConstraints percentWidth="16.66"/>
-            <ColumnConstraints percentWidth="16.66"/>
-            <ColumnConstraints percentWidth="16.66"/>
-            <ColumnConstraints percentWidth="16.66"/>
-            <ColumnConstraints percentWidth="16.66"/>
-            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="14.28"/>
+            <ColumnConstraints percentWidth="7.14"/>
+            <ColumnConstraints percentWidth="7.14"/>
+            <ColumnConstraints percentWidth="14.28"/>
+            <ColumnConstraints percentWidth="14.28"/>
+            <ColumnConstraints percentWidth="14.28"/>
+            <ColumnConstraints percentWidth="14.28"/>
+            <ColumnConstraints percentWidth="14.28"/>
         </columnConstraints>
 
         <StackPane fx:id="modGroupOption"
@@ -142,10 +144,26 @@
                    id="optionText"/>
         </StackPane>
 
-        <StackPane fx:id="voidOption"
+        <StackPane fx:id="subOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="1">
+            <Label text="-"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="addOption"
                    id="optionButton"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="2">
+            <Label text="+"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="voidOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="4">
             <Label text="Void"
                    fx:id="voidOptionLabel"
                    id="optionText"/>
@@ -154,7 +172,7 @@
         <StackPane fx:id="holdOption"
                    id="optionButton"
                    GridPane.rowIndex="0"
-                   GridPane.columnIndex="3">
+                   GridPane.columnIndex="5">
             <Label text="Hold"
                    fx:id="holdOptionLabel"
                    id="optionText"/>
@@ -163,7 +181,7 @@
         <StackPane fx:id="doneOption"
                    id="optionButton"
                    GridPane.rowIndex="0"
-                   GridPane.columnIndex="4">
+                   GridPane.columnIndex="6">
             <Label text="Done"
                    id="optionText"/>
         </StackPane>

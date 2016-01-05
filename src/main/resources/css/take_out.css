@@ -52,11 +52,27 @@
     -fx-background-color: #8C1200;
 }
 
-#customerFullName, #customerPhoneNumber {
+#infoWrapper {
     -fx-background-color: #A80000;
-    -fx-padding: 0 10px 0 10px;
+    -fx-padding: 5px;
 }
 
-#customerPreviousOrder {
+#historyPane {
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+}
 
+.primary-info {
+    -fx-font-size: 1.8em;
+    -fx-font-weight: bolder;
+    -fx-text-fill: #FFFF0F;
+}
+
+.secondary-info {
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bolder;
+}
+
+.tertiary-info {
+    -fx-font-size: 1.5em;
 }

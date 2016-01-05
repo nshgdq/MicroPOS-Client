@@ -42,13 +42,15 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
     @FXML public Label lblTotalPrice;
 
     @FXML public StackPane modGroupOption;
+    @FXML public StackPane subOption;
+    @FXML public StackPane addOption;
     @FXML public StackPane voidOption;
     @FXML public StackPane holdOption;
     @FXML public StackPane doneOption;
     @FXML public StackPane spItems;
     @FXML public Label holdOptionLabel;
-    @FXML public Label voidOptionLabel;
 
+    @FXML public Label voidOptionLabel;
     @FXML public GridView<ModifierGroup> gpModifierGroups;
     @FXML public GridView<Modifier> gpModifiers;
     @FXML public ListView<Modifier> entryModifiers;
@@ -64,6 +66,22 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
         GridPane.setHalignment(lblTotalPrice, HPos.RIGHT);
 
         modGroupOption.setOnMouseClicked(event -> Platform.runLater(this::showModifierGroups));
+
+        subOption.setOnMouseClicked(event -> {
+            ProductEntry pe = getItem();
+            if (pe.getQuantity().compareTo(BigDecimal.ONE) > 0) {
+                pe.setQuantity(pe.getQuantity().subtract(BigDecimal.ONE));
+                if (pe.hasStatus(ProductEntryStatus.SENT))
+                    pe.setStatus(ProductEntryStatus.REQUEST_EDIT);
+            }
+        });
+
+        addOption.setOnMouseClicked(event -> {
+            ProductEntry pe = getItem();
+            pe.setQuantity(pe.getQuantity().add(BigDecimal.ONE));
+            if (pe.hasStatus(ProductEntryStatus.SENT))
+                pe.setStatus(ProductEntryStatus.REQUEST_EDIT);
+        });
 
         voidOption.setOnMouseClicked(event -> Platform.runLater(() -> {
             if (getItem().hasStatus(ProductEntryStatus.REQUEST_SENT) || getItem().hasStatus(ProductEntryStatus.REQUEST_HOLD)) {

@@ -9,7 +9,6 @@
 
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>
-        <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="ALWAYS"/>
     </rowConstraints>
 
@@ -17,19 +16,40 @@
         <ColumnConstraints hgrow="ALWAYS"/>
     </columnConstraints>
 
-    <Label fx:id="lblFullName"
-           id="customerFullName"
-           GridPane.rowIndex="0"
-           GridPane.columnIndex="0"/>
+    <GridPane id="infoPane"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="0">
 
-    <Label fx:id="lblPhoneNumber"
-           id="customerPhoneNumber"
-           GridPane.rowIndex="1"
-           GridPane.columnIndex="0"/>
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
 
-    <Label fx:id="lblPreviousOrder"
-           id="customerPreviousOrder"
-           GridPane.rowIndex="2"
-           GridPane.columnIndex="0"/>
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <StackPane id="infoWrapper"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0">
+            <Label fx:id="lblPhoneNumber"
+                   styleClass="primary-info"/>
+        </StackPane>
+
+        <StackPane id="infoWrapper"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="0">
+            <Label fx:id="lblFullName"
+                   styleClass="secondary-info"/>
+        </StackPane>
+
+    </GridPane>
+
+    <StackPane id="historyPane"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="0">
+        <Label fx:id="lblPreviousOrder"
+               styleClass="tertiary-info"/>
+    </StackPane>
 
 </GridPane>

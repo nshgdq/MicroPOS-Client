@@ -130,7 +130,11 @@ public class TakeOutPresenter extends Presenter {
                     return !customer.getSalesOrders().isEmpty();
 
                 } else {
-                    return customer.getFirstName().toLowerCase().contains(fn)
+                    return customer != null
+                            && customer.getFirstName() != null
+                            && customer.getLastName() != null
+                            && customer.getPhoneNumber() != null
+                            && customer.getFirstName().toLowerCase().contains(fn)
                             && customer.getLastName().toLowerCase().contains(ln)
                             && customer.getPhoneNumber().toLowerCase().contains(pn);
                 }

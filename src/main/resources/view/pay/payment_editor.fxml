@@ -400,7 +400,7 @@
         <StackPane fx:id="gratuityOption"
                    id="optionButton"
                    GridPane.rowIndex="0"
-                   GridPane.columnIndex="1">
+                   GridPane.columnIndex="0">
             <Label text="Gratuity"
                    id="optionText"/>
         </StackPane>
@@ -408,7 +408,7 @@
         <StackPane fx:id="voidOption"
                    id="optionButton"
                    GridPane.rowIndex="0"
-                   GridPane.columnIndex="2">
+                   GridPane.columnIndex="1">
             <Label text="Void"
                    fx:id="voidText"
                    id="optionText"/>
@@ -417,7 +417,7 @@
         <StackPane fx:id="printOption"
                    id="optionButton"
                    GridPane.rowIndex="0"
-                   GridPane.columnIndex="3">
+                   GridPane.columnIndex="2">
             <Label text="Print"
                    id="optionText"/>
         </StackPane>

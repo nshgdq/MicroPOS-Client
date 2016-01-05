@@ -35,7 +35,7 @@ public class ViewProductEntry extends ItemPresenter<ProductEntry> {
         } else {
             setLabel(lblMenuItem, Bindings.concat(
                     newItem.quantityProperty().asString(),
-                    " - ",
+                    "-",
                     newItem.getMenuItem().tagProperty(),
                     " ",
                     newItem.menuItemNameProperty()

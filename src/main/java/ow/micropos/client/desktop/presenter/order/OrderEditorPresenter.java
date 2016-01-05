@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.presenter.order;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import email.com.gmail.ttsai0509.javafx.control.GridView;
 import email.com.gmail.ttsai0509.javafx.control.PresenterCellAdapter;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
@@ -62,6 +63,9 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
     @FXML
     public void initialize() {
 
+        // TODO : Not sure if we should have print option here.
+        printOption.setVisible(false);
+
         sentWeight = App.properties.getInt("pe-status-weight-sent");
         holdWeight = App.properties.getInt("pe-status-weight-hold");
         voidWeight = App.properties.getInt("pe-status-weight-void");
@@ -104,6 +108,8 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         cancelOption.setOnMouseClicked(
                 event -> App.confirm.showAndWait("Are you sure? Any changes will not be saved.", App.main::backRefresh)
         );
+
+        ObjectMapper mapper = new ObjectMapper();
 
         sendOption.setOnMouseClicked(event -> {
             if (getItem().getProductEntries().isEmpty()) {

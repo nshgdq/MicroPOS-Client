@@ -6,7 +6,9 @@ import email.com.gmail.ttsai0509.print.printer.PrintJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ow.micropos.client.desktop.custom.PrintJobBuilder;
-import ow.micropos.client.desktop.model.menu.Modifier;
+import ow.micropos.client.desktop.model.enums.PaymentEntryStatus;
+import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
+import ow.micropos.client.desktop.model.orders.PaymentEntry;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.model.report.ActiveSalesReport;
@@ -14,7 +16,9 @@ import ow.micropos.client.desktop.model.report.DaySalesReport;
 import ow.micropos.client.desktop.model.report.Summary;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public class WokPrintJobBuilder implements PrintJobBuilder {
 
@@ -37,6 +41,7 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
                 .salesOrderInfo(so)
                 .salesOrderContent(so)
                 .salesOrderTotals(so)
+                .paymentEntryTotals(so)
                 .thanks()
                 .footer(so.getDate())
                 .finish();
@@ -152,7 +157,7 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
         String employee = so.getEmployee().getFirstName();
         String orderNumber = so.getId().toString();
 
-        builder.align(EscPosBuilder.Align.CENTER)
+        return align(EscPosBuilder.Align.CENTER)
                 .font(EscPosBuilder.Font.DWDH)
                 .text("Order " + orderNumber)
                 .feed(2)
@@ -162,58 +167,30 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
                 .feed(1)
                 .text("Employee : " + employee)
                 .feed(2);
-        return this;
     }
 
     private WokPrintJobBuilder salesOrderContent(SalesOrder so) {
 
-        builder.align(EscPosBuilder.Align.LEFT);
+        // Skip void items (Requests should have already been sent)
+        List<ProductEntry> active = so.getProductEntries().filtered(
+                pe -> pe.hasStatus(ProductEntryStatus.SENT) || pe.hasStatus(ProductEntryStatus.HOLD)
+        );
 
-        for (ProductEntry pe : so.getProductEntries()) {
+        return align(EscPosBuilder.Align.LEFT)
+                .forEach(active, pe -> {
 
-            String item = pe.getMenuItem().getName();
+                    String item = pe.getMenuItem().getName();
+                    String tag = pe.getMenuItem().getTag();
+                    String quantity = BigDecimalUtils.asQuantity(pe.getQuantity()).toString();
+                    String price = pe.totalProperty().get().toString();
 
-            String tag = pe.getMenuItem().getTag();
-
-            String quantity = BigDecimalUtils.asQuantity(pe.getQuantity()).toString();
-
-            String status;
-            switch (pe.getStatus()) {
-                case SENT:
-                    status = "     ";
-                    break;
-                case VOID:
-                    status = "VOID ";
-                    break;
-                case HOLD:
-                    status = "HOLD ";
-                    break;
-                default:
-                    // TODO : Should probably throw Exception here instead
-                    log.warn("Skipping unexpected product entry " + pe.toString());
-                    return this;
-            }
-
-            String price = pe.totalProperty().get().toString();
-
-            String desc = quantity + " " + tag + " " + item;
-            int descWidth = width - price.length() - status.length() - 1;
-            desc = String.format("%-" + descWidth + "." + descWidth + "s ", desc);
-
-            builder.font(EscPosBuilder.Font.EMPHASIZED)
-                    .text(status)
-                    .font(EscPosBuilder.Font.REGULAR)
-                    .text(desc)
-                    .text(price)
-                    .feed(1);
-
-            for (Modifier mod : pe.getModifiers())
-                total("        " + mod.getTag() + " " + mod.getName(), mod.getPrice() + "        ");
-        }
-
-        builder.feed(2);
-
-        return this;
+                    font(EscPosBuilder.Font.REGULAR)
+                            .total(quantity + " " + tag + " " + item, price)
+                            .forEach(pe.getModifiers(),
+                                    mod -> total("     " + mod.getTag() + " " + mod.getName(), mod.getPrice() + "     ")
+                            );
+                })
+                .feed(2);
     }
 
     private WokPrintJobBuilder salesOrderTotals(SalesOrder so) {
@@ -224,32 +201,34 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
         String taxtotal = so.taxTotalProperty().get().toString();
         String grandtotal = so.grandTotalProperty().get().toString();
 
-        builder.align(EscPosBuilder.Align.LEFT)
-                .font(EscPosBuilder.Font.REGULAR);
+        return align(EscPosBuilder.Align.LEFT)
+                .font(EscPosBuilder.Font.REGULAR)
+                .total("Subtotal", subtotal)
+                .optional(so.hasAppliedCharge(), () -> total("Discounts", discounts))
+                .optional(so.hasGratuity(), () -> total("Gratuity (" + so.gratuityTextProperty().get() + ")", gratuity))
+                .total("Sales Tax (" + so.taxTextProperty().get() + ")", taxtotal)
+                .font(EscPosBuilder.Font.EMPHASIZED)
+                .total("Grand Total", grandtotal)
+                .feed(2);
+    }
 
-        total("Subtotal", subtotal);
+    private WokPrintJobBuilder paymentEntryTotals(SalesOrder so) {
 
-        if (so.hasAppliedCharge())
-            total("Discounts", discounts);
+        List<PaymentEntry> active = so.getPaymentEntries().filtered(pe -> pe.hasStatus(PaymentEntryStatus.PAID));
 
-        if (so.hasGratuity())
-            total("Gratuity (" + so.gratuityTextProperty().get() + ")", gratuity);
-
-        total("Sales Tax (" + so.taxTextProperty().get() + ")", taxtotal);
-
-        builder.font(EscPosBuilder.Font.EMPHASIZED);
-
-        total("Grand Total", grandtotal);
-
-        builder.feed(2);
-
-        return this;
+        return optional(!active.isEmpty(),
+                () -> align(EscPosBuilder.Align.LEFT)
+                        .font(EscPosBuilder.Font.REGULAR)
+                        .forEach(active, pe -> total(pe.getType().name(), pe.getAmount().toString()))
+                        .font(EscPosBuilder.Font.EMPHASIZED)
+                        .total("Change Due", so.changeProperty().get().toString())
+                        .font(EscPosBuilder.Font.REGULAR)
+                        .feed(2));
     }
 
     private WokPrintJobBuilder summary(String title, Summary summary) {
-        builder.align(EscPosBuilder.Align.LEFT);
-
-        font(EscPosBuilder.Font.EMPHASIZED)
+        return align(EscPosBuilder.Align.LEFT)
+                .font(EscPosBuilder.Font.EMPHASIZED)
                 .text(title + " (" + summary.dineInCount + " Dine In, " + summary.takeOutCount + " Take Out)")
                 .font(EscPosBuilder.Font.REGULAR)
                 .feed(1)
@@ -257,13 +236,9 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
                 .total("Charge Total (" + summary.chargeCount + ")", summary.chargeTotal.toString())
                 .total("Sub Total", summary.subTotal.toString())
                 .total("Tax Total", summary.taxTotal.toString())
-                .total("Gratuity Total (" + summary.gratuityCount + ")", summary.gratuityTotal.toString())
-                .total("Grand Total", summary.grandTotal.toString())
-                .total("Payment Total (" + summary.paymentCount + ")", summary.paymentTotal.toString())
                 .font(EscPosBuilder.Font.EMPHASIZED)
-                .total("Payment - Grand Total", summary.paymentTotal.subtract(summary.grandTotal).toString())
+                .total("Sales Total", summary.grandTotal.subtract(summary.gratuityTotal).toString())
                 .font(EscPosBuilder.Font.REGULAR);
-        return this;
     }
 
     /******************************************************************
@@ -271,6 +246,20 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
      * Convenience
      *                                                                *
      ******************************************************************/
+
+    private interface Action {
+        void invoke();
+    }
+
+    private interface Action1<T> {
+        void invoke(T item);
+    }
+
+    private WokPrintJobBuilder optional(boolean condition, Action action) {
+        if (condition)
+            action.invoke();
+        return this;
+    }
 
     private WokPrintJobBuilder total(String desc, int total) {
         return total(desc, Integer.toString(total));
@@ -305,6 +294,16 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
 
     private WokPrintJobBuilder font(EscPosBuilder.Font font) {
         builder.font(font);
+        return this;
+    }
+
+    private WokPrintJobBuilder align(EscPosBuilder.Align align) {
+        builder.align(align);
+        return this;
+    }
+
+    private <T> WokPrintJobBuilder forEach(Collection<T> items, Action1<T> action) {
+        items.forEach(action::invoke);
         return this;
     }
 

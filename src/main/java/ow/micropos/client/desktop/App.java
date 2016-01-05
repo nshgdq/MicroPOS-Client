@@ -245,7 +245,7 @@ public class App extends Application implements VkProperties {
 
         homePresenter = getHomePresenter(properties.getStr("home"));
 
-        jobBuilder = new WokPrintJobBuilder(42);
+        jobBuilder = new WokPrintJobBuilder(48);
         dispatcher = initPrinterDispatcher(properties);
 
         clock.start();

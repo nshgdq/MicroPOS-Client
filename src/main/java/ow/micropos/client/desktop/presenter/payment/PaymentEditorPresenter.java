@@ -108,12 +108,18 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         sendOption.setOnMouseClicked(event -> {
             if (getItem().getProductEntries().isEmpty()) {
                 Platform.runLater(() -> App.notify.showAndWait("Nothing to send."));
+
+            } else if (getItem().changeProperty().get().compareTo(BigDecimal.ZERO) < 0) {
+                Platform.runLater(() -> App.notify.showAndWait("Order has not been fully paid."));
+
             } else if (App.apiIsBusy.compareAndSet(false, true)) {
                 getItem().setStatus(SalesOrderStatus.REQUEST_CLOSE);
                 App.api.postSalesOrder(getItem(), (AlertCallback<Long>) (aLong, response) -> {
                     Platform.runLater(() -> {
+                        getItem().setId(aLong);
                         App.main.backRefresh();
                         App.notify.showAndWait("Change Due: " + getItem().changeProperty().get().toString());
+                        App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
                     });
                 });
             }
