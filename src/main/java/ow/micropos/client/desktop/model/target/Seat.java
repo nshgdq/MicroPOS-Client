@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.model.target;
 
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -106,6 +107,29 @@ public class Seat {
 
     public void setSalesOrders(List<SalesOrder> salesOrders) {
         this.salesOrders.setAll(salesOrders);
+    }
+
+    /******************************************************************
+     *                                                                *
+     * Seat Summary                                               *
+     *                                                                *
+     ******************************************************************/
+
+    private ReadOnlyStringWrapper sectionSummary;
+
+    public ReadOnlyStringProperty sectionSummaryProperty() {
+        if (sectionSummary == null) {
+            sectionSummary = new ReadOnlyStringWrapper();
+            sectionSummary.bind(new StringBinding() {
+                {bind(section);}
+
+                @Override
+                protected String computeValue() {
+                    return getSection().getName() + "(" + getSection().getId() + ")";
+                }
+            });
+        }
+        return sectionSummary.getReadOnlyProperty();
     }
 
 }

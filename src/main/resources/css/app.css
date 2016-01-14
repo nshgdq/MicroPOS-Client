@@ -8,7 +8,7 @@
     -fx-font-size: 2em;
 }
 
-.button, .text-field, .check-box, .radio-button {
+.button, .text-field, .check-box, .radio-button, .combo-box {
     -fx-font-size: 2.3em;
 }
 

@@ -48,7 +48,7 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
         row = new TableColumn<>("Row");
         col = new TableColumn<>("Col");
 
-        section.setCellValueFactory(param -> param.getValue().getSection().nameProperty());
+        section.setCellValueFactory(param -> param.getValue().sectionSummaryProperty());
         tag.setCellValueFactory(param -> param.getValue().tagProperty());
         row.setCellValueFactory(param -> param.getValue().rowProperty().asString());
         col.setCellValueFactory(param -> param.getValue().colProperty().asString());

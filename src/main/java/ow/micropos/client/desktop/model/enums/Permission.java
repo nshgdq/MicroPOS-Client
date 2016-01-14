@@ -1,6 +1,10 @@
 package ow.micropos.client.desktop.model.enums;
 
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public enum Permission {
 
     /******************************************************************
@@ -104,6 +108,9 @@ public enum Permission {
     DB_SEATS,
     DB_SECTIONS,
     DB_CUSTOMERS,
-    DB_CHARGES
+    DB_CHARGES;
+
+
+    public static final List<Permission> asList = Collections.unmodifiableList(Arrays.asList(Permission.values()));
 
 }

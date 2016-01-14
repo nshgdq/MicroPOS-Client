@@ -2,11 +2,7 @@ package ow.micropos.client.desktop.presenter.database;
 
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.util.StringConverter;
+import javafx.scene.control.*;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.ModifierType;
@@ -21,7 +17,7 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
     TextField tfName;
     TextField tfTag;
     TextField tfPrice;
-    TextField tfType;
+    ComboBox<ModifierType> cbType;
     TextField tfGroup;
     TextField tfWeight;
 
@@ -37,11 +33,11 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfPrice = createTextField("Price");
-        tfType = createTextField("Type");
+        cbType = createComboBox("Type", ModifierType.values());
         tfGroup = createTextField("Group");
         tfWeight = createTextField("Weight");
 
-        return new Node[]{new Label("Modifier Information"), tfName, tfTag, tfPrice, tfType, tfGroup, tfWeight};
+        return new Node[]{new Label("Modifier Information"), tfName, tfTag, tfPrice, cbType, tfGroup, tfWeight};
     }
 
     @Override
@@ -50,7 +46,7 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
         tag = createTableColumn("Tag", param -> param.getValue().tagProperty());
         price = createTableColumn("Price", param -> param.getValue().priceProperty().asString());
         type = createTableColumn("Type", param -> param.getValue().typeProperty().asString());
-        group = createTableColumn("Group", param -> param.getValue().getModifierGroup().nameProperty());
+        group = createTableColumn("Group", param -> param.getValue().modifierGroupSummaryProperty());
         weight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
 
         return new TableColumn[]{name, tag, price, type, group, weight};
@@ -61,7 +57,7 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
         tfName.textProperty().unbindBidirectional(currentItem.nameProperty());
         tfTag.textProperty().unbindBidirectional(currentItem.tagProperty());
         tfPrice.textProperty().unbindBidirectional(currentItem.priceProperty());
-        tfType.textProperty().unbindBidirectional(currentItem.typeProperty());
+        cbType.valueProperty().unbindBidirectional(currentItem.typeProperty());
         tfGroup.textProperty().unbindBidirectional(currentItem.getModifierGroup().nameProperty());
         tfWeight.textProperty().unbindBidirectional(currentItem.weightProperty());
     }
@@ -71,7 +67,7 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
         tfName.textProperty().bindBidirectional(newItem.nameProperty());
         tfTag.textProperty().bindBidirectional(newItem.tagProperty());
         tfPrice.textProperty().bindBidirectional(newItem.priceProperty(), priceConverter);
-        tfType.textProperty().bindBidirectional(newItem.typeProperty(), modifierTypeConverter);
+        cbType.valueProperty().bindBidirectional(newItem.typeProperty());
         tfGroup.textProperty().bindBidirectional(newItem.getModifierGroup().idProperty(), idConverter);
         tfWeight.textProperty().bindBidirectional(newItem.weightProperty(), numberConverter);
     }
@@ -81,7 +77,7 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
         tfName.setText("");
         tfTag.setText("");
         tfPrice.setText("");
-        tfType.setText("");
+        cbType.getSelectionModel().clearSelection();
         tfGroup.setText("");
         tfWeight.setText("");
     }
@@ -121,51 +117,4 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
             App.notify.showAndWait("Removed Menu Item.");
         });
     }
-
-    /******************************************************************
-     *                                                                *
-     * Converter
-     *                                                                *
-     ******************************************************************/
-
-    private static final StringConverter<ModifierType> modifierTypeConverter = new StringConverter<ModifierType>() {
-        @Override
-        public String toString(ModifierType object) {
-            if (object == null)
-                return "";
-
-            switch (object) {
-                case ADDITION:
-                    return "A";
-                case SUBSTITUTION:
-                    return "S";
-                case EXCLUSION:
-                    return "E";
-                case INSTRUCTION:
-                    return "I";
-                case VARIATION:
-                    return "V";
-                default:
-                    return "";
-            }
-        }
-
-        @Override
-        public ModifierType fromString(String string) {
-            if (string == null || string.length() == 0)
-                return null;
-            else if (string.equalsIgnoreCase("A"))
-                return ModifierType.ADDITION;
-            else if (string.equalsIgnoreCase("S"))
-                return ModifierType.SUBSTITUTION;
-            else if (string.equalsIgnoreCase("E"))
-                return ModifierType.EXCLUSION;
-            else if (string.equalsIgnoreCase("I"))
-                return ModifierType.INSTRUCTION;
-            else if (string.equalsIgnoreCase("V"))
-                return ModifierType.VARIATION;
-            else
-                return null;
-        }
-    };
 }

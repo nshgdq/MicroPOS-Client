@@ -6,9 +6,7 @@ import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,13 +16,14 @@ import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
 import ow.micropos.client.desktop.common.AlertCallback;
-import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.presenter.common.ViewProductEntry;
 import ow.micropos.client.desktop.presenter.common.ViewSalesOrder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,14 +40,18 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
     @Override
     public void initialize() {
 
-        // Adding an order is based off the first sales order.
+        // New SalesOrders inherit from first SalesOrder.
         newOption.setOnMouseClicked(event -> Platform.runLater(() -> {
-            SalesOrder salesOrder = SalesOrder.fromModel(App.employee, gvOrderGrid.getItems().get(0));
-            gvOrderGrid.getItems().add(salesOrder);
+            if (!gvOrderGrid.getItems().isEmpty()) {
+                SalesOrder salesOrder = SalesOrder.fromModel(App.employee, gvOrderGrid.getItems().get(0));
+                gvOrderGrid.getItems().add(salesOrder);
+            } else {
+                App.notify.showAndWait("No orders to split.");
+            }
         }));
 
         doneOption.setOnMouseClicked(event -> Platform.runLater(() -> {
-            if (!entriesContext.isEmpty()) {
+            if (!moveEntryList.isEmpty()) {
                 Platform.runLater(() -> App.notify.showAndWait("There are still unassigned entries."));
 
             } else if (App.apiIsBusy.compareAndSet(false, true)) {
@@ -56,12 +59,6 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
                 List<SalesOrder> nonEmpty = getItem()
                         .stream()
                         .filter(so -> so.getId() != null || !so.getProductEntries().isEmpty())
-                        .map(so -> {
-                            // Void empty sales orders
-                            if (so.getId() != null && so.getProductEntries().isEmpty())
-                                so.setStatus(SalesOrderStatus.REQUEST_VOID);
-                            return so;
-                        })
                         .collect(Collectors.toList());
 
                 App.api.postSalesOrders(nonEmpty, (AlertCallback<List<Long>>) (longs, response) -> {
@@ -83,40 +80,16 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
         gvOrderGrid.setHorizontal(true);
         gvOrderGrid.setCellFactory(param -> {
             ViewSalesOrder presenter = Presenter.load("/view/common/view_sales_order.fxml");
-            presenter.onAnyClick(event -> Platform.runLater(() -> {
-                SalesOrder order = presenter.getItem();
-                if (orderContext.get() != order && !entriesContext.isEmpty()) {
-                    order.getProductEntries().addAll(entriesContext.get());
-                    entriesContext.get().clear();
-                    orderContext.set(null);
-                }
-            }));
-            presenter.onSubItemClick((sop, pep) -> Platform.runLater(() -> {
-                SalesOrder order = sop.getItem();
-                ProductEntry entry = pep.getItem();
-                if (orderContext.get() == null) {
-                    orderContext.set(order);
-                    entriesContext.add(entry);
-                    order.getProductEntries().remove(entry);
-                } else if (orderContext.get() == order) {
-                    entriesContext.add(entry);
-                    order.getProductEntries().remove(entry);
-                }
-
-            }));
+            presenter.onTopClick(event -> tapSalesOrder(presenter.getItem()));
+            presenter.onSubItemClick((so, pe) -> tapProductEntry(so.getItem(), pe.getItem()));
             return presenter;
         });
 
-        lvContext.setItems(entriesContext);
+        lvContext.setItems(moveEntryList);
         lvContext.setCellFactory(param -> {
             ViewProductEntry presenter = Presenter.load("/view/common/view_product_entry.fxml");
             presenter.fixWidth(lvContext);
-            presenter.onClick(event -> Platform.runLater(() -> {
-                orderContext.get().getProductEntries().add(presenter.getItem());
-                entriesContext.remove(presenter.getItem());
-                if (entriesContext.isEmpty())
-                    orderContext.set(null);
-            }));
+            presenter.onClick(event -> tapContextEntry(presenter.getItem()));
             return new PresenterCellAdapter<>(presenter);
         });
     }
@@ -129,8 +102,7 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
     public void refresh() {
         gvOrderGrid.setPage(0);
         gvOrderGrid.setItems(FXCollections.emptyObservableList());
-        orderContext.set(null);
-        entriesContext.get().clear();
+        moveEntryList.get().clear();
 
         Platform.runLater(() -> gvOrderGrid.setItems(FXCollections.observableList(getItem())));
     }
@@ -146,9 +118,50 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
      =                                                                       =
      *=======================================================================*/
 
-    private final ObjectProperty<SalesOrder> orderContext = new SimpleObjectProperty<>();
+    private final ListProperty<ProductEntry> moveEntryList = new SimpleListProperty<>(FXCollections.observableList(new ArrayList<>()));
+    private final HashMap<ProductEntry, SalesOrder> moveEntryContext = new HashMap<>();
 
-    private final ListProperty<ProductEntry> entriesContext = new SimpleListProperty<>(FXCollections.observableList(new ArrayList<>()));
+    private void tapProductEntry(SalesOrder salesOrder, ProductEntry productEntry) {
+        if (salesOrder == null || productEntry == null)
+            return;
+
+        Platform.runLater(() -> {
+            ProductEntry pe = productEntry.tryExtract(BigDecimal.ONE);
+
+            if (pe != null) {
+                moveEntryContext.put(pe, salesOrder);
+                pe.mergeInto(moveEntryList);
+
+            } else {
+                moveEntryContext.put(productEntry, salesOrder);
+                salesOrder.getProductEntries().remove(productEntry);
+                productEntry.mergeInto(moveEntryList);
+            }
+        });
+    }
+
+    private void tapSalesOrder(SalesOrder salesOrder) {
+        if (salesOrder == null)
+            return;
+
+        Platform.runLater(() -> {
+            moveEntryList.forEach(pe -> pe.mergeInto(salesOrder.getProductEntries()));
+            moveEntryList.get().clear();
+            moveEntryContext.clear();
+        });
+    }
+
+    private void tapContextEntry(ProductEntry productEntry) {
+        if (productEntry == null)
+            return;
+
+        Platform.runLater(() -> {
+            SalesOrder salesOrder = moveEntryContext.get(productEntry);
+            productEntry.mergeInto(salesOrder.getProductEntries());
+            moveEntryList.remove(productEntry);
+            moveEntryContext.remove(productEntry);
+        });
+    }
 
     /*=======================================================================*
      =                                                                       =

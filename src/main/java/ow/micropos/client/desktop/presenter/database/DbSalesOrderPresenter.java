@@ -14,8 +14,9 @@ import java.util.List;
 public class DbSalesOrderPresenter extends DbEntityPresenter<SalesOrder> {
 
     TableColumn<SalesOrder, String> id;
-    TableColumn<SalesOrder, String> employee;
+    TableColumn<SalesOrder, String> status;
     TableColumn<SalesOrder, String> total;
+    TableColumn<SalesOrder, String> payments;
 
     @Override
     Node[] getEditControls() {
@@ -25,10 +26,11 @@ public class DbSalesOrderPresenter extends DbEntityPresenter<SalesOrder> {
     @Override
     TableColumn<SalesOrder, String>[] getTableColumns() {
         id = createTableColumn("ID", param -> param.getValue().idProperty().asString());
-        employee = createTableColumn("Employee", param -> param.getValue().employeeNameProperty());
+        status = createTableColumn("Status", param -> param.getValue().statusProperty().asString());
         total = createTableColumn("Total", param -> param.getValue().grandTotalProperty().asString());
+        payments = createTableColumn("Payment", param -> param.getValue().paymentSummaryProperty());
 
-        return new TableColumn[]{id, employee, total};
+        return new TableColumn[]{id, status, payments, total};
     }
 
     @Override
@@ -58,12 +60,13 @@ public class DbSalesOrderPresenter extends DbEntityPresenter<SalesOrder> {
 
     @Override
     SalesOrder createNew() {
+        App.notify.showAndWait("Not available on this screen.");
         return null;
     }
 
     @Override
     void submitItem(SalesOrder item) {
-
+        App.notify.showAndWait("Not available on this screen.");
     }
 
     @Override
@@ -71,12 +74,9 @@ public class DbSalesOrderPresenter extends DbEntityPresenter<SalesOrder> {
         if (item == null)
             return;
 
-        App.api.removeSalesOrder(item.getId(), new AlertCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean aBoolean, Response response) {
-                refresh();
-                App.notify.showAndWait("Sales Order " + item.getId() + " removed.");
-            }
+        App.api.removeSalesOrder(item.getId(), (AlertCallback<Boolean>) (aBoolean, response) -> {
+            refresh();
+            App.notify.showAndWait("Sales Order " + item.getId() + " removed.");
         });
     }
 }

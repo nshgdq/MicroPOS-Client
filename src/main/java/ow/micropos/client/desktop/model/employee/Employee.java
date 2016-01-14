@@ -1,9 +1,11 @@
 package ow.micropos.client.desktop.model.employee;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.commons.lang3.StringUtils;
 import ow.micropos.client.desktop.model.auth.Position;
 import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
@@ -133,6 +135,32 @@ public class Employee {
             fullName.bind(Bindings.concat(firstName, " ", lastName));
         }
         return fullName.getReadOnlyProperty();
+    }
+
+    /******************************************************************
+     *                                                                *
+     * Positions                                                      *
+     *                                                                *
+     ******************************************************************/
+
+    private ReadOnlyStringWrapper positionSummary;
+
+    public ReadOnlyStringProperty positionSummaryProperty() {
+        if (positionSummary == null) {
+            positionSummary = new ReadOnlyStringWrapper();
+            positionSummary.bind(new StringBinding() {
+                {bind(positions);}
+
+                @Override
+                protected String computeValue() {
+                    return StringUtils.join(
+                            positions.stream().map(p -> p.getName() + "(" + p.getId() + ")").toArray(),
+                            ","
+                    );
+                }
+            });
+        }
+        return positionSummary.getReadOnlyProperty();
     }
 
 }

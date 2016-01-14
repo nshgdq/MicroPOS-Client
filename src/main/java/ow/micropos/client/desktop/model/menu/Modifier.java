@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.model.menu;
 
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import ow.micropos.client.desktop.model.enums.ModifierType;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
@@ -121,6 +122,29 @@ public class Modifier {
 
     public boolean hasType(ModifierType type) {
         return getType() == type;
+    }
+
+    /******************************************************************
+     *                                                                *
+     * Modifier Group Summary                                         *
+     *                                                                *
+     ******************************************************************/
+
+    private ReadOnlyStringWrapper modifierGroupSummary;
+
+    public ReadOnlyStringProperty modifierGroupSummaryProperty() {
+        if (modifierGroupSummary == null) {
+            modifierGroupSummary = new ReadOnlyStringWrapper();
+            modifierGroupSummary.bind(new StringBinding() {
+                {bind(modifierGroup);}
+
+                @Override
+                protected String computeValue() {
+                    return getModifierGroup().getName() + "(" + getModifierGroup().getId() + ")";
+                }
+            });
+        }
+        return modifierGroupSummary.getReadOnlyProperty();
     }
 
 }

@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.service;
 
+import ow.micropos.client.desktop.model.auth.Position;
 import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
@@ -79,7 +80,7 @@ public interface RestService {
     @POST("/orders")
     void postSalesOrder(@Body SalesOrder salesOrder, Callback<Long> callback);
 
-    @POST("/orders/batch")
+    @POST("/orders/split")
     void postSalesOrders(@Body List<SalesOrder> salesOrders, Callback<List<Long>> callback);
 
     /******************************************************************
@@ -120,6 +121,26 @@ public interface RestService {
      * Database Controller
      *                                                                *
      ******************************************************************/
+
+    /* Positions ******************************************************/
+    @GET("/database/positions")
+    void listPositions(Callback<List<Position>> callback);
+
+    @POST("/database/positions")
+    void updatePosition(@Body Position position, Callback<Long> callback);
+
+    @DELETE("/database/positions/{id}")
+    void removePosition(@Path("id") long id, Callback<Boolean> callback);
+
+    /* Employees ******************************************************/
+    @GET("/database/employees")
+    void listEmployees(Callback<List<Employee>> callback);
+
+    @POST("/database/employees")
+    void updateEmployee(@Body Employee employee, Callback<Long> callback);
+
+    @DELETE("/database/employees/{id}")
+    void removeEmployee(@Path("id") long id, Callback<Boolean> callback);
 
     /* Sales Orders ***************************************************/
     @GET("/database/salesOrders")

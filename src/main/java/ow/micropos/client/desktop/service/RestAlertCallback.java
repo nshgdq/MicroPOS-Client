@@ -1,4 +1,4 @@
-package ow.micropos.client.desktop.common;
+package ow.micropos.client.desktop.service;
 
 import javafx.application.Platform;
 import ow.micropos.client.desktop.App;
@@ -7,21 +7,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-@Deprecated
-public interface AlertCallback<T> extends Callback<T> {
+public class RestAlertCallback<T> implements Callback<T> {
 
-    void onSuccess(T t, Response response);
-
-    default void onFailure(RetrofitError error) {}
-    
-    /*=======================================================================*
-     =                                                                       =
-     = Retrofit Callback method to be decorated
-     =                                                                       =
-     *=======================================================================*/
 
     @Override
-    public default void success(T t, Response response) {
+    public void success(Object o, Response response) {
         Platform.runLater(() -> {
             onSuccess(t, response);
             App.apiIsBusy.set(false);
@@ -29,7 +19,7 @@ public interface AlertCallback<T> extends Callback<T> {
     }
 
     @Override
-    public default void failure(RetrofitError error) {
+    public void failure(RetrofitError error) {
         try {
             ErrorInfo info = (ErrorInfo) error.getBodyAs(ErrorInfo.class);
             final String status = info.getStatus();

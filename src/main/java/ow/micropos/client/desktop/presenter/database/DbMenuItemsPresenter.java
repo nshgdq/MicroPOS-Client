@@ -48,7 +48,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         name = createTableColumn("Name", param -> param.getValue().nameProperty());
         tag = createTableColumn("Tag", param -> param.getValue().tagProperty());
         price = createTableColumn("Price", param -> param.getValue().priceProperty().asString());
-        category = createTableColumn("Category", param -> param.getValue().getCategory().nameProperty());
+        category = createTableColumn("Category", param -> param.getValue().categorySummaryProperty());
         printers = createTableColumn("Printers", param -> param.getValue().printersProperty().asString());
         weight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
 

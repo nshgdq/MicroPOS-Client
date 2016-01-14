@@ -116,6 +116,12 @@ public class ManagerPresenter extends Presenter {
             new Action("Charges", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 App.main.nextRefresh(App.dbChargePresenter);
             })),
+            new Action("Employees", ActionType.TAB_SELECT, event -> {
+                App.main.nextRefresh(App.dbEmployeePresenter);
+            }),
+            new Action("Positions", ActionType.TAB_SELECT, event -> {
+                App.main.nextRefresh(App.dbPositionPresenter);
+            }),
             new Action("Sales Orders", ActionType.TAB_DEFAULT, event -> {
                 App.confirm.showAndWait(
                         "WARNING - Database maintenance only. Continue?",

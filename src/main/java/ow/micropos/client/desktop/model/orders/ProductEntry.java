@@ -20,13 +20,6 @@ public class ProductEntry {
 
     public ProductEntry() {}
 
-    public ProductEntry(ProductEntry productEntry) {
-        setStatus(productEntry.getStatus());
-        setQuantity(productEntry.getQuantity());
-        setMenuItem(productEntry.getMenuItem());
-        setModifiers(productEntry.getModifiers());
-    }
-
     public ProductEntry(MenuItem menuItem, BigDecimal quantity) {
         setMenuItem(menuItem);
         setQuantity(quantity);
@@ -146,6 +139,34 @@ public class ProductEntry {
         return CollectionUtils.isEqualCollection(thisIds, otherIds);
 
     }
+
+    public ProductEntry tryExtract(BigDecimal quantity) {
+        if (getQuantity().compareTo(quantity) <= 0)
+            return null;
+
+        ProductEntry pe = new ProductEntry();
+        pe.setQuantity(quantity);
+        pe.setStatus(getStatus());
+        pe.setMenuItem(getMenuItem());
+        pe.setModifiers(getModifiers());
+        pe.setSalesOrder(getSalesOrder());
+
+        setQuantity(getQuantity().subtract(quantity));
+
+        return pe;
+    }
+
+    public void mergeInto(List<ProductEntry> productEntries) {
+        for (ProductEntry productEntry : productEntries) {
+            if (canMerge(productEntry)) {
+                productEntry.setQuantity(productEntry.getQuantity().add(getQuantity()));
+                setQuantity(BigDecimal.ZERO);
+                return;
+            }
+        }
+        productEntries.add(this);
+    }
+
 
     /******************************************************************
      *                                                                *

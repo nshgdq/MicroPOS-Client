@@ -130,10 +130,8 @@ public class StageScene {
      ******************************************************************/
 
     public void attach(KeyBoardPopup keyboard) {
-        keyboard.addDoubleClickEventFilter(mStage);
         keyboard.registerScene(mScene);
         keyboard.addFocusListener(mScene);
-        keyboard.setAutoHide(true);
     }
 
 }

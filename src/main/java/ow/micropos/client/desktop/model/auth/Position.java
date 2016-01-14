@@ -1,8 +1,10 @@
 package ow.micropos.client.desktop.model.auth;
 
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.commons.lang3.StringUtils;
 import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.model.enums.Permission;
 
@@ -81,6 +83,29 @@ public class Position {
                 return false;
 
         return true;
+    }
+
+    /******************************************************************
+     *                                                                *
+     * Permissions                                                    *
+     *                                                                *
+     ******************************************************************/
+
+    private ReadOnlyStringWrapper permissionSummary;
+
+    public ReadOnlyStringProperty permissionSummaryProperty() {
+        if (permissionSummary == null) {
+            permissionSummary = new ReadOnlyStringWrapper();
+            permissionSummary.bind(new StringBinding() {
+                {bind(permissions);}
+
+                @Override
+                protected String computeValue() {
+                    return StringUtils.join(permissions, ",");
+                }
+            });
+        }
+        return permissionSummary.getReadOnlyProperty();
     }
 
 }

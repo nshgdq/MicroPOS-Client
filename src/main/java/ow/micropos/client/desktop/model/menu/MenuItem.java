@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.model.menu;
 
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -118,5 +119,29 @@ public class MenuItem {
 
     public void setPrinters(List<String> printers) {
         this.printers.setAll(printers);
+    }
+
+
+    /******************************************************************
+     *                                                                *
+     * Category Summary                                               *
+     *                                                                *
+     ******************************************************************/
+
+    private ReadOnlyStringWrapper categorySummary;
+
+    public ReadOnlyStringProperty categorySummaryProperty() {
+        if (categorySummary == null) {
+            categorySummary = new ReadOnlyStringWrapper();
+            categorySummary.bind(new StringBinding() {
+                {bind(category);}
+
+                @Override
+                protected String computeValue() {
+                    return getCategory().getName() + "(" + getCategory().getId() + ")";
+                }
+            });
+        }
+        return categorySummary.getReadOnlyProperty();
     }
 }

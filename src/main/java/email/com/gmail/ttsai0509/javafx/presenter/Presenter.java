@@ -47,7 +47,7 @@ public abstract class Presenter {
         }
     }
 
-    // Use this in code-based, non-fxml presenters (in constructor)
+    // Use this in code-based, non-fxml presenters (last line in Presenter constructor)
     public static <P extends Presenter> P injectView(P presenter, Parent view) {
         presenter.setView(view);
         return presenter;

@@ -28,7 +28,7 @@ public class SalesOrder {
         created.setCustomer(salesOrder.getCustomer());
         created.setSeat(salesOrder.getSeat());
         created.setType(salesOrder.getType());
-        created.setStatus(SalesOrderStatus.REQUEST_OPEN);
+        created.setStatus(SalesOrderStatus.OPEN);
         created.setTaxPercent(salesOrder.getTaxPercent());
         created.setGratuityPercent(salesOrder.getGratuityPercent());
         created.setDate(new Date());
@@ -678,6 +678,55 @@ public class SalesOrder {
             });
         }
         return orderSummary.getReadOnlyProperty();
+    }
+
+
+    /******************************************************************
+     *                                                                *
+     * Payment Summary                                                *
+     *                                                                *
+     ******************************************************************/
+
+    private ReadOnlyStringWrapper paymentSummary;
+
+    public ReadOnlyStringProperty paymentSummaryProperty() {
+        if (paymentSummary == null) {
+            paymentSummary = new ReadOnlyStringWrapper();
+            paymentSummary.bind(new StringBinding() {
+                {
+                    bind(paymentEntries);
+                }
+
+                @Override
+                protected String computeValue() {
+                    int cash = 0;
+                    int credit = 0;
+                    int check = 0;
+                    int gc = 0;
+
+                    for (PaymentEntry paymentEntry : getPaymentEntries()) {
+                        switch (paymentEntry.getType()) {
+                            case CASH:
+                                cash++;
+                                break;
+                            case CREDIT:
+                                credit++;
+                                break;
+                            case CHECK:
+                                check++;
+                                break;
+                            case GIFTCARD:
+                                gc++;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    return String.format("Cash(%d), Credit(%d), Check(%d), Gc(%d)", cash, credit, check, gc);
+                }
+            });
+        }
+        return paymentSummary.getReadOnlyProperty();
     }
 
 }

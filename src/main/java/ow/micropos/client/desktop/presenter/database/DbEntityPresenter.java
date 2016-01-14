@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -109,6 +110,12 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
      * Node Factory Methods
      *                                                                *
      ******************************************************************/
+
+    protected final <S> ComboBox<S> createComboBox(String prompt, S... choices) {
+        ComboBox<S> cb = new ComboBox<>(FXCollections.observableArrayList(choices));
+        cb.setPromptText(prompt);
+        return cb;
+    }
 
     protected final TextField createTextField(String prompt) {
         TextField tf = new TextField();

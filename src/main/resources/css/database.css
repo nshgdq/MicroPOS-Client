@@ -1,0 +1,25 @@
+.combo-box {
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: black;
+    -fx-background-color: #777;
+    -fx-max-width: infinity;
+    -fx-border-color: black;
+}
+
+.combo-box .cell {
+    -fx-text-fill: black;
+}
+
+.combo-box .list-cell {
+    -fx-background: #777;
+    -fx-background-color: #777;
+    -fx-text-fill: black;
+}
+
+.combo-box .list-view {
+    -fx-background-color: #777;
+}
+
+.fontSizeHack {
+    -fx-font-size: 2em;
+}

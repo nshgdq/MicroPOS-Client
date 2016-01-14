@@ -103,6 +103,8 @@ public class App extends Application implements VkProperties {
     public static MovePresenter movePresenter;
 
     // Database Presenters
+    public static DbEmployeePresenter dbEmployeePresenter;
+    public static DbPositionPresenter dbPositionPresenter;
     public static DbMenuItemsPresenter dbMenuItemsPresenter;
     public static DbCategoryPresenter dbCategoriesPresenter;
     public static DbSectionPresenter dbSectionPresenter;
@@ -232,6 +234,8 @@ public class App extends Application implements VkProperties {
         targetPresenter = Presenter.load("/view/target/target.fxml");
         movePresenter = Presenter.load("/view/move/move.fxml");
 
+        dbEmployeePresenter = new DbEmployeePresenter();
+        dbPositionPresenter = new DbPositionPresenter();
         dbMenuItemsPresenter = new DbMenuItemsPresenter();
         dbCategoriesPresenter = new DbCategoryPresenter();
         dbModifierGroupPresenter = new DbModifierGroupPresenter();
