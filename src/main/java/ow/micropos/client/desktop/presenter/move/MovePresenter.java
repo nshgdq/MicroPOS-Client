@@ -15,11 +15,11 @@ import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.presenter.common.ViewProductEntry;
 import ow.micropos.client.desktop.presenter.common.ViewSalesOrder;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -54,16 +54,19 @@ public class MovePresenter extends ItemPresenter<List<SalesOrder>> {
             if (!moveEntryList.isEmpty()) {
                 Platform.runLater(() -> App.notify.showAndWait("There are still unassigned entries."));
 
-            } else if (App.apiIsBusy.compareAndSet(false, true)) {
+            } else {
 
                 List<SalesOrder> nonEmpty = getItem()
                         .stream()
                         .filter(so -> so.getId() != null || !so.getProductEntries().isEmpty())
                         .collect(Collectors.toList());
 
-                App.api.postSalesOrders(nonEmpty, (AlertCallback<List<Long>>) (longs, response) -> {
-                    App.main.backToRefresh(2);
-                    App.notify.showAndWait("Sales Orders " + longs.toString());
+                App.apiProxy.postSalesOrders(nonEmpty, new RunLaterCallback<List<Long>>() {
+                    @Override
+                    public void laterSuccess(List<Long> longs) {
+                        App.main.backToRefresh(2);
+                        App.notify.showAndWait("Sales Orders " + longs.toString());
+                    }
                 });
             }
         }));

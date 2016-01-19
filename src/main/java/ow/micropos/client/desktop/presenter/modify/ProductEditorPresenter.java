@@ -19,14 +19,13 @@ import org.fxmisc.easybind.EasyBind;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.ModifierType;
 import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
 import ow.micropos.client.desktop.model.menu.Modifier;
 import ow.micropos.client.desktop.model.menu.ModifierGroup;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -246,18 +245,15 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
     public void refresh() {
         gpModifierGroups.setItems(FXCollections.emptyObservableList());
         resetModifiers();
-
-        if (App.apiIsBusy.compareAndSet(false, true)) {
-            App.api.getModifierGroups(new AlertCallback<List<ModifierGroup>>() {
-                @Override
-                public void onSuccess(List<ModifierGroup> mgList, Response response) {
-                    mgList.sort((o1, o2) -> o1.getWeight() - o2.getWeight());
-                    mgList.forEach(mg -> mg.getModifiers().sort((o1, o2) -> o1.getWeight() - o2.getWeight()));
-                    gpModifierGroups.setItems(FXCollections.observableList(mgList));
-                    showModifierGroups();
-                }
-            });
-        }
+        App.apiProxy.getModifierGroups(new RunLaterCallback<List<ModifierGroup>>() {
+            @Override
+            public void laterSuccess(List<ModifierGroup> mgList) {
+                mgList.sort((o1, o2) -> o1.getWeight() - o2.getWeight());
+                mgList.forEach(mg -> mg.getModifiers().sort((o1, o2) -> o1.getWeight() - o2.getWeight()));
+                gpModifierGroups.setItems(FXCollections.observableList(mgList));
+                showModifierGroups();
+            }
+        });
     }
 
     @Override

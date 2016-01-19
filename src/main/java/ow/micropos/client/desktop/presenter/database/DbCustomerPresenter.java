@@ -7,9 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.target.Customer;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -69,30 +68,21 @@ public class DbCustomerPresenter extends DbEntityPresenter<Customer> {
 
     @Override
     void updateTableContent(TableView<Customer> table) {
-        App.api.listCustomers(new AlertCallback<List<Customer>>() {
+        App.apiProxy.listCustomers(new RunLaterCallback<List<Customer>>() {
             @Override
-            public void onSuccess(List<Customer> categories, Response response) {
-                table.setItems(FXCollections.observableList(categories));
+            public void laterSuccess(List<Customer> customers) {
+                table.setItems(FXCollections.observableList(customers));
             }
         });
     }
 
     @Override
     void submitItem(Customer item) {
-        App.api.updateCustomer(
-                item,
-                (AlertCallback<Long>) (aLong, response) -> {
-                    refresh();
-                    App.notify.showAndWait("Updated Customer.");
-                }
-        );
+        App.apiProxy.updateCustomer(item, RunLaterCallback.submitCallback());
     }
 
     @Override
     void deleteItem(Customer item) {
-        App.api.removeCustomer(item.getId(), (AlertCallback<Boolean>) (aBool, response) -> {
-            refresh();
-            App.notify.showAndWait("Removed Customer.");
-        });
+        App.apiProxy.removeCustomer(item.getId(), RunLaterCallback.deleteCallback());
     }
 }

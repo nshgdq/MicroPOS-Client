@@ -7,10 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
@@ -48,6 +45,10 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
         table.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {if (n != null) setItem(n);});
         table.getColumns().addAll(getTableColumns());
         GridPane.setConstraints(table, 0, 0);
+
+        // TODO : Scroll Buttons for DBEntityPresenter
+        StackPane upButton = new StackPane(new Label("&#x25B2;"));
+        StackPane downButton = new StackPane(new Label("&#x25BC;"));
 
         VBox side = new VBox(10);
         side.setId("side");
@@ -96,6 +97,8 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
     @Override
     public void refresh() {
+        table.setItems(FXCollections.emptyObservableList());
+
         setItem(createNew());
         updateTableContent(table);
     }
@@ -234,7 +237,7 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
         return menu;
     }
 
-    private final ObservableList<Action> menu = FXCollections.observableArrayList(
+    protected final ObservableList<Action> menu = FXCollections.observableArrayList(
             new Action("Done", ActionType.FINISH, event -> Platform.runLater(this::onDone)),
             new Action("New", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 table.getSelectionModel().clearSelection();
@@ -243,20 +246,12 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
             new Action("Submit", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 if (getItem() == null)
                     return;
-
-                if (App.apiIsBusy.compareAndSet(false, true)) {
-                    submitItem(getItem());
-                }
+                submitItem(getItem());
             })),
             new Action("Delete", ActionType.BUTTON, event -> {
                 if (getItem() == null)
                     return;
-
-                App.confirm.showAndWait("Are you sure you want to delete this item?", () -> {
-                    if (App.apiIsBusy.compareAndSet(false, true)) {
-                        deleteItem(getItem());
-                    }
-                });
+                App.confirm.showAndWait("Are you sure you want to delete this item?", () -> deleteItem(getItem()));
             })
     );
 

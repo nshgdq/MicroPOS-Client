@@ -29,6 +29,7 @@
             <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="ALWAYS"/>
             <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
         <columnConstraints>
@@ -82,8 +83,38 @@
                       AnchorPane.topAnchor="0"/>
         </AnchorPane>
 
+        <GridPane GridPane.rowIndex="2"
+                  GridPane.columnIndex="0">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <StackPane fx:id="upOption"
+                       id="optionButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0">
+                <Label id="optionText"
+                       text="&#x25B2;"/>
+            </StackPane>
+
+            <StackPane fx:id="downOption"
+                       id="optionButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="1">
+                <Label id="optionText"
+                       text="&#x25BC;"/>
+            </StackPane>
+
+        </GridPane>
+
         <GridPane id="gpBottom"
-                  GridPane.rowIndex="2"
+                  GridPane.rowIndex="3"
                   GridPane.columnIndex="0">
 
             <columnConstraints>
@@ -184,7 +215,7 @@
                    id="optionButton"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="1">
-            <Label text="Prev Pg."
+            <Label text="&#x25C0;"
                    id="optionText"/>
         </StackPane>
 
@@ -192,7 +223,7 @@
                    id="optionButton"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="2">
-            <Label text="Next Pg."
+            <Label text="&#x25B6;"
                    id="optionText"/>
         </StackPane>
 

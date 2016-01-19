@@ -2,6 +2,7 @@ package ow.micropos.client.desktop.presenter.common;
 
 
 import email.com.gmail.ttsai0509.javafx.LabelUtils;
+import email.com.gmail.ttsai0509.javafx.ListViewUtils;
 import email.com.gmail.ttsai0509.javafx.control.PresenterCellAdapter;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
@@ -14,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
@@ -29,6 +31,8 @@ public class ViewSalesOrder extends ItemPresenter<SalesOrder> {
     @FXML public Label lblSoStatus;
     @FXML public Label lblSoTime;
     @FXML public ListView<ProductEntry> lvSoSummary;
+    @FXML public StackPane downOption;
+    @FXML public StackPane upOption;
 
     public final void onTopClick(EventHandler<? super MouseEvent> handler) {
         gpTop.setOnMouseClicked(handler);
@@ -75,6 +79,14 @@ public class ViewSalesOrder extends ItemPresenter<SalesOrder> {
             presenter.onClick(event -> Platform.runLater(() -> onSubItemClick(presenter)));
             return new PresenterCellAdapter<>(presenter);
         });
+
+        upOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(lvSoSummary, -2))
+        );
+
+        downOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(lvSoSummary, 2))
+        );
 
     }
 

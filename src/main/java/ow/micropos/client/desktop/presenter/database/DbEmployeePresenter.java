@@ -1,6 +1,5 @@
 package ow.micropos.client.desktop.presenter.database;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -11,12 +10,9 @@ import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.auth.Position;
 import ow.micropos.client.desktop.model.employee.Employee;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 import java.util.Objects;
@@ -83,64 +79,27 @@ public class DbEmployeePresenter extends DbEntityPresenter<Employee> {
 
     @Override
     void updateTableContent(TableView<Employee> table) {
-        App.api.listEmployees(new AlertCallback<List<Employee>>() {
+        App.apiProxy.listEmployees(new RunLaterCallback<List<Employee>>() {
             @Override
-            public void onSuccess(List<Employee> categories, Response response) {
-                table.setItems(FXCollections.observableList(categories));
+            public void laterSuccess(List<Employee> employees) {
+                table.setItems(FXCollections.observableList(employees));
+
             }
         });
     }
 
     @Override
     void submitItem(Employee item) {
-        App.api.updateEmployee(item, new Callback<Long>() {
-            @Override
-            public void success(Long aLong, Response response) {
-                Platform.runLater(() -> {
-                    refresh();
-                    App.notify.showAndWait("Updated Employee.");
-                });
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Platform.runLater(() -> {
-                    refresh();
-                    if (error != null)
-                        App.notify.showAndWait("ERROR", error.getMessage());
-                    else
-                        App.notify.showAndWait("ERROR", "Unexpected Error.");
-                });
-            }
-        });
+        App.apiProxy.updateEmployee(item, RunLaterCallback.submitCallback());
     }
 
     @Override
     void deleteItem(Employee item) {
         if (Objects.equals(item.getId(), App.employee.getId())) {
-            refresh();
             App.notify.showAndWait("Can't remove yourself.");
+            refresh();
         } else {
-            App.api.removeEmployee(item.getId(), new Callback<Boolean>() {
-                @Override
-                public void success(Boolean aBoolean, Response response) {
-                    Platform.runLater(() -> {
-                        refresh();
-                        App.notify.showAndWait("Removed Employee.");
-                    });
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Platform.runLater(() -> {
-                        refresh();
-                        if (error != null)
-                            App.notify.showAndWait("ERROR", error.getMessage());
-                        else
-                            App.notify.showAndWait("ERROR", "Unexpected Error.");
-                    });
-                }
-            });
+            App.apiProxy.removeEmployee(item.getId(), RunLaterCallback.deleteCallback());
         }
     }
 

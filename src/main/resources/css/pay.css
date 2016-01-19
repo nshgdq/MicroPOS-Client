@@ -26,6 +26,28 @@
     -fx-font-size: 1.5em;
 }
 
+/******************************************************************
+ *                                                                *
+ * Change Due
+ *                                                                *
+ ******************************************************************/
+
+#prompt {
+    -fx-font-size: 3em;
+}
+
+#change {
+    -fx-font-size: 12em;
+    -fx-font-weight: bolder;
+    -fx-text-fill: #FFFF0F;
+}
+
+#done {
+    -fx-font-size: 3em;
+    -fx-padding: 10px 100px;
+    -fx-font-weight: bolder;
+    -fx-background-color: #8C1200;
+}
 
 /******************************************************************
  *                                                                *

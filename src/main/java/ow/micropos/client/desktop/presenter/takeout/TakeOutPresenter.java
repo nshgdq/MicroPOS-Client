@@ -13,10 +13,10 @@ import org.comtel2000.keyboard.control.VkProperties;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.model.target.Customer;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -33,7 +33,6 @@ public class TakeOutPresenter extends Presenter {
     @FXML TextField tfLastName;
 
     private FilteredList<Customer> filteredCustomers = new FilteredList<>(FXCollections.observableArrayList());
-    ;
 
     @FXML
     public void initialize() {
@@ -48,12 +47,15 @@ public class TakeOutPresenter extends Presenter {
 
             if (!fn.isEmpty() || !ln.isEmpty() || !pn.isEmpty()) {
                 Customer c = new Customer(fn, ln, pn);
-                App.api.postCustomer(c, (AlertCallback<Long>) (aLong, response) -> {
-                    c.setId(aLong);
-                    App.main.setNextRefresh(
-                            App.orderEditorPresenter,
-                            SalesOrder.forCustomer(App.employee, c, App.properties.getBd("tax-percent"))
-                    );
+                App.apiProxy.postCustomer(c, new RunLaterCallback<Long>() {
+                    @Override
+                    public void laterSuccess(Long aLong) {
+                        c.setId(aLong);
+                        App.main.setNextRefresh(
+                                App.orderEditorPresenter,
+                                SalesOrder.forCustomer(App.employee, c, App.properties.getBd("tax-percent"))
+                        );
+                    }
                 });
             }
         });
@@ -96,6 +98,7 @@ public class TakeOutPresenter extends Presenter {
 
     @Override
     public void refresh() {
+        gvCustomers.setItems(FXCollections.emptyObservableList());
         tfLastName.clear();
         tfFirstName.clear();
         tfPhoneNumber.clear();
@@ -107,12 +110,14 @@ public class TakeOutPresenter extends Presenter {
         else if (App.employee.hasPermission(Permission.CLIENT_MANAGER) && !menu.contains(manager))
             menu.add(manager);
 
-        App.api.getCustomers((AlertCallback<List<Customer>>) (cList, response) ->
-                Platform.runLater(() -> {
-                    filteredCustomers = new FilteredList<>(FXCollections.observableList(cList));
-                    updateCustomerFilter();
-                    gvCustomers.setItems(filteredCustomers);
-                }));
+        App.apiProxy.getCustomers(new RunLaterCallback<List<Customer>>() {
+            @Override
+            public void laterSuccess(List<Customer> customers) {
+                filteredCustomers = new FilteredList<>(FXCollections.observableList(customers));
+                updateCustomerFilter();
+                gvCustomers.setItems(filteredCustomers);
+            }
+        });
     }
 
     @Override

@@ -8,10 +8,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.target.Seat;
 import ow.micropos.client.desktop.model.target.Section;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -137,30 +136,21 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
 
     @Override
     void updateTableContent(TableView<Seat> table) {
-        App.api.listSeats(new AlertCallback<List<Seat>>() {
+        App.apiProxy.listSeats(new RunLaterCallback<List<Seat>>() {
             @Override
-            public void onSuccess(List<Seat> categories, Response response) {
-                table.setItems(FXCollections.observableList(categories));
+            public void laterSuccess(List<Seat> seats) {
+                table.setItems(FXCollections.observableList(seats));
             }
         });
     }
 
     @Override
     void submitItem(Seat item) {
-        App.api.updateSeat(
-                item,
-                (AlertCallback<Long>) (aLong, response) -> {
-                    refresh();
-                    App.notify.showAndWait("Updated Menu Item.");
-                }
-        );
+        App.apiProxy.updateSeat(item, RunLaterCallback.submitCallback());
     }
 
     @Override
     void deleteItem(Seat item) {
-        App.api.removeSeat(item.getId(), (AlertCallback<Boolean>) (aBool, response) -> {
-            refresh();
-            App.notify.showAndWait("Removed Menu Item.");
-        });
+        App.apiProxy.removeSeat(item.getId(), RunLaterCallback.deleteCallback());
     }
 }

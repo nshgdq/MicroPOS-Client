@@ -10,10 +10,9 @@ import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionLabel;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.report.ActiveSalesReport;
 import ow.micropos.client.desktop.model.report.DaySalesReport;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.Calendar;
 
@@ -53,44 +52,42 @@ public class ManagerPresenter extends Presenter {
             }),
             new Action("Current Report", ActionType.FINISH, event -> {
                 App.confirm.showAndWait("Generate Current Report?", () -> {
-                    if (App.apiIsBusy.compareAndSet(false, true)) {
-                        App.api.getCurrentReport(new AlertCallback<ActiveSalesReport>() {
-                            @Override
-                            public void onSuccess(ActiveSalesReport report, Response response) {
-                                App.dispatcher.requestPrint("receipt", App.jobBuilder.report(report));
-                            }
-                        });
-                    }
+                    App.apiProxy.getCurrentReport(new RunLaterCallback<ActiveSalesReport>() {
+                        @Override
+                        public void laterSuccess(ActiveSalesReport activeSalesReport) {
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.report(activeSalesReport));
+                        }
+                    });
                 });
             }),
             new Action("Day Report", ActionType.FINISH, event -> {
-                App.confirm.showAndWait("Generate Day Report?", () -> {
-                    if (App.apiIsBusy.compareAndSet(false, true)) {
-                        Calendar c = Calendar.getInstance();
-                        App.api.getDayReport(
+                Calendar c = Calendar.getInstance();
+                App.confirm.showAndWait(
+                        "Generate Day Report?",
+                        () -> App.apiProxy.getDayReport(
                                 c.get(Calendar.YEAR),
                                 c.get(Calendar.MONTH),
                                 c.get(Calendar.DAY_OF_MONTH),
-                                new AlertCallback<DaySalesReport>() {
+                                new RunLaterCallback<DaySalesReport>() {
                                     @Override
-                                    public void onSuccess(DaySalesReport report, Response response) {
+                                    public void laterSuccess(DaySalesReport report) {
                                         App.dispatcher.requestPrint("receipt", App.jobBuilder.report(report));
                                     }
-                                });
-                    }
-                });
+                                })
+                );
             }),
             new Action("Migration", ActionType.FINISH, event -> {
-                App.confirm.showAndWait("Migration can not be undone. Please check that all open orders have been processed appropriately. Continue Migrating?", () -> {
-                    if (App.apiIsBusy.compareAndSet(false, true)) {
-                        App.api.migrateSalesOrders(new AlertCallback<Integer>() {
-                            @Override
-                            public void onSuccess(Integer aInt, Response response) {
-                                App.notify.showAndWait("Migrated " + aInt + " Sales Orders.");
-                            }
-                        });
-                    }
-                });
+                App.confirm.showAndWait(
+                        "Migration can not be undone. Please verify all orders before continuing.",
+                        () -> App.apiProxy.migrateSalesOrders(
+                                new RunLaterCallback<Integer>() {
+                                    @Override
+                                    public void laterSuccess(Integer integer) {
+                                        App.notify.showAndWait("Migrated " + integer + " Sales Orders.");
+                                    }
+                                }
+                        )
+                );
             }),
             new Action("Customers", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 App.main.nextRefresh(App.dbCustomerPresenter);

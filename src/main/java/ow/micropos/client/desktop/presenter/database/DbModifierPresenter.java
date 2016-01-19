@@ -4,11 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.ModifierType;
 import ow.micropos.client.desktop.model.menu.Modifier;
 import ow.micropos.client.desktop.model.menu.ModifierGroup;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -91,9 +90,9 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
 
     @Override
     void updateTableContent(TableView<Modifier> table) {
-        App.api.listModifiers(new AlertCallback<List<Modifier>>() {
+        App.apiProxy.listModifiers(new RunLaterCallback<List<Modifier>>() {
             @Override
-            public void onSuccess(List<Modifier> modifiers, Response response) {
+            public void laterSuccess(List<Modifier> modifiers) {
                 table.setItems(FXCollections.observableList(modifiers));
             }
         });
@@ -101,20 +100,11 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
 
     @Override
     void submitItem(Modifier item) {
-        App.api.updateModifier(
-                item,
-                (AlertCallback<Long>) (aLong, response) -> {
-                    refresh();
-                    App.notify.showAndWait("Updated Menu Item.");
-                }
-        );
+        App.apiProxy.updateModifier(item, RunLaterCallback.submitCallback());
     }
 
     @Override
     void deleteItem(Modifier item) {
-        App.api.removeModifier(item.getId(), (AlertCallback<Boolean>) (aBool, response) -> {
-            refresh();
-            App.notify.showAndWait("Removed Menu Item.");
-        });
+        App.apiProxy.removeModifier(item.getId(), RunLaterCallback.deleteCallback());
     }
 }

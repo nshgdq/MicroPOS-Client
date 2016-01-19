@@ -223,6 +223,14 @@ public class GridView<T> extends GridPane {
             setPage(pageCount.get() - 1);
     }
 
+    public void firstPage() {
+        setPage(0);
+    }
+
+    public void lastPage() {
+        setPage(pageCount.get() - 1);
+    }
+
     private Procedure activeMax = this::listifyMax;
 
     private void listifyMax() {

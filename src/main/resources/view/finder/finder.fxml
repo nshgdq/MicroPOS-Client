@@ -35,6 +35,12 @@
 
         <VBox id="vbInfo">
 
+            <TextField fx:id="tfOrderNumber"
+                       promptText="Order Number"/>
+
+            <TextField fx:id="tfSeat"
+                       promptText="Seat"/>
+
             <TextField fx:id="tfPhoneNumber"
                        promptText="Phone Number"/>
 
@@ -44,11 +50,6 @@
             <TextField fx:id="tfLastName"
                        promptText="Last Name"/>
 
-            <TextField fx:id="tfSeat"
-                       promptText="Seat"/>
-
-            <TextField fx:id="tfOrderNumber"
-                       promptText="Order Number"/>
         </VBox>
 
         <VBox id="vbType">
@@ -92,7 +93,7 @@
                        id="backButton"
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="0">
-                <Label text="&lt;"
+                <Label text="&#x25C0;"
                        id="backText"/>
             </StackPane>
 
@@ -100,7 +101,7 @@
                        id="nextButton"
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="1">
-                <Label text="&gt;"
+                <Label text="&#x25B6;"
                        id="nextText"/>
             </StackPane>
 

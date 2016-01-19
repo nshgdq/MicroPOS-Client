@@ -1,6 +1,7 @@
 package email.com.gmail.ttsai0509.javafx;
 
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -131,7 +132,12 @@ public class StageScene {
 
     public void attach(KeyBoardPopup keyboard) {
         keyboard.registerScene(mScene);
+        keyboard.setAutoHide(true);
+        keyboard.setAutoFix(true);
         keyboard.addFocusListener(mScene);
+
+        // Hack to remove focus from TextField on AutoHide
+        keyboard.setOnAutoHide(event -> Platform.runLater(mPane::requestFocus));
     }
 
 }

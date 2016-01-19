@@ -42,10 +42,12 @@ import ow.micropos.client.desktop.presenter.manager.ManagerPresenter;
 import ow.micropos.client.desktop.presenter.modify.ProductEditorPresenter;
 import ow.micropos.client.desktop.presenter.move.MovePresenter;
 import ow.micropos.client.desktop.presenter.order.OrderEditorPresenter;
+import ow.micropos.client.desktop.presenter.payment.ChangeDuePresenter;
 import ow.micropos.client.desktop.presenter.payment.PaymentEditorPresenter;
 import ow.micropos.client.desktop.presenter.takeout.TakeOutPresenter;
 import ow.micropos.client.desktop.presenter.target.TargetPresenter;
 import ow.micropos.client.desktop.service.RestService;
+import ow.micropos.client.desktop.service.RestServiceProxy;
 import retrofit.RestAdapter;
 
 import java.io.File;
@@ -74,10 +76,10 @@ public class App extends Application implements VkProperties {
     // Application Services
     public static KeyBoardPopup keyboard;
     public static DateTimeClock clock;
-    public static RestService api;
-    public static AtomicBoolean apiIsBusy;
     public static PrinterDispatcher dispatcher;
     public static PrintJobBuilder jobBuilder;
+    public static RestServiceProxy apiProxy;
+    public static AtomicBoolean apiIsBusy;
 
     // Display Components
     public static StageScene primary, secondary;
@@ -101,6 +103,8 @@ public class App extends Application implements VkProperties {
     public static PaymentEditorPresenter paymentEditorPresenter;
     public static TargetPresenter targetPresenter;
     public static MovePresenter movePresenter;
+
+    public static ChangeDuePresenter changeDuePresenter;
 
     // Database Presenters
     public static DbEmployeePresenter dbEmployeePresenter;
@@ -173,7 +177,7 @@ public class App extends Application implements VkProperties {
 
         clock = new DateTimeClock();
 
-        api = new RestAdapter.Builder()
+        apiProxy = RestServiceProxy.from(new RestAdapter.Builder()
                 .setLog(log::info)
                 .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .setConverter(DataConverter.jackson())
@@ -183,7 +187,7 @@ public class App extends Application implements VkProperties {
                         request.addHeader(properties.getStr("header"), employee.getPin());
                 })
                 .build()
-                .create(RestService.class);
+                .create(RestService.class));
 
         keyboard = KeyBoardPopupBuilder.create()
                 .addIRobot(new FXRobotHandler())
@@ -233,6 +237,8 @@ public class App extends Application implements VkProperties {
         paymentEditorPresenter = Presenter.load("/view/pay/payment_editor.fxml");
         targetPresenter = Presenter.load("/view/target/target.fxml");
         movePresenter = Presenter.load("/view/move/move.fxml");
+
+        changeDuePresenter = Presenter.load("/view/pay/change_due.fxml");
 
         dbEmployeePresenter = new DbEmployeePresenter();
         dbPositionPresenter = new DbPositionPresenter();

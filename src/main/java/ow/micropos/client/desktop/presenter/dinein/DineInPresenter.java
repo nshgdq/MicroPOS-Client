@@ -9,11 +9,11 @@ import javafx.fxml.FXML;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.model.target.Seat;
 import ow.micropos.client.desktop.model.target.Section;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -56,10 +56,13 @@ public class DineInPresenter extends Presenter {
         else if (App.employee.hasPermission(Permission.CLIENT_MANAGER) && !menu.contains(manager))
             menu.add(manager);
 
-        App.api.getSection(id, (AlertCallback<Section>) (section, response) -> {
-            gvRestaurantLayout.setRows(section.getRows());
-            gvRestaurantLayout.setCols(section.getCols());
-            gvRestaurantLayout.setItems(section.getSeats());
+        App.apiProxy.getSection(id, new RunLaterCallback<Section>() {
+            @Override
+            public void laterSuccess(Section section) {
+                gvRestaurantLayout.setRows(section.getRows());
+                gvRestaurantLayout.setCols(section.getCols());
+                gvRestaurantLayout.setItems(section.getSeats());
+            }
         });
     }
 

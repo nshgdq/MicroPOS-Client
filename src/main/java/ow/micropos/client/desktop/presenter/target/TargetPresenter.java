@@ -11,12 +11,12 @@ import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.model.target.Customer;
 import ow.micropos.client.desktop.model.target.Seat;
 import ow.micropos.client.desktop.presenter.common.ViewSalesOrder;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -86,21 +86,28 @@ public class TargetPresenter extends ItemPresenter<Object> {
             // Do nothing
 
         } else if (getItem() instanceof Seat) {
-            App.api.getSalesOrderBySeat(
+            App.apiProxy.getSalesOrderBySeat(
                     ((Seat) getItem()).getId(),
                     SalesOrderStatus.OPEN,
-                    (AlertCallback<List<SalesOrder>>) (salesOrders, response) ->
-                            gvOrderGrid.setItems(FXCollections.observableList(salesOrders))
+                    new RunLaterCallback<List<SalesOrder>>() {
+                        @Override
+                        public void laterSuccess(List<SalesOrder> salesOrders) {
+                            gvOrderGrid.setItems(FXCollections.observableList(salesOrders));
+                        }
+                    }
             );
 
         } else if (getItem() instanceof Customer) {
-            App.api.getSalesOrderByCustomer(
+            App.apiProxy.getSalesOrderByCustomer(
                     ((Customer) getItem()).getId(),
                     SalesOrderStatus.OPEN,
-                    (AlertCallback<List<SalesOrder>>) (salesOrders, response) ->
-                            gvOrderGrid.setItems(FXCollections.observableList(salesOrders))
+                    new RunLaterCallback<List<SalesOrder>>() {
+                        @Override
+                        public void laterSuccess(List<SalesOrder> salesOrders) {
+                            gvOrderGrid.setItems(FXCollections.observableList(salesOrders));
+                        }
+                    }
             );
-
         }
     }
 

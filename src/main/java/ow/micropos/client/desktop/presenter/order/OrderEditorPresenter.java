@@ -1,6 +1,6 @@
 package ow.micropos.client.desktop.presenter.order;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import email.com.gmail.ttsai0509.javafx.ListViewUtils;
 import email.com.gmail.ttsai0509.javafx.control.GridView;
 import email.com.gmail.ttsai0509.javafx.control.PresenterCellAdapter;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
@@ -18,13 +18,12 @@ import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
 import ow.micropos.client.desktop.model.menu.Category;
 import ow.micropos.client.desktop.model.menu.MenuItem;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -41,6 +40,9 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
     @FXML public GridView<Category> gvCategories;
     @FXML public GridView<MenuItem> gvMenuItems;
     @FXML public ListView<ProductEntry> orderEntries;
+
+    @FXML public StackPane upOption;
+    @FXML public StackPane downOption;
 
     @FXML public Label employee;
     @FXML public Label target;
@@ -109,17 +111,16 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
                 event -> App.confirm.showAndWait("Are you sure? Any changes will not be saved.", App.main::backRefresh)
         );
 
-        ObjectMapper mapper = new ObjectMapper();
-
         sendOption.setOnMouseClicked(event -> {
             if (getItem().getProductEntries().isEmpty()) {
                 Platform.runLater(() -> App.notify.showAndWait("Nothing to send."));
-            } else if (App.apiIsBusy.compareAndSet(false, true)) {
-                App.api.postSalesOrder(getItem(), (AlertCallback<Long>) (aLong, response) -> {
-                    Platform.runLater(() -> {
+            } else {
+                App.apiProxy.postSalesOrder(getItem(), new RunLaterCallback<Long>() {
+                    @Override
+                    public void laterSuccess(Long aLong) {
                         App.main.backRefresh();
                         App.notify.showAndWait("Sales Order " + aLong);
-                    });
+                    }
                 });
             }
         });
@@ -173,6 +174,15 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             });
             return new PresenterCellAdapter<>(presenter);
         });
+
+        upOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, -2))
+        );
+
+        downOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, 2))
+        );
+
     }
 
     @Override
@@ -226,9 +236,9 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         gvCategories.setItems(FXCollections.emptyObservableList());
         gvMenuItems.setItems(FXCollections.emptyObservableList());
 
-        App.api.getCategories(new AlertCallback<List<Category>>() {
+        App.apiProxy.getCategories(new RunLaterCallback<List<Category>>() {
             @Override
-            public void onSuccess(List<Category> categories, Response response) {
+            public void laterSuccess(List<Category> categories) {
                 categories.sort((o1, o2) -> o1.getWeight() - o2.getWeight());
                 categories.forEach(c -> c.getMenuItems().sort((o1, o2) -> o1.getWeight() - o2.getWeight()));
                 gvCategories.setItems(FXCollections.observableList(categories));

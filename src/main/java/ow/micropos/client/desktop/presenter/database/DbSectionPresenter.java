@@ -7,9 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.target.Section;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -85,30 +84,21 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
 
     @Override
     void updateTableContent(TableView<Section> table) {
-        App.api.listSections(new AlertCallback<List<Section>>() {
+        App.apiProxy.listSections(new RunLaterCallback<List<Section>>() {
             @Override
-            public void onSuccess(List<Section> categories, Response response) {
-                table.setItems(FXCollections.observableList(categories));
+            public void laterSuccess(List<Section> sections) {
+                table.setItems(FXCollections.observableList(sections));
             }
         });
     }
 
     @Override
     void submitItem(Section item) {
-        App.api.updateSection(
-                item,
-                (AlertCallback<Long>) (aLong, response) -> {
-                    refresh();
-                    App.notify.showAndWait("Updated Menu Item.");
-                }
-        );
+        App.apiProxy.updateSection(item, RunLaterCallback.submitCallback());
     }
 
     @Override
     void deleteItem(Section item) {
-        App.api.removeSection(item.getId(), (AlertCallback<Boolean>) (aBool, response) -> {
-            refresh();
-            App.notify.showAndWait("Removed Menu Item.");
-        });
+        App.apiProxy.removeSection(item.getId(), RunLaterCallback.deleteCallback());
     }
 }

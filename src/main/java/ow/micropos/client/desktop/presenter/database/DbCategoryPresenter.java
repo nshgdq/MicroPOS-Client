@@ -7,9 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.menu.Category;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -70,9 +69,9 @@ public class DbCategoryPresenter extends DbEntityPresenter<Category> {
 
     @Override
     void updateTableContent(TableView<Category> table) {
-        App.api.listCategories(new AlertCallback<List<Category>>() {
+        App.apiProxy.listCategories(new RunLaterCallback<List<Category>>() {
             @Override
-            public void onSuccess(List<Category> categories, Response response) {
+            public void laterSuccess(List<Category> categories) {
                 table.setItems(FXCollections.observableList(categories));
             }
         });
@@ -80,20 +79,11 @@ public class DbCategoryPresenter extends DbEntityPresenter<Category> {
 
     @Override
     void submitItem(Category item) {
-        App.api.updateCategory(
-                item,
-                (AlertCallback<Long>) (aLong, response) -> {
-                    refresh();
-                    App.notify.showAndWait("Updated Menu Item.");
-                }
-        );
+        App.apiProxy.updateCategory(item, RunLaterCallback.submitCallback());
     }
 
     @Override
     void deleteItem(Category item) {
-        App.api.removeCategory(item.getId(), (AlertCallback<Boolean>) (aBool, response) -> {
-            refresh();
-            App.notify.showAndWait("Removed Menu Item.");
-        });
+        App.apiProxy.removeCategory(item.getId(), RunLaterCallback.deleteCallback());
     }
 }

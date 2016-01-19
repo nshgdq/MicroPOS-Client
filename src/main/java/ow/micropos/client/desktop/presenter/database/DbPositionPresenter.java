@@ -13,9 +13,9 @@ import javafx.scene.layout.*;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.auth.Position;
 import ow.micropos.client.desktop.model.enums.Permission;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -107,9 +107,12 @@ public class DbPositionPresenter extends ItemPresenter<Position> {
     @Override
     public void refresh() {
         clear();
-        App.api.listPositions((AlertCallback<List<Position>>) (positions, response) -> Platform.runLater(() -> {
-            lvPositions.setItems(FXCollections.observableList(positions));
-        }));
+        App.apiProxy.listPositions(new RunLaterCallback<List<Position>>() {
+            @Override
+            public void laterSuccess(List<Position> positions) {
+                lvPositions.setItems(FXCollections.observableList(positions));
+            }
+        });
     }
 
     @Override
@@ -151,26 +154,15 @@ public class DbPositionPresenter extends ItemPresenter<Position> {
             new Action("Submit", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 if (getItem() == null)
                     return;
-
-                if (App.apiIsBusy.compareAndSet(false, true)) {
-                    App.api.updatePosition(getItem(), (AlertCallback<Long>) (aLong, response) -> {
-                        refresh();
-                        App.notify.showAndWait("Updated Position.");
-                    });
-                }
+                App.apiProxy.updatePosition(getItem(), RunLaterCallback.submitCallback());
             })),
             new Action("Delete", ActionType.BUTTON, event -> {
                 if (getItem() == null)
                     return;
-
-                App.confirm.showAndWait("Are you sure you want to delete this item?", () -> {
-                    if (App.apiIsBusy.compareAndSet(false, true)) {
-                        App.api.removePosition(getItem().getId(), (AlertCallback<Boolean>) (aBool, response) -> {
-                            refresh();
-                            App.notify.showAndWait("Position " + getItem().getId() + " removed.");
-                        });
-                    }
-                });
+                App.confirm.showAndWait(
+                        "Are you sure you want to delete this item?",
+                        () -> App.apiProxy.removePosition(getItem().getId(), RunLaterCallback.deleteCallback()));
             })
     );
+
 }

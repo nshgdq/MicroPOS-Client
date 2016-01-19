@@ -7,10 +7,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.menu.Category;
 import ow.micropos.client.desktop.model.menu.MenuItem;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -94,9 +93,9 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
 
     @Override
     void updateTableContent(TableView<MenuItem> table) {
-        App.api.listMenuItems(new AlertCallback<List<MenuItem>>() {
+        App.apiProxy.listMenuItems(new RunLaterCallback<List<MenuItem>>() {
             @Override
-            public void onSuccess(List<MenuItem> menuItems, Response response) {
+            public void laterSuccess(List<MenuItem> menuItems) {
                 table.setItems(FXCollections.observableList(menuItems));
             }
         });
@@ -104,21 +103,12 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
 
     @Override
     void submitItem(MenuItem item) {
-        App.api.updateMenuItem(
-                item,
-                (AlertCallback<Long>) (aLong, response) -> {
-                    refresh();
-                    App.notify.showAndWait("Updated Menu Item.");
-                }
-        );
+        App.apiProxy.updateMenuItem(item, RunLaterCallback.submitCallback());
     }
 
     @Override
     void deleteItem(MenuItem item) {
-        App.api.removeMenuItem(getItem().getId(), (AlertCallback<Boolean>) (aBool, response) -> {
-            refresh();
-            App.notify.showAndWait("Removed Menu Item.");
-        });
+        App.apiProxy.removeMenuItem(item.getId(), RunLaterCallback.deleteCallback());
     }
 
 }

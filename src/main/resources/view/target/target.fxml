@@ -47,7 +47,7 @@
                        id="backButton"
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="0">
-                <Label text="&lt;"
+                <Label text="&#x25C0;"
                        id="backText"/>
             </StackPane>
 
@@ -55,7 +55,7 @@
                        id="nextButton"
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="1">
-                <Label text="&gt;"
+                <Label text="&#x25B6;"
                        id="nextText"/>
             </StackPane>
 

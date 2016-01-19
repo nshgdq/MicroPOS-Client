@@ -4,10 +4,9 @@ import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.ChargeType;
 import ow.micropos.client.desktop.model.menu.Charge;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -81,31 +80,22 @@ public class DbChargePresenter extends DbEntityPresenter<Charge> {
 
     @Override
     void updateTableContent(TableView<Charge> table) {
-        App.api.listCharges(new AlertCallback<List<Charge>>() {
+        App.apiProxy.listCharges(new RunLaterCallback<List<Charge>>() {
             @Override
-            public void onSuccess(List<Charge> categories, Response response) {
-                table.setItems(FXCollections.observableList(categories));
+            public void laterSuccess(List<Charge> charges) {
+                table.setItems(FXCollections.observableList(charges));
             }
         });
     }
 
     @Override
     void submitItem(Charge item) {
-        App.api.updateCharge(
-                item,
-                (AlertCallback<Long>) (aLong, response) -> {
-                    refresh();
-                    App.notify.showAndWait("Updated Menu Item.");
-                }
-        );
+        App.apiProxy.updateCharge(item, RunLaterCallback.submitCallback());
     }
 
     @Override
     void deleteItem(Charge item) {
-        App.api.removeCharge(item.getId(), (AlertCallback<Boolean>) (aBool, response) -> {
-            refresh();
-            App.notify.showAndWait("Removed Menu Item.");
-        });
+        App.apiProxy.removeCharge(item.getId(), RunLaterCallback.deleteCallback());
     }
 
 }

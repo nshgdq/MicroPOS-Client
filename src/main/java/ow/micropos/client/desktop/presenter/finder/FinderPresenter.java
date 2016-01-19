@@ -19,12 +19,12 @@ import org.comtel2000.keyboard.control.VkProperties;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.presenter.common.ViewSalesOrder;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -114,12 +114,14 @@ public class FinderPresenter extends Presenter {
         else if (App.employee.hasPermission(Permission.CLIENT_MANAGER) && !menu.contains(manager))
             menu.add(manager);
 
-        App.api.getSalesOrders((AlertCallback<List<SalesOrder>>) (salesOrders, response) ->
-                Platform.runLater(() -> {
-                    filteredSalesOrders = new FilteredList<>(FXCollections.observableList(salesOrders));
-                    updateSalesOrderFilter();
-                    orders.setItems(filteredSalesOrders);
-                }));
+        App.apiProxy.getSalesOrders(new RunLaterCallback<List<SalesOrder>>() {
+            @Override
+            public void laterSuccess(List<SalesOrder> salesOrders) {
+                filteredSalesOrders = new FilteredList<>(FXCollections.observableList(salesOrders));
+                updateSalesOrderFilter();
+                orders.setItems(filteredSalesOrders);
+            }
+        });
     }
 
     @Override

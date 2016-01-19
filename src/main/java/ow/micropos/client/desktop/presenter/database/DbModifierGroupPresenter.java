@@ -7,9 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.menu.ModifierGroup;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
 
@@ -71,9 +70,9 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
 
     @Override
     void updateTableContent(TableView<ModifierGroup> table) {
-        App.api.getModifierGroups(new AlertCallback<List<ModifierGroup>>() {
+        App.apiProxy.getModifierGroups(new RunLaterCallback<List<ModifierGroup>>() {
             @Override
-            public void onSuccess(List<ModifierGroup> modifierGroups, Response response) {
+            public void laterSuccess(List<ModifierGroup> modifierGroups) {
                 table.setItems(FXCollections.observableList(modifierGroups));
             }
         });
@@ -81,24 +80,11 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
 
     @Override
     void submitItem(ModifierGroup item) {
-        App.api.updateModifierGroup(item, new AlertCallback<Long>() {
-            @Override
-            public void onSuccess(Long aLong, Response response) {
-                refresh();
-                App.notify.showAndWait("Modifier Group Submitted.");
-            }
-        });
+        App.apiProxy.updateModifierGroup(item, RunLaterCallback.submitCallback());
     }
 
     @Override
     void deleteItem(ModifierGroup item) {
-        App.api.removeModifierGroup(item.getId(), new AlertCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean aBoolean, Response response) {
-                refresh();
-                App.notify.showAndWait("Modifier Group Removed.");
-            }
-        });
-
+        App.apiProxy.removeModifierGroup(item.getId(), RunLaterCallback.deleteCallback());
     }
 }

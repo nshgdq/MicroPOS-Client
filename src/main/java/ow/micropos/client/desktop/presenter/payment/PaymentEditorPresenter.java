@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.presenter.payment;
 
+import email.com.gmail.ttsai0509.javafx.ListViewUtils;
 import email.com.gmail.ttsai0509.javafx.binding.CentStringBinding;
 import email.com.gmail.ttsai0509.javafx.control.PresenterCellAdapter;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
@@ -22,17 +23,15 @@ import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.enums.*;
+import ow.micropos.client.desktop.model.error.ErrorInfo;
 import ow.micropos.client.desktop.model.menu.Charge;
 import ow.micropos.client.desktop.model.orders.ChargeEntry;
 import ow.micropos.client.desktop.model.orders.PaymentEntry;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.presenter.order.ViewProductEntry;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -74,12 +73,15 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     @FXML public Button btnCheck;
     @FXML public Button btnGiftCard;
 
+    @FXML public StackPane downOption;
+    @FXML public StackPane upOption;
+
     @FXML public StackPane gratuityOption;
     @FXML public StackPane printOption;
     @FXML public StackPane cancelOption;
     @FXML public StackPane sendOption;
-    @FXML public StackPane voidOption;
 
+    @FXML public StackPane voidOption;
     @FXML public ListView<ChargeEntry> lvChargeEntries;
     @FXML public ListView<PaymentEntry> lvPaymentEntries;
     @FXML public Label voidText;
@@ -101,6 +103,14 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         GridPane.setHalignment(taxTotal, HPos.RIGHT);
         GridPane.setHalignment(grandTotal, HPos.RIGHT);
 
+        upOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, -2))
+        );
+
+        downOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, 2))
+        );
+
         cancelOption.setOnMouseClicked(
                 event -> App.confirm.showAndWait("Are you sure? Any changes will not be saved.", App.main::backRefresh)
         );
@@ -112,15 +122,17 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             } else if (getItem().changeProperty().get().compareTo(BigDecimal.ZERO) < 0) {
                 Platform.runLater(() -> App.notify.showAndWait("Order has not been fully paid."));
 
-            } else if (App.apiIsBusy.compareAndSet(false, true)) {
+            } else {
                 getItem().setStatus(SalesOrderStatus.REQUEST_CLOSE);
-                App.api.postSalesOrder(getItem(), (AlertCallback<Long>) (aLong, response) -> {
-                    Platform.runLater(() -> {
+                App.apiProxy.postSalesOrder(getItem(), new RunLaterCallback<Long>() {
+                    @Override
+                    public void laterSuccess(Long aLong) {
                         getItem().setId(aLong);
-                        App.main.backRefresh();
-                        App.notify.showAndWait("Change Due: " + getItem().changeProperty().get().toString());
+                        App.main.setSwapRefresh(App.changeDuePresenter, getItem());
+                        //App.main.backRefresh();
+                        //App.notify.showAndWait("Change Due: " + getItem().changeProperty().get().toString());
                         App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
-                    });
+                    }
                 });
             }
         });
@@ -145,49 +157,43 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         voidOption.setOnMouseClicked(event -> {
             if (getItem().hasStatus(SalesOrderStatus.VOID) || getItem().hasStatus(SalesOrderStatus.CLOSED)) {
                 App.confirm.showAndWait("Reopen Sales Order?", () -> {
-                    if (App.apiIsBusy.compareAndSet(false, true)) {
+                    SalesOrderStatus prevStatus = getItem().getStatus();
+                    getItem().setStatus(SalesOrderStatus.REQUEST_OPEN);
 
-                        SalesOrderStatus prevStatus = getItem().getStatus();
-                        getItem().setStatus(SalesOrderStatus.REQUEST_OPEN);
+                    App.apiProxy.postSalesOrder(getItem(), new RunLaterCallback<Long>() {
+                        @Override
+                        public void laterSuccess(Long aLong) {
+                            App.notify.showAndWait("Sales Order " + aLong + " Reopened.");
+                            App.main.backRefresh();
+                        }
 
-                        App.api.postSalesOrder(getItem(), new AlertCallback<Long>() {
-                            @Override
-                            public void onSuccess(Long aLong, Response response) {
-                                Platform.runLater(() -> {
-                                    App.main.backRefresh();
-                                    App.notify.showAndWait("Sales Order " + aLong + " Reopened.");
-                                });
-                            }
-
-                            @Override
-                            public void onFailure(RetrofitError error) {
-                                getItem().setStatus(prevStatus);
-                            }
-                        });
-                    }
+                        @Override
+                        public void laterFailure(ErrorInfo error) {
+                            super.laterFailure(error);
+                            getItem().setStatus(prevStatus);
+                        }
+                    });
                 });
             } else {
                 App.confirm.showAndWait("Void Sales Order?", () -> {
-                    if (App.apiIsBusy.compareAndSet(false, true)) {
+                    SalesOrderStatus prevStatus = getItem().getStatus();
+                    getItem().setStatus(SalesOrderStatus.REQUEST_VOID);
 
-                        SalesOrderStatus prevStatus = getItem().getStatus();
-                        getItem().setStatus(SalesOrderStatus.REQUEST_VOID);
+                    App.apiProxy.postSalesOrder(getItem(), new RunLaterCallback<Long>() {
+                        @Override
+                        public void laterSuccess(Long aLong) {
+                            Platform.runLater(() -> {
+                                App.main.backRefresh();
+                                App.notify.showAndWait("Sales Order " + aLong + " Voided.");
+                            });
+                        }
 
-                        App.api.postSalesOrder(getItem(), new AlertCallback<Long>() {
-                            @Override
-                            public void onSuccess(Long aLong, Response response) {
-                                Platform.runLater(() -> {
-                                    App.main.backRefresh();
-                                    App.notify.showAndWait("Sales Order " + aLong + " Voided.");
-                                });
-                            }
-
-                            @Override
-                            public void onFailure(RetrofitError error) {
-                                getItem().setStatus(prevStatus);
-                            }
-                        });
-                    }
+                        @Override
+                        public void laterFailure(ErrorInfo error) {
+                            super.laterFailure(error);
+                            getItem().setStatus(prevStatus);
+                        }
+                    });
                 });
             }
         });
@@ -253,14 +259,13 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     @Override
     public void refresh() {
         rawAmount.set("");
-
-        if (App.apiIsBusy.compareAndSet(false, true)) {
-            App.api.getCharges((AlertCallback<List<Charge>>) (charges, response) -> {
-                        charges.sort((o1, o2) -> o1.getWeight() - o2.getWeight());
-                        lvCharges.setItems(FXCollections.observableList(charges));
-                    }
-            );
-        }
+        App.apiProxy.getCharges(new RunLaterCallback<List<Charge>>() {
+            @Override
+            public void laterSuccess(List<Charge> charges) {
+                charges.sort((o1, o2) -> o1.getWeight() - o2.getWeight());
+                lvCharges.setItems(FXCollections.observableList(charges));
+            }
+        });
     }
 
     @Override
@@ -377,13 +382,6 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         } else {
             App.notify.showAndWait("You must enter a payment amount.");
         }
-
-        /* Auto-post on full payment
-        if (getItem().changeProperty().get().compareTo(BigDecimal.ZERO) >= 0) {
-            getItem().setStatus(SalesOrderStatus.REQUEST_CLOSE);
-            App.api.postSalesOrder(getItem(), onPost);
-        }
-        */
     }
 
     private void enableKeypad() {
@@ -433,10 +431,5 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         btnCheck.setOnAction(null);
         btnGiftCard.setOnAction(null);
     }
-
-    private Callback<Long> onPost = (AlertCallback<Long>) (aLong, response) -> Platform.runLater(() -> {
-        App.main.backRefresh();
-        App.notify.showAndWait("Change Due : " + getItem().changeProperty().get().toString());
-    });
 
 }

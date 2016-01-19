@@ -4,20 +4,17 @@ import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import org.apache.commons.lang3.StringUtils;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.AlertCallback;
 import ow.micropos.client.desktop.model.employee.Employee;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import ow.micropos.client.desktop.model.error.ErrorInfo;
+import ow.micropos.client.desktop.service.RunLaterCallback;
 
 public class LoginPresenter extends Presenter {
 
@@ -63,6 +60,7 @@ public class LoginPresenter extends Presenter {
             }
         });
 
+        btnClear.setOnMouseClicked(event -> rawPin.set(""));
         btn0.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "0"));
         btn1.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "1"));
         btn2.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "2"));
@@ -73,8 +71,20 @@ public class LoginPresenter extends Presenter {
         btn7.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "7"));
         btn8.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "8"));
         btn9.setOnMouseClicked(event -> rawPin.set(rawPin.get() + "9"));
-        btnClear.setOnMouseClicked(event -> rawPin.set(""));
-        btnLogin.setOnMouseClicked(loginEvent);
+        btnLogin.setOnMouseClicked(event -> App.apiProxy.getEmployee(rawPin.get(), new RunLaterCallback<Employee>() {
+            @Override
+            public void laterSuccess(Employee employee) {
+                if (employee == null)
+                    return;
+                App.employee = employee;
+                App.main.nextRefresh(App.homePresenter);
+            }
+
+            @Override
+            public void laterFailure(ErrorInfo error) {
+                refresh();
+            }
+        }));
     }
 
     @Override
@@ -97,22 +107,5 @@ public class LoginPresenter extends Presenter {
     public void refresh() {
         rawPin.set("");
     }
-
-    private final EventHandler<MouseEvent> loginEvent = (event) -> App.api.getEmployee(
-            rawPin.get(),
-            new AlertCallback<Employee>() {
-                @Override
-                public void onSuccess(Employee employee, Response response) {
-                    if (employee != null) {
-                        App.employee = employee;
-                        App.main.nextRefresh(App.homePresenter);
-                    }
-                }
-
-                @Override
-                public void onFailure(RetrofitError error) {
-                    refresh();
-                }
-            });
 
 }
