@@ -23,12 +23,22 @@ public class DbCustomerPresenter extends DbEntityPresenter<Customer> {
     TableColumn<Customer, String> phone;
 
     @Override
+    Label getTitleLabel() {
+        return new Label("Customer Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("First"), new Label("Last"), new Label("Phone")};
+    }
+
+    @Override
     Node[] getEditControls() {
         tfFirst = createTextField("First Name");
         tfLast = createTextField("Last Name");
         tfPhone = createTextField("Phone Number");
 
-        return new Node[]{new Label("Customer Information"), tfFirst, tfLast, tfPhone};
+        return new Node[]{tfFirst, tfLast, tfPhone};
     }
 
     @Override
@@ -55,7 +65,10 @@ public class DbCustomerPresenter extends DbEntityPresenter<Customer> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfFirst.setVisible(visible);
+        tfLast.setVisible(visible);
+        tfPhone.setVisible(visible);
         tfFirst.setText("");
         tfLast.setText("");
         tfPhone.setText("");
@@ -78,11 +91,11 @@ public class DbCustomerPresenter extends DbEntityPresenter<Customer> {
 
     @Override
     void submitItem(Customer item) {
-        App.apiProxy.updateCustomer(item, RunLaterCallback.submitCallback());
+        App.apiProxy.updateCustomer(item, RunLaterCallback.submitCallback(item, table, (id, o) -> o.setId(id)));
     }
 
     @Override
     void deleteItem(Customer item) {
-        App.apiProxy.removeCustomer(item.getId(), RunLaterCallback.deleteCallback());
+        App.apiProxy.removeCustomer(item.getId(), RunLaterCallback.deleteCallback(item, table));
     }
 }

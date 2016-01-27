@@ -33,21 +33,23 @@
               id="keypad">
 
         <columnConstraints>
-            <ColumnConstraints percentWidth="33.33"/>
-            <ColumnConstraints percentWidth="33.33"/>
-            <ColumnConstraints percentWidth="33.33"/>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER"/>
         </columnConstraints>
 
         <rowConstraints>
-            <RowConstraints percentHeight="16.66"/>
-            <RowConstraints percentHeight="16.66"/>
-            <RowConstraints percentHeight="16.66"/>
-            <RowConstraints percentHeight="16.66"/>
-            <RowConstraints percentHeight="16.66"/>
-            <RowConstraints percentHeight="16.66"/>
+            <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="ALWAYS"/>
         </rowConstraints>
 
-        <StackPane GridPane.rowIndex="0"
+        <StackPane id="lblPinContainer"
+                   GridPane.rowIndex="1"
                    GridPane.columnIndex="0"
                    GridPane.columnSpan="3">
             <Label fx:id="lblPin"/>
@@ -55,7 +57,7 @@
 
         <StackPane fx:id="btn1"
                    id="keypadButton"
-                   GridPane.rowIndex="1"
+                   GridPane.rowIndex="2"
                    GridPane.columnIndex="0">
             <Label id="keypadText"
                    text="1"/>
@@ -63,7 +65,7 @@
 
         <StackPane fx:id="btn2"
                    id="keypadButton"
-                   GridPane.rowIndex="1"
+                   GridPane.rowIndex="2"
                    GridPane.columnIndex="1">
             <Label id="keypadText"
                    text="2"/>
@@ -71,7 +73,7 @@
 
         <StackPane fx:id="btn3"
                    id="keypadButton"
-                   GridPane.rowIndex="1"
+                   GridPane.rowIndex="2"
                    GridPane.columnIndex="2">
             <Label id="keypadText"
                    text="3"/>
@@ -79,7 +81,7 @@
 
         <StackPane fx:id="btn4"
                    id="keypadButton"
-                   GridPane.rowIndex="2"
+                   GridPane.rowIndex="3"
                    GridPane.columnIndex="0">
             <Label id="keypadText"
                    text="4"/>
@@ -87,7 +89,7 @@
 
         <StackPane fx:id="btn5"
                    id="keypadButton"
-                   GridPane.rowIndex="2"
+                   GridPane.rowIndex="3"
                    GridPane.columnIndex="1">
             <Label id="keypadText"
                    text="5"/>
@@ -95,7 +97,7 @@
 
         <StackPane fx:id="btn6"
                    id="keypadButton"
-                   GridPane.rowIndex="2"
+                   GridPane.rowIndex="3"
                    GridPane.columnIndex="2">
             <Label id="keypadText"
                    text="6"/>
@@ -103,7 +105,7 @@
 
         <StackPane fx:id="btn7"
                    id="keypadButton"
-                   GridPane.rowIndex="3"
+                   GridPane.rowIndex="4"
                    GridPane.columnIndex="0">
             <Label id="keypadText"
                    text="7"/>
@@ -111,7 +113,7 @@
 
         <StackPane fx:id="btn8"
                    id="keypadButton"
-                   GridPane.rowIndex="3"
+                   GridPane.rowIndex="4"
                    GridPane.columnIndex="1">
             <Label id="keypadText"
                    text="8"/>
@@ -119,7 +121,7 @@
 
         <StackPane fx:id="btn9"
                    id="keypadButton"
-                   GridPane.rowIndex="3"
+                   GridPane.rowIndex="4"
                    GridPane.columnIndex="2">
             <Label id="keypadText"
                    text="9"/>
@@ -127,7 +129,7 @@
 
         <StackPane fx:id="btnClear"
                    id="keypadButton"
-                   GridPane.rowIndex="4"
+                   GridPane.rowIndex="5"
                    GridPane.columnIndex="0">
             <Label id="keypadText"
                    text="Clear"/>
@@ -135,7 +137,7 @@
 
         <StackPane fx:id="btn0"
                    id="keypadButton"
-                   GridPane.rowIndex="4"
+                   GridPane.rowIndex="5"
                    GridPane.columnIndex="1">
             <Label id="keypadText"
                    text="0"/>
@@ -143,7 +145,7 @@
 
         <StackPane fx:id="btnLogin"
                    id="keypadButton"
-                   GridPane.rowIndex="4"
+                   GridPane.rowIndex="5"
                    GridPane.columnIndex="2">
             <Label id="keypadText"
                    text="Login"/>

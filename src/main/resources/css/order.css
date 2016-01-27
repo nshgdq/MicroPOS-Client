@@ -1,4 +1,4 @@
-#editorWrapper, #gpMenu, #gpSalesOrder, #gpCategories, #gpMenuItems, #gpOptions {
+#editorWrapper, #gpMenu, #gpSalesOrder, #gpCategories, #gpMenuItems, #gpOptions, #gpScroll {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
@@ -15,6 +15,11 @@
 #optionText {
     -fx-font-weight: bolder;
     -fx-padding: 20px;
+}
+
+#smOptionText {
+    -fx-font-weight: bolder;
+    -fx-padding: 5px 20px;
 }
 
 .primary-info {

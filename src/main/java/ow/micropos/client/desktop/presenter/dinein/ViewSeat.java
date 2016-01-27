@@ -4,6 +4,7 @@ import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.model.target.Seat;
 
@@ -12,7 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ViewSeat extends ItemPresenter<Seat> {
 
-    @FXML Label lblSeatTag;
+    @FXML public StackPane seatView;
+    @FXML public Label lblSeatTag;
 
     @Override
     protected void updateItem(Seat currentItem, Seat newItem) {

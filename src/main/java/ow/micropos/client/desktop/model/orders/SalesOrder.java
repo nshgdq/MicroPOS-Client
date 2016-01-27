@@ -243,6 +243,13 @@ public class SalesOrder {
         return getStatus() == status;
     }
 
+    public boolean hasStatuses(SalesOrderStatus... statuses) {
+        for (SalesOrderStatus status : statuses)
+            if (hasStatus(status))
+                return true;
+        return false;
+    }
+
     public void addMenuItem(MenuItem menuItem) {
         ProductEntry newPE = new ProductEntry(menuItem, BigDecimal.ONE);
 
@@ -269,7 +276,7 @@ public class SalesOrder {
 
     public boolean hasAppliedCharge() {
         for (ChargeEntry ce : chargeEntries)
-            if (ce.hasStatus(ChargeEntryStatus.APPLIED))
+            if (ce.hasStatus(ChargeEntryStatus.APPLIED) || ce.hasStatus(ChargeEntryStatus.REQUEST_APPLY))
                 return true;
         return false;
     }
@@ -360,6 +367,7 @@ public class SalesOrder {
     private ReadOnlyObjectWrapper<BigDecimal> grandTotal;
     private ReadOnlyObjectWrapper<BigDecimal> paymentTotal;
     private ReadOnlyObjectWrapper<BigDecimal> change;
+    private ReadOnlyObjectWrapper<BigDecimal> due;
 
     public ReadOnlyObjectProperty<BigDecimal> productTotalProperty() {
         if (productTotal == null) {
@@ -518,6 +526,18 @@ public class SalesOrder {
             ));
         }
         return change.getReadOnlyProperty();
+    }
+
+    public ReadOnlyObjectProperty<BigDecimal> dueProperty() {
+        if (due == null) {
+            due = new ReadOnlyObjectWrapper<>();
+            due.bind(EasyBind.combine(
+                    grandTotalProperty(),
+                    paymentTotalProperty(),
+                    (a, b) -> BigDecimalUtils.asDollars(a.subtract(b).max(BigDecimal.ZERO))
+            ));
+        }
+        return due.getReadOnlyProperty();
     }
 
     /******************************************************************

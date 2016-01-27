@@ -107,6 +107,10 @@ public class TypedProperties {
         return properties.getProperty(property) != null;
     }
 
+    public Boolean getBool(String property) {
+        return Boolean.parseBoolean(properties.getProperty(property));
+    }
+
     public String getStr(String property) {
         return properties.getProperty(property);
     }

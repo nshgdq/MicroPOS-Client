@@ -56,7 +56,7 @@ public class LoginPresenter extends Presenter {
 
             @Override
             protected String computeValue() {
-                return StringUtils.repeat('.', rawPin.get().length());
+                return StringUtils.repeat('\u25CF', rawPin.get().length());
             }
         });
 

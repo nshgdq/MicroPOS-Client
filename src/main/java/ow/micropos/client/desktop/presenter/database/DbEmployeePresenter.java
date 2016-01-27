@@ -30,17 +30,35 @@ public class DbEmployeePresenter extends DbEntityPresenter<Employee> {
     TableColumn<Employee, String> positions;
 
     @Override
+    Label getTitleLabel() {
+        return new Label("Employee Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("First"), new Label("Last"), new Label("PIN"), new Label("Positions")};
+    }
+
+    @Override
     Node[] getEditControls() {
         tfFirst = createTextField("First Name");
         tfLast = createTextField("Last Name");
         tfPin = createTextField("PIN");
         tfPositions = createTextField("Positions");
 
-        return new Node[]{new Label("Employee Information"), tfFirst, tfLast, tfPin, tfPositions};
+        return new Node[]{tfFirst, tfLast, tfPin, tfPositions};
     }
 
     @Override
     TableColumn<Employee, String>[] getTableColumns() {
+        /*
+        first = createEditTableColumn("First Name", param -> param.getValue().firstNameProperty(), event -> {
+            int position = event.getTablePosition().getRow();
+            Employee item = event.getTableView().getItems().get(position);
+            item.setFirstName(event.getNewValue());
+            submitItem(item);
+        });
+        */
         first = createTableColumn("First Name", param -> param.getValue().firstNameProperty());
         last = createTableColumn("Last Name", param -> param.getValue().lastNameProperty());
         positions = createTableColumn("Positions", param -> param.getValue().positionSummaryProperty());
@@ -65,7 +83,12 @@ public class DbEmployeePresenter extends DbEntityPresenter<Employee> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfFirst.setVisible(visible);
+        tfLast.setVisible(visible);
+        tfPin.setVisible(visible);
+        tfPositions.setVisible(visible);
+
         tfFirst.setText("");
         tfLast.setText("");
         tfPin.setText("");
@@ -90,7 +113,7 @@ public class DbEmployeePresenter extends DbEntityPresenter<Employee> {
 
     @Override
     void submitItem(Employee item) {
-        App.apiProxy.updateEmployee(item, RunLaterCallback.submitCallback());
+        App.apiProxy.updateEmployee(item, RunLaterCallback.submitCallback(item, table, (id, o) -> o.setId(id)));
     }
 
     @Override
@@ -99,7 +122,7 @@ public class DbEmployeePresenter extends DbEntityPresenter<Employee> {
             App.notify.showAndWait("Can't remove yourself.");
             refresh();
         } else {
-            App.apiProxy.removeEmployee(item.getId(), RunLaterCallback.deleteCallback());
+            App.apiProxy.removeEmployee(item.getId(), RunLaterCallback.deleteCallback(item, table));
         }
     }
 

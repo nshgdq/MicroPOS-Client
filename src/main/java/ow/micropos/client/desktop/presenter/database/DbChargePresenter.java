@@ -25,6 +25,16 @@ public class DbChargePresenter extends DbEntityPresenter<Charge> {
     TableColumn<Charge, String> weight;
 
     @Override
+    Label getTitleLabel() {
+        return new Label("Charge Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("Name"), new Label("Tag"), new Label("Type"), new Label("Amount"), new Label("Weight")};
+    }
+
+    @Override
     Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
@@ -32,7 +42,7 @@ public class DbChargePresenter extends DbEntityPresenter<Charge> {
         tfAmount = createTextField("Amount");
         tfWeight = createTextField("Weight");
 
-        return new Node[]{new Label("Charge Information"), tfName, tfTag, cbType, tfAmount, tfWeight};
+        return new Node[]{tfName, tfTag, cbType, tfAmount, tfWeight};
     }
 
     @Override
@@ -65,7 +75,13 @@ public class DbChargePresenter extends DbEntityPresenter<Charge> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfName.setVisible(visible);
+        tfTag.setVisible(visible);
+        cbType.setVisible(visible);
+        tfAmount.setVisible(visible);
+        tfWeight.setVisible(visible);
+
         tfName.setText("");
         tfTag.setText("");
         cbType.getSelectionModel().clearSelection();
@@ -90,12 +106,12 @@ public class DbChargePresenter extends DbEntityPresenter<Charge> {
 
     @Override
     void submitItem(Charge item) {
-        App.apiProxy.updateCharge(item, RunLaterCallback.submitCallback());
+        App.apiProxy.updateCharge(item, RunLaterCallback.submitCallback(item, table, (id, o) -> o.setId(id)));
     }
 
     @Override
     void deleteItem(Charge item) {
-        App.apiProxy.removeCharge(item.getId(), RunLaterCallback.deleteCallback());
+        App.apiProxy.removeCharge(item.getId(), RunLaterCallback.deleteCallback(item, table));
     }
 
 }

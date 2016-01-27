@@ -130,6 +130,9 @@ public class ManagerPresenter extends Presenter {
                         "WARNING - Database maintenance only. Continue?",
                         () -> App.main.nextRefresh(App.dbPropertyPresenter)
                 );
+            })),
+            new Action("Report", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.reportPresenter);
             }))
     );
 

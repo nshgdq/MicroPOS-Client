@@ -24,12 +24,22 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
     private TableColumn<ModifierGroup, String> tcWeight;
 
     @Override
+    Label getTitleLabel() {
+        return new Label("Modifier Group Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("Name"), new Label("Tag"), new Label("Weight")};
+    }
+
+    @Override
     Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfWeight = createTextField("Weight");
 
-        return new Node[]{new Label("Modifier Group Information"), tfName, tfTag, tfWeight};
+        return new Node[]{tfName, tfTag, tfWeight};
     }
 
     @Override
@@ -57,7 +67,11 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfName.setVisible(visible);
+        tfTag.setVisible(visible);
+        tfWeight.setVisible(visible);
+
         tfName.setText("");
         tfTag.setText("");
         tfWeight.setText("");
@@ -70,7 +84,7 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
 
     @Override
     void updateTableContent(TableView<ModifierGroup> table) {
-        App.apiProxy.getModifierGroups(new RunLaterCallback<List<ModifierGroup>>() {
+        App.apiProxy.listModifierGroups(new RunLaterCallback<List<ModifierGroup>>() {
             @Override
             public void laterSuccess(List<ModifierGroup> modifierGroups) {
                 table.setItems(FXCollections.observableList(modifierGroups));
@@ -80,11 +94,11 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
 
     @Override
     void submitItem(ModifierGroup item) {
-        App.apiProxy.updateModifierGroup(item, RunLaterCallback.submitCallback());
+        App.apiProxy.updateModifierGroup(item, RunLaterCallback.submitCallback(item, table, (id, o) -> o.setId(id)));
     }
 
     @Override
     void deleteItem(ModifierGroup item) {
-        App.apiProxy.removeModifierGroup(item.getId(), RunLaterCallback.deleteCallback());
+        App.apiProxy.removeModifierGroup(item.getId(), RunLaterCallback.deleteCallback(item, table));
     }
 }

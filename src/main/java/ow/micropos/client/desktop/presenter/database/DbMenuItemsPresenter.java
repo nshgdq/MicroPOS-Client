@@ -30,6 +30,17 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
     TableColumn<MenuItem, String> weight;
 
     @Override
+    Label getTitleLabel() {
+        return new Label("Menu Item Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("Name"), new Label("Tag"), new Label("Price"), new Label("Categories"), new Label("Printers"), new Label("Weight")};
+    }
+
+
+    @Override
     Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
@@ -38,7 +49,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         tfPrinters = createTextField("Printers");
         tfWeight = createTextField("Weight");
 
-        return new Node[]{new Label("Menu Item Information"), tfName, tfTag, tfPrice, tfCategory, tfPrinters, tfWeight};
+        return new Node[]{tfName, tfTag, tfPrice, tfCategory, tfPrinters, tfWeight};
     }
 
     @Override
@@ -75,7 +86,14 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfName.setVisible(visible);
+        tfTag.setVisible(visible);
+        tfPrice.setVisible(visible);
+        tfCategory.setVisible(visible);
+        tfPrinters.setVisible(visible);
+        tfWeight.setVisible(visible);
+
         tfName.setText("");
         tfTag.setText("");
         tfPrice.setText("");
@@ -103,12 +121,12 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
 
     @Override
     void submitItem(MenuItem item) {
-        App.apiProxy.updateMenuItem(item, RunLaterCallback.submitCallback());
+        App.apiProxy.updateMenuItem(item, RunLaterCallback.submitCallback(item, table, (id, o) -> o.setId(id)));
     }
 
     @Override
     void deleteItem(MenuItem item) {
-        App.apiProxy.removeMenuItem(item.getId(), RunLaterCallback.deleteCallback());
+        App.apiProxy.removeMenuItem(item.getId(), RunLaterCallback.deleteCallback(item, table));
     }
 
 }

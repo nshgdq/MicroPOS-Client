@@ -28,6 +28,16 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
     TableColumn<Modifier, String> weight;
 
     @Override
+    Label getTitleLabel() {
+        return new Label("Modifier Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("Name"), new Label("Tag"), new Label("Price"), new Label("Type"), new Label("Group"), new Label("Weight")};
+    }
+
+    @Override
     Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
@@ -36,7 +46,7 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
         tfGroup = createTextField("Group");
         tfWeight = createTextField("Weight");
 
-        return new Node[]{new Label("Modifier Information"), tfName, tfTag, tfPrice, cbType, tfGroup, tfWeight};
+        return new Node[]{tfName, tfTag, tfPrice, cbType, tfGroup, tfWeight};
     }
 
     @Override
@@ -72,7 +82,14 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfName.setVisible(visible);
+        tfTag.setVisible(visible);
+        tfPrice.setVisible(visible);
+        cbType.setVisible(visible);
+        tfGroup.setVisible(visible);
+        tfWeight.setVisible(visible);
+
         tfName.setText("");
         tfTag.setText("");
         tfPrice.setText("");
@@ -100,11 +117,11 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
 
     @Override
     void submitItem(Modifier item) {
-        App.apiProxy.updateModifier(item, RunLaterCallback.submitCallback());
+        App.apiProxy.updateModifier(item, RunLaterCallback.submitCallback(item, table, (id, o) -> o.setId(id)));
     }
 
     @Override
     void deleteItem(Modifier item) {
-        App.apiProxy.removeModifier(item.getId(), RunLaterCallback.deleteCallback());
+        App.apiProxy.removeModifier(item.getId(), RunLaterCallback.deleteCallback(item, table));
     }
 }

@@ -13,12 +13,14 @@
 
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>
-        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints/>
     </columnConstraints>
 
-    <Label fx:id="lblName"
-           GridPane.rowIndex="0"
-           GridPane.columnIndex="0"/>
+    <StackPane id="lblModifierWrapper"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="0">
+        <Label fx:id="lblName"/>
+    </StackPane>
 
     <Label fx:id="lblPrice"
            GridPane.rowIndex="0"

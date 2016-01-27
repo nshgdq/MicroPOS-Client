@@ -171,9 +171,9 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
 
     private WokPrintJobBuilder salesOrderContent(SalesOrder so) {
 
-        // Skip void items (Requests should have already been sent)
+        // Skip void items
         List<ProductEntry> active = so.getProductEntries().filtered(
-                pe -> pe.hasStatus(ProductEntryStatus.SENT) || pe.hasStatus(ProductEntryStatus.HOLD)
+                pe -> !pe.hasStatus(ProductEntryStatus.REQUEST_VOID) && !pe.hasStatus(ProductEntryStatus.REQUEST_HOLD_VOID)
         );
 
         return align(EscPosBuilder.Align.LEFT)
@@ -190,7 +190,7 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
                                     mod -> total("     " + mod.getTag() + " " + mod.getName(), mod.getPrice() + "     ")
                             );
                 })
-                .feed(2);
+                .feed(1);
     }
 
     private WokPrintJobBuilder salesOrderTotals(SalesOrder so) {
@@ -209,12 +209,14 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
                 .total("Sales Tax (" + so.taxTextProperty().get() + ")", taxtotal)
                 .font(EscPosBuilder.Font.EMPHASIZED)
                 .total("Grand Total", grandtotal)
-                .feed(2);
+                .feed(1);
     }
 
     private WokPrintJobBuilder paymentEntryTotals(SalesOrder so) {
 
-        List<PaymentEntry> active = so.getPaymentEntries().filtered(pe -> pe.hasStatus(PaymentEntryStatus.PAID));
+        List<PaymentEntry> active = so.getPaymentEntries().filtered(
+                pe -> !pe.hasStatus(PaymentEntryStatus.VOID) && !pe.hasStatus(PaymentEntryStatus.REQUEST_VOID)
+        );
 
         return optional(!active.isEmpty(),
                 () -> align(EscPosBuilder.Align.LEFT)

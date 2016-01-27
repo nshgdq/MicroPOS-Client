@@ -15,6 +15,7 @@ import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
 import ow.micropos.client.desktop.model.auth.Position;
 import ow.micropos.client.desktop.model.enums.Permission;
+import ow.micropos.client.desktop.model.error.ErrorInfo;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
@@ -73,6 +74,7 @@ public class DbPositionPresenter extends ItemPresenter<Position> {
                 if (n != null && getItem() != null && !getItem().hasPermission(n)) {
                     lvPermissionsAvailable.getSelectionModel().clearSelection();
                     getItem().getPermissions().add(n);
+                    System.out.println("added");
                 }
             });
         });
@@ -117,10 +119,10 @@ public class DbPositionPresenter extends ItemPresenter<Position> {
 
     @Override
     protected void updateItem(Position currentItem, Position newItem) {
-        if (newItem == null) {
-            if (currentItem != null)
-                tfName.textProperty().unbindBidirectional(currentItem.nameProperty());
+        if (currentItem != null)
+            tfName.textProperty().unbindBidirectional(currentItem.nameProperty());
 
+        if (newItem == null) {
             tfName.setText("");
             lvPermissionsUsed.setItems(FXCollections.emptyObservableList());
         } else {
@@ -147,21 +149,40 @@ public class DbPositionPresenter extends ItemPresenter<Position> {
 
     private final ObservableList<Action> menu = FXCollections.observableArrayList(
             new Action("Done", ActionType.FINISH, event -> Platform.runLater(App.main::backRefresh)),
-            new Action("New", ActionType.BUTTON, event -> Platform.runLater(() -> {
-                lvPositions.getSelectionModel().clearSelection();
-                setItem(new Position());
-            })),
+            new Action("New", ActionType.BUTTON, event -> Platform.runLater(() -> setItem(new Position()))),
             new Action("Submit", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 if (getItem() == null)
                     return;
-                App.apiProxy.updatePosition(getItem(), RunLaterCallback.submitCallback());
+                App.apiProxy.updatePosition(getItem(), new RunLaterCallback<Long>() {
+                    @Override
+                    public void laterSuccess(Long aLong) {
+                        App.main.refresh();
+                    }
+
+                    @Override
+                    public void laterFailure(ErrorInfo error) {
+                        super.laterFailure(error);
+                        App.main.refresh();
+                    }
+                });
             })),
             new Action("Delete", ActionType.BUTTON, event -> {
                 if (getItem() == null)
                     return;
                 App.confirm.showAndWait(
                         "Are you sure you want to delete this item?",
-                        () -> App.apiProxy.removePosition(getItem().getId(), RunLaterCallback.deleteCallback()));
+                        () -> App.apiProxy.removePosition(getItem().getId(), new RunLaterCallback<Boolean>() {
+                            @Override
+                            public void laterSuccess(Boolean aBool) {
+                                App.main.refresh();
+                            }
+
+                            @Override
+                            public void laterFailure(ErrorInfo error) {
+                                super.laterFailure(error);
+                                App.main.refresh();
+                            }
+                        }));
             })
     );
 

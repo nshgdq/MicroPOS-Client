@@ -91,6 +91,14 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
 
         categoriesOption.setOnMouseClicked(event -> Platform.runLater(this::showCategories));
 
+        upOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, -2))
+        );
+
+        downOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, 2))
+        );
+
         backOption.setOnMouseClicked(event -> Platform.runLater(() -> {
             if (spItems.getChildren().contains(gvCategories)) {
                 gvCategories.prevPage();
@@ -174,14 +182,6 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             });
             return new PresenterCellAdapter<>(presenter);
         });
-
-        upOption.setOnMouseClicked(
-                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, -2))
-        );
-
-        downOption.setOnMouseClicked(
-                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, 2))
-        );
 
     }
 
@@ -295,7 +295,7 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         spItems.getChildren().setAll(gvMenuItems);
     }
 
-    private int getWeight(ProductEntry pe) {
+    private int getStatusWeight(ProductEntry pe) {
         switch (pe.getStatus()) {
             case SENT:
                 return sentWeight;
@@ -322,7 +322,7 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             if (pe1.getStatus() == pe2.getStatus()) {
                 return pe1.getMenuItem().getWeight() - pe2.getMenuItem().getWeight();
             } else {
-                return getWeight(pe1) - getWeight(pe2);
+                return getStatusWeight(pe1) - getStatusWeight(pe2);
             }
         });
     }

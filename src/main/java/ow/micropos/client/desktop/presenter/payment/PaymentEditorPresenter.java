@@ -7,6 +7,7 @@ import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -14,10 +15,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.scene.control.Button;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
@@ -49,29 +49,28 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     @FXML public Label gratuityTotal;
     @FXML public Label taxTotal;
     @FXML public Label grandTotal;
-    //@FXML public Label lblPaidAmount;
-    //@FXML public Label lblChangeAmount;
 
     @FXML public ListView<Charge> lvCharges;
 
-    @FXML public TextField tfAmount;
-    @FXML public Button btn7;
-    @FXML public Button btn8;
-    @FXML public Button btn9;
-    @FXML public Button btn4;
-    @FXML public Button btn5;
-    @FXML public Button btn6;
-    @FXML public Button btn1;
-    @FXML public Button btn2;
-    @FXML public Button btn3;
-    @FXML public Button btn0;
-    @FXML public Button btn00;
-    @FXML public Button btnEvenTender;
-    @FXML public Button btnClear;
-    @FXML public Button btnCash;
-    @FXML public Button btnCredit;
-    @FXML public Button btnCheck;
-    @FXML public Button btnGiftCard;
+    @FXML public Label tfAmountDue;
+    @FXML public Label tfAmountEntry;
+    @FXML public StackPane btn7;
+    @FXML public StackPane btn8;
+    @FXML public StackPane btn9;
+    @FXML public StackPane btn4;
+    @FXML public StackPane btn5;
+    @FXML public StackPane btn6;
+    @FXML public StackPane btn1;
+    @FXML public StackPane btn2;
+    @FXML public StackPane btn3;
+    @FXML public StackPane btn0;
+    @FXML public StackPane btn00;
+    @FXML public StackPane btnEvenTender;
+    @FXML public StackPane btnClear;
+    @FXML public StackPane btnCash;
+    @FXML public StackPane btnCredit;
+    @FXML public StackPane btnCheck;
+    @FXML public StackPane btnGiftCard;
 
     @FXML public StackPane downOption;
     @FXML public StackPane upOption;
@@ -103,6 +102,9 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         GridPane.setHalignment(taxTotal, HPos.RIGHT);
         GridPane.setHalignment(grandTotal, HPos.RIGHT);
 
+        StackPane.setAlignment(tfAmountDue, Pos.CENTER_LEFT);
+        StackPane.setAlignment(tfAmountEntry, Pos.CENTER_RIGHT);
+
         upOption.setOnMouseClicked(
                 event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, -2))
         );
@@ -120,7 +122,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
                 Platform.runLater(() -> App.notify.showAndWait("Nothing to send."));
 
             } else if (getItem().changeProperty().get().compareTo(BigDecimal.ZERO) < 0) {
-                Platform.runLater(() -> App.notify.showAndWait("Order has not been fully paid."));
+                Platform.runLater(() -> App.notify.showAndWait("Payment Due : " + getItem().dueProperty().get()));
 
             } else {
                 getItem().setStatus(SalesOrderStatus.REQUEST_CLOSE);
@@ -270,18 +272,6 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
 
     @Override
     protected void updateItem(SalesOrder currentItem, SalesOrder newItem) {
-        if (newItem == null) {
-            disableKeypad();
-            unsetListView(lvPaymentEntries);
-            //unsetLabel(lblChangeAmount);
-            //unsetLabel(lblPaidAmount);
-
-        } else {
-            enableKeypad();
-            setListView(lvPaymentEntries, newItem.getPaymentEntries());
-            //setLabel(lblChangeAmount, newItem.changeProperty().asString());
-            //setLabel(lblPaidAmount, newItem.paymentTotalProperty().asString());
-        }
 
         if (newItem == null) {
             unsetLabel(status);
@@ -295,6 +285,10 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             unsetLabel(grandTotal);
             unsetListView(orderEntries);
             unsetListView(lvChargeEntries);
+            unsetListView(lvPaymentEntries);
+            unsetLabel(tfAmountDue);
+            disableKeypad();
+
         } else {
             setLabel(info, new StringBinding() {
                 {bind(newItem.idProperty());}
@@ -322,10 +316,14 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             setListView(orderEntries, newItem.productEntriesProperty());
             setListView(lvChargeEntries, newItem.chargeEntriesProperty());
             setListView(lvPaymentEntries, newItem.paymentEntriesProperty());
+            setLabel(tfAmountDue, Bindings.concat("Payment Due : ", newItem.dueProperty().asString()));
+
             if (newItem.hasStatus(SalesOrderStatus.CLOSED) || newItem.hasStatus(SalesOrderStatus.VOID))
                 voidText.setText("Reopen");
             else
                 voidText.setText("Void");
+
+            enableKeypad();
         }
     }
 
@@ -385,24 +383,24 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     }
 
     private void enableKeypad() {
-        setTextProperty(tfAmount.textProperty(), amountFormatter);
-        btnClear.setOnAction(event -> rawAmount.set(""));
-        btn00.setOnAction(event -> rawAmount.set(rawAmount.get() + "00"));
-        btn0.setOnAction(event -> rawAmount.set(rawAmount.get() + "0"));
-        btn1.setOnAction(event -> rawAmount.set(rawAmount.get() + "1"));
-        btn2.setOnAction(event -> rawAmount.set(rawAmount.get() + "2"));
-        btn3.setOnAction(event -> rawAmount.set(rawAmount.get() + "3"));
-        btn4.setOnAction(event -> rawAmount.set(rawAmount.get() + "4"));
-        btn5.setOnAction(event -> rawAmount.set(rawAmount.get() + "5"));
-        btn6.setOnAction(event -> rawAmount.set(rawAmount.get() + "6"));
-        btn7.setOnAction(event -> rawAmount.set(rawAmount.get() + "7"));
-        btn8.setOnAction(event -> rawAmount.set(rawAmount.get() + "8"));
-        btn9.setOnAction(event -> rawAmount.set(rawAmount.get() + "9"));
-        btnCash.setOnAction(event -> addPaymentEntry(PaymentEntryType.CASH));
-        btnCredit.setOnAction(event -> addPaymentEntry(PaymentEntryType.CREDIT));
-        btnCheck.setOnAction(event -> addPaymentEntry(PaymentEntryType.CHECK));
-        btnGiftCard.setOnAction(event -> addPaymentEntry(PaymentEntryType.GIFTCARD));
-        btnEvenTender.setOnAction(event -> rawAmount.set(getItem()
+        setTextProperty(tfAmountEntry.textProperty(), amountFormatter);
+        btnClear.setOnMouseClicked(event -> rawAmount.set(""));
+        btn00.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "00"));
+        btn0.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "0"));
+        btn1.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "1"));
+        btn2.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "2"));
+        btn3.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "3"));
+        btn4.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "4"));
+        btn5.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "5"));
+        btn6.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "6"));
+        btn7.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "7"));
+        btn8.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "8"));
+        btn9.setOnMouseClicked(event -> rawAmount.set(rawAmount.get() + "9"));
+        btnCash.setOnMouseClicked(event -> addPaymentEntry(PaymentEntryType.CASH));
+        btnCredit.setOnMouseClicked(event -> addPaymentEntry(PaymentEntryType.CREDIT));
+        btnCheck.setOnMouseClicked(event -> addPaymentEntry(PaymentEntryType.CHECK));
+        btnGiftCard.setOnMouseClicked(event -> addPaymentEntry(PaymentEntryType.GIFTCARD));
+        btnEvenTender.setOnMouseClicked(event -> rawAmount.set(getItem()
                         .changeProperty()
                         .get()
                         .negate()
@@ -412,24 +410,24 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     }
 
     private void disableKeypad() {
-        unsetTextProperty(tfAmount.textProperty(), "Disabled");
-        btnEvenTender.setOnAction(null);
-        btnClear.setOnAction(null);
-        btn00.setOnAction(null);
-        btn0.setOnAction(null);
-        btn1.setOnAction(null);
-        btn2.setOnAction(null);
-        btn3.setOnAction(null);
-        btn4.setOnAction(null);
-        btn5.setOnAction(null);
-        btn6.setOnAction(null);
-        btn7.setOnAction(null);
-        btn8.setOnAction(null);
-        btn9.setOnAction(null);
-        btnCash.setOnAction(null);
-        btnCredit.setOnAction(null);
-        btnCheck.setOnAction(null);
-        btnGiftCard.setOnAction(null);
+        unsetTextProperty(tfAmountEntry.textProperty(), "Disabled");
+        btnEvenTender.setOnMouseClicked(null);
+        btnClear.setOnMouseClicked(null);
+        btn00.setOnMouseClicked(null);
+        btn0.setOnMouseClicked(null);
+        btn1.setOnMouseClicked(null);
+        btn2.setOnMouseClicked(null);
+        btn3.setOnMouseClicked(null);
+        btn4.setOnMouseClicked(null);
+        btn5.setOnMouseClicked(null);
+        btn6.setOnMouseClicked(null);
+        btn7.setOnMouseClicked(null);
+        btn8.setOnMouseClicked(null);
+        btn9.setOnMouseClicked(null);
+        btnCash.setOnMouseClicked(null);
+        btnCredit.setOnMouseClicked(null);
+        btnCheck.setOnMouseClicked(null);
+        btnGiftCard.setOnMouseClicked(null);
     }
 
 }

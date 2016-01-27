@@ -28,6 +28,16 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
     TableColumn<Section, String> weight;
 
     @Override
+    Label getTitleLabel() {
+        return new Label("Section Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("Name"), new Label("Tag"), new Label("Rows"), new Label("Cols"), new Label("Weight")};
+    }
+
+    @Override
     Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
@@ -35,7 +45,7 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
         tfCols = createTextField("Cols");
         tfWeight = createTextField("Weight");
 
-        return new Node[]{new Label("Section Information"), tfName, tfTag, tfRows, tfCols, tfWeight};
+        return new Node[]{tfName, tfTag, tfRows, tfCols, tfWeight};
     }
 
     @Override
@@ -69,7 +79,13 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfName.setVisible(visible);
+        tfTag.setVisible(visible);
+        tfRows.setVisible(visible);
+        tfCols.setVisible(visible);
+        tfWeight.setVisible(visible);
+
         tfName.setText("");
         tfTag.setText("");
         tfRows.setText("");
@@ -94,11 +110,11 @@ public class DbSectionPresenter extends DbEntityPresenter<Section> {
 
     @Override
     void submitItem(Section item) {
-        App.apiProxy.updateSection(item, RunLaterCallback.submitCallback());
+        App.apiProxy.updateSection(item, RunLaterCallback.submitCallback(item, table, (id, o) -> o.setId(id)));
     }
 
     @Override
     void deleteItem(Section item) {
-        App.apiProxy.removeSection(item.getId(), RunLaterCallback.deleteCallback());
+        App.apiProxy.removeSection(item.getId(), RunLaterCallback.deleteCallback(item, table));
     }
 }

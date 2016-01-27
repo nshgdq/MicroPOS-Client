@@ -156,12 +156,26 @@ public class ProductEntry {
         return pe;
     }
 
+    @SuppressWarnings("UnnecessaryContinue")
     public void mergeInto(List<ProductEntry> productEntries) {
         for (ProductEntry productEntry : productEntries) {
             if (canMerge(productEntry)) {
-                productEntry.setQuantity(productEntry.getQuantity().add(getQuantity()));
-                setQuantity(BigDecimal.ZERO);
-                return;
+                if (getId() == null) {
+                    // No id transfer
+                    productEntry.setQuantity(productEntry.getQuantity().add(getQuantity()));
+                    setQuantity(BigDecimal.ZERO);
+                    return;
+                } else if (productEntry.getId() == null) {
+                    // Merged ProductEntry inherits id from merging
+                    productEntry.setId(getId());
+                    productEntry.setQuantity(productEntry.getQuantity().add(getQuantity()));
+                    setId(null);
+                    setQuantity(BigDecimal.ZERO);
+                    return;
+                } else {
+                    // Don't merge if both ProductEntries have id's
+                    continue;
+                }
             }
         }
         productEntries.add(this);

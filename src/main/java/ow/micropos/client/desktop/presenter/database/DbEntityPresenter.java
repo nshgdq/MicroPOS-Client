@@ -6,8 +6,12 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
@@ -30,36 +34,53 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
         root.setVgap(10);
 
         RowConstraints rc1 = new RowConstraints();
-        rc1.setVgrow(Priority.ALWAYS);
-        root.getRowConstraints().setAll(rc1);
+        RowConstraints rc2 = new RowConstraints();
+        rc1.setVgrow(Priority.NEVER);
+        rc2.setVgrow(Priority.ALWAYS);
+        root.getRowConstraints().setAll(rc1, rc2);
 
         ColumnConstraints cc1 = new ColumnConstraints();
         ColumnConstraints cc2 = new ColumnConstraints();
-        cc1.setPercentWidth(80);
-        cc2.setPercentWidth(20);
-        root.getColumnConstraints().setAll(cc1, cc2);
+        ColumnConstraints cc3 = new ColumnConstraints();
+        cc1.setPercentWidth(70);
+        cc2.setPercentWidth(10);
+        cc3.setPercentWidth(20);
+        root.getColumnConstraints().setAll(cc1, cc2, cc3);
 
         table = new TableView<>(FXCollections.emptyObservableList());
         table.setId("content");
+        table.setEditable(true);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {if (n != null) setItem(n);});
         table.getColumns().addAll(getTableColumns());
-        GridPane.setConstraints(table, 0, 0);
+        GridPane.setConstraints(table, 0, 0, 1, 2);
 
         // TODO : Scroll Buttons for DBEntityPresenter
         StackPane upButton = new StackPane(new Label("&#x25B2;"));
         StackPane downButton = new StackPane(new Label("&#x25BC;"));
 
-        VBox side = new VBox(10);
-        side.setId("side");
-        side.getChildren().addAll(getEditControls());
-        GridPane.setConstraints(side, 1, 0);
+        Label title = getTitleLabel();
+        GridPane.setConstraints(title, 1, 0, 2, 1, HPos.CENTER, VPos.CENTER);
 
-        root.getChildren().setAll(table, side);
+        VBox labels = new VBox(10);
+        labels.setId("labels");
+        labels.getChildren().addAll(getEditLabels());
+        GridPane.setConstraints(labels, 1, 1, 1, 1, HPos.RIGHT, VPos.TOP);
+
+        VBox controls = new VBox(10);
+        controls.setId("controls");
+        controls.getChildren().addAll(getEditControls());
+        GridPane.setConstraints(controls, 2, 1);
+
+        root.getChildren().setAll(table, title, labels, controls);
 
         Presenter.injectView(this, root);
 
     }
+
+    abstract Label getTitleLabel();
+
+    abstract Label[] getEditLabels();
 
     abstract Node[] getEditControls();
 
@@ -71,7 +92,7 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
     abstract void bindItem(T newItem);
 
-    abstract void clearControls();
+    abstract void toggleControls(boolean visible);
 
     abstract T createNew();
 
@@ -89,8 +110,9 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
             unbindItem(currentItem);
 
         if (newItem == null) {
-            clearControls();
+            toggleControls(false);
         } else {
+            toggleControls(true);
             bindItem(newItem);
         }
     }
@@ -98,7 +120,6 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
     @Override
     public void refresh() {
         table.setItems(FXCollections.emptyObservableList());
-
         setItem(createNew());
         updateTableContent(table);
     }
@@ -132,6 +153,18 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
     ) {
         TableColumn<T, String> tc = new TableColumn<>(name);
         tc.setCellValueFactory(callback);
+        return tc;
+    }
+
+    protected final TableColumn<T, String> createEditTableColumn(
+            String name,
+            Callback<TableColumn.CellDataFeatures<T, String>, ObservableValue<String>> callback,
+            EventHandler<TableColumn.CellEditEvent<T, String>> commit
+    ) {
+        TableColumn<T, String> tc = new TableColumn<>(name);
+        tc.setCellValueFactory(callback);
+        tc.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc.setOnEditCommit(commit);
         return tc;
     }
 

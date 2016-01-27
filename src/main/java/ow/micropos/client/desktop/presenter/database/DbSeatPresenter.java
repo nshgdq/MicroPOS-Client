@@ -26,6 +26,16 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
     TableColumn<Seat, String> col;
 
     @Override
+    Label getTitleLabel() {
+        return new Label("Seat Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("Section"), new Label("Tag"), new Label("Row"), new Label("Col")};
+    }
+
+    @Override
     Node[] getEditControls() {
         tfSection = new TextField();
         tfTag = new TextField();
@@ -37,7 +47,7 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
         tfRow.setPromptText("Row");
         tfCol.setPromptText("Col");
 
-        return new Node[]{new Label("Seat Information"), tfTag, tfSection, tfRow, tfCol};
+        return new Node[]{tfTag, tfSection, tfRow, tfCol};
     }
 
     @Override
@@ -120,7 +130,12 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfSection.setVisible(visible);
+        tfTag.setVisible(visible);
+        tfRow.setVisible(visible);
+        tfCol.setVisible(visible);
+
         tfSection.setText("");
         tfTag.setText("");
         tfRow.setText("");
@@ -146,11 +161,11 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
 
     @Override
     void submitItem(Seat item) {
-        App.apiProxy.updateSeat(item, RunLaterCallback.submitCallback());
+        App.apiProxy.updateSeat(item, RunLaterCallback.submitCallback(item, table, (id, o) -> o.setId(id)));
     }
 
     @Override
     void deleteItem(Seat item) {
-        App.apiProxy.removeSeat(item.getId(), RunLaterCallback.deleteCallback());
+        App.apiProxy.removeSeat(item.getId(), RunLaterCallback.deleteCallback(item, table));
     }
 }

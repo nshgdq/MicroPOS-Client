@@ -82,7 +82,8 @@
                       AnchorPane.topAnchor="0"/>
         </AnchorPane>
 
-        <GridPane GridPane.rowIndex="2"
+        <GridPane id="gpScroll"
+                  GridPane.rowIndex="2"
                   GridPane.columnIndex="0">
 
             <columnConstraints>
@@ -98,7 +99,7 @@
                        id="optionButton"
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="0">
-                <Label id="optionText"
+                <Label id="smOptionText"
                        text="&#x25B2;"/>
             </StackPane>
 
@@ -106,7 +107,7 @@
                        id="optionButton"
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="1">
-                <Label id="optionText"
+                <Label id="smOptionText"
                        text="&#x25BC;"/>
             </StackPane>
 
@@ -174,25 +175,31 @@
 
     </GridPane>
 
-    <!-- Payment Editor -->
+    <!-- Charge & Payment Editor -->
     <GridPane id="gvPaymentEditor"
               GridPane.rowIndex="0"
               GridPane.columnIndex="1">
 
         <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="ALWAYS"/>
         </rowConstraints>
 
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS"/>
-            <ColumnConstraints hgrow="NEVER"/>
-            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
         </columnConstraints>
 
         <!-- Charge & Payment Entries -->
         <GridPane id="gpEntries"
                   GridPane.rowIndex="0"
-                  GridPane.columnIndex="0">
+                  GridPane.columnIndex="0"
+                  GridPane.columnSpan="2"
+                  GridPane.rowSpan="2">
 
             <rowConstraints>
                 <RowConstraints percentHeight="50"/>
@@ -254,147 +261,37 @@
 
         </GridPane>
 
-        <!-- Keypad -->
-        <GridPane GridPane.rowIndex="0"
-                  GridPane.columnIndex="1"
-                  id="keypad">
+        <!-- Paid & Due -->
+        <GridPane id="gpEntryDue"
+                  GridPane.rowIndex="0"
+                  GridPane.columnIndex="2"
+                  GridPane.columnSpan="4">
 
             <columnConstraints>
-                <ColumnConstraints/>
-                <ColumnConstraints/>
-                <ColumnConstraints/>
-                <ColumnConstraints/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
 
-            <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-            </rowConstraints>
-
-            <TextField fx:id="tfAmount"
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="0">
+                <Label fx:id="tfAmountDue"
                        id="keypadEntry"
-                       promptText="Amount"
-                       editable="false"
-                       GridPane.rowIndex="0"
-                       GridPane.columnIndex="0"
-                       GridPane.columnSpan="4"/>
+                       text="-"/>
+            </StackPane>
 
-            <Button fx:id="btnEvenTender"
-                    id="keypadLongButton"
-                    text="Even Tender"
-                    GridPane.rowIndex="5"
-                    GridPane.columnIndex="0"
-                    GridPane.columnSpan="4"/>
-
-            <Button fx:id="btn7"
-                    id="keypadRegularButton"
-                    text="7"
-                    GridPane.rowIndex="1"
-                    GridPane.columnIndex="0"/>
-
-            <Button fx:id="btn8"
-                    id="keypadRegularButton"
-                    text="8"
-                    GridPane.rowIndex="1"
-                    GridPane.columnIndex="1"/>
-
-            <Button fx:id="btn9"
-                    id="keypadRegularButton"
-                    text="9"
-                    GridPane.rowIndex="1"
-                    GridPane.columnIndex="2"/>
-
-            <Button fx:id="btnCash"
-                    id="keypadRegularButton"
-                    text="Cash"
-                    GridPane.rowIndex="1"
-                    GridPane.columnIndex="3"/>
-
-            <Button fx:id="btn4"
-                    id="keypadRegularButton"
-                    text="4"
-                    GridPane.rowIndex="2"
-                    GridPane.columnIndex="0"/>
-
-            <Button fx:id="btn5"
-                    id="keypadRegularButton"
-                    text="5"
-                    GridPane.rowIndex="2"
-                    GridPane.columnIndex="1"/>
-
-            <Button fx:id="btn6"
-                    id="keypadRegularButton"
-                    text="6"
-                    GridPane.rowIndex="2"
-                    GridPane.columnIndex="2"/>
-
-            <Button fx:id="btnCredit"
-                    id="keypadRegularButton"
-                    text="Credit"
-                    GridPane.rowIndex="2"
-                    GridPane.columnIndex="3"/>
-
-            <Button fx:id="btn1"
-                    id="keypadRegularButton"
-                    text="1"
-                    GridPane.rowIndex="3"
-                    GridPane.columnIndex="0"/>
-
-            <Button fx:id="btn2"
-                    id="keypadRegularButton"
-                    text="2"
-                    GridPane.rowIndex="3"
-                    GridPane.columnIndex="1"/>
-
-            <Button fx:id="btn3"
-                    id="keypadRegularButton"
-                    text="3"
-                    GridPane.rowIndex="3"
-                    GridPane.columnIndex="2"/>
-
-            <Button fx:id="btnCheck"
-                    id="keypadRegularButton"
-                    text="Check"
-                    GridPane.rowIndex="3"
-                    GridPane.columnIndex="3"/>
-
-            <Button fx:id="btn0"
-                    id="keypadRegularButton"
-                    text="0"
-                    GridPane.rowIndex="4"
-                    GridPane.columnIndex="0"/>
-
-            <Button fx:id="btn00"
-                    id="keypadRegularButton"
-                    text="00"
-                    GridPane.rowIndex="4"
-                    GridPane.columnIndex="1"/>
-
-            <Button fx:id="btnClear"
-                    id="keypadRegularButton"
-                    text="C"
-                    GridPane.rowIndex="4"
-                    GridPane.columnIndex="2"/>
-
-            <Button fx:id="btnGiftCard"
-                    id="keypadRegularButton"
-                    text="GC"
-                    GridPane.rowIndex="4"
-                    GridPane.columnIndex="3"/>
-
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="1">
+                <Label fx:id="tfAmountEntry"
+                       id="keypadEntry"/>
+            </StackPane>
         </GridPane>
 
-        <!-- Summary -->
-        <GridPane GridPane.rowIndex="0"
+        <!-- Charges -->
+        <GridPane GridPane.rowIndex="1"
                   GridPane.columnIndex="2">
 
             <rowConstraints>
-                <RowConstraints percentHeight="50"/>
-                <RowConstraints percentHeight="50"/>
+                <RowConstraints vgrow="ALWAYS"/>
             </rowConstraints>
 
             <columnConstraints>
@@ -402,9 +299,167 @@
             </columnConstraints>
 
 
-            <ListView fx:id="lvCharges"
-                      GridPane.rowIndex="0"
-                      GridPane.columnIndex="0"/>
+            <ListView fx:id="lvCharges"/>
+
+        </GridPane>
+
+        <!-- Keypad -->
+        <GridPane GridPane.rowIndex="1"
+                  GridPane.columnIndex="3"
+                  GridPane.columnSpan="3"
+                  id="keypad">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints percentHeight="20"/>
+                <RowConstraints percentHeight="20"/>
+                <RowConstraints percentHeight="20"/>
+                <RowConstraints percentHeight="20"/>
+                <RowConstraints percentHeight="20"/>
+            </rowConstraints>
+
+            <StackPane fx:id="btn7"
+                       id="keypadButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0">
+                <Label id="keypadText"
+                       text="7"/>
+            </StackPane>
+
+            <StackPane fx:id="btn8"
+                       id="keypadButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="1">
+                <Label id="keypadText"
+                       text="8"/>
+            </StackPane>
+
+            <StackPane fx:id="btn9"
+                       id="keypadButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="2">
+                <Label id="keypadText"
+                       text="9"/>
+            </StackPane>
+
+            <StackPane fx:id="btnCash"
+                       id="keypadButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="3">
+                <Label id="keypadText"
+                       text="Cash"/>
+            </StackPane>
+
+            <StackPane fx:id="btn4"
+                       id="keypadButton"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="0">
+                <Label id="keypadText"
+                       text="4"/>
+            </StackPane>
+
+            <StackPane fx:id="btn5"
+                       id="keypadButton"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="1">
+                <Label id="keypadText"
+                       text="5"/>
+            </StackPane>
+
+            <StackPane fx:id="btn6"
+                       id="keypadButton"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="2">
+                <Label id="keypadText"
+                       text="6"/>
+            </StackPane>
+
+            <StackPane fx:id="btnCredit"
+                       id="keypadButton"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="3">
+                <Label id="keypadText"
+                       text="Credit"/>
+            </StackPane>
+
+            <StackPane fx:id="btn1"
+                       id="keypadButton"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="0">
+                <Label id="keypadText"
+                       text="1"/>
+            </StackPane>
+
+            <StackPane fx:id="btn2"
+                       id="keypadButton"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="1">
+                <Label id="keypadText"
+                       text="2"/>
+            </StackPane>
+
+            <StackPane fx:id="btn3"
+                       id="keypadButton"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="2">
+                <Label id="keypadText"
+                       text="3"/>
+            </StackPane>
+
+            <StackPane fx:id="btnCheck"
+                       id="keypadButton"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="3">
+                <Label id="keypadText"
+                       text="Check"/>
+            </StackPane>
+
+            <StackPane fx:id="btn0"
+                       id="keypadButton"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="0">
+                <Label id="keypadText"
+                       text="0"/>
+            </StackPane>
+
+            <StackPane fx:id="btn00"
+                       id="keypadButton"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="1">
+                <Label id="keypadText"
+                       text="00"/>
+            </StackPane>
+
+            <StackPane fx:id="btnClear"
+                       id="keypadButton"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="2">
+                <Label id="keypadText"
+                       text="Clear"/>
+            </StackPane>
+
+            <StackPane fx:id="btnGiftCard"
+                       id="keypadButton"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="3">
+                <Label id="smKeypadText"
+                       text="Gift Card"/>
+            </StackPane>
+
+            <StackPane fx:id="btnEvenTender"
+                       id="keypadButton"
+                       GridPane.rowIndex="4"
+                       GridPane.columnIndex="0"
+                       GridPane.columnSpan="4">
+                <Label id="keypadText"
+                       text="Even Tender"/>
+            </StackPane>
 
         </GridPane>
 
@@ -465,7 +520,7 @@
                    id="optionButton"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="5">
-            <Label text="Send/Close"
+            <Label text="Pay"
                    id="optionText"/>
         </StackPane>
 

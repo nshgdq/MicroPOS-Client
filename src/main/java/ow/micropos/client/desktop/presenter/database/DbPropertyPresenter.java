@@ -21,6 +21,16 @@ public class DbPropertyPresenter extends DbEntityPresenter<Property> {
     private TableColumn<Property, String> tcKey;
     private TableColumn<Property, String> tcValue;
 
+    @Override
+    Label getTitleLabel() {
+        return new Label("Property Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("Key"), new Label("Value")};
+    }
+
 
     @Override
     Node[] getEditControls() {
@@ -28,7 +38,7 @@ public class DbPropertyPresenter extends DbEntityPresenter<Property> {
         tfValue = createTextField("Value");
         cpColor = new ColorPicker();
 
-        return new Node[]{new Label("Property Information"), tfKey, tfValue, cpColor};
+        return new Node[]{tfKey, tfValue, cpColor};
     }
 
     @Override
@@ -61,7 +71,10 @@ public class DbPropertyPresenter extends DbEntityPresenter<Property> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfKey.setVisible(visible);
+        tfValue.setVisible(visible);
+
         tfKey.setText("");
         tfValue.setText("");
     }

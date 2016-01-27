@@ -44,6 +44,7 @@ import ow.micropos.client.desktop.presenter.move.MovePresenter;
 import ow.micropos.client.desktop.presenter.order.OrderEditorPresenter;
 import ow.micropos.client.desktop.presenter.payment.ChangeDuePresenter;
 import ow.micropos.client.desktop.presenter.payment.PaymentEditorPresenter;
+import ow.micropos.client.desktop.presenter.report.ReportPresenter;
 import ow.micropos.client.desktop.presenter.takeout.TakeOutPresenter;
 import ow.micropos.client.desktop.presenter.target.TargetPresenter;
 import ow.micropos.client.desktop.service.RestService;
@@ -103,7 +104,6 @@ public class App extends Application implements VkProperties {
     public static PaymentEditorPresenter paymentEditorPresenter;
     public static TargetPresenter targetPresenter;
     public static MovePresenter movePresenter;
-
     public static ChangeDuePresenter changeDuePresenter;
 
     // Database Presenters
@@ -119,6 +119,10 @@ public class App extends Application implements VkProperties {
     public static DbCustomerPresenter dbCustomerPresenter;
     public static DbSalesOrderPresenter dbSalesOrderPresenter;
     public static DbPropertyPresenter dbPropertyPresenter;
+
+    // Report Presenters
+    public static ReportPresenter reportPresenter;
+
 
     /******************************************************************
      *                                                                *
@@ -170,6 +174,9 @@ public class App extends Application implements VkProperties {
 
         for (String property : properties.getProperties())
             logProperty(property, properties.getStr(property));
+
+        // http://stackoverflow.com/questions/31786980/javafx-windows-10-combobox-error
+        System.setProperty("glass.accessible.force", "false");
 
         logo = new Image(properties.getStr("icon"));
 
@@ -237,7 +244,6 @@ public class App extends Application implements VkProperties {
         paymentEditorPresenter = Presenter.load("/view/pay/payment_editor.fxml");
         targetPresenter = Presenter.load("/view/target/target.fxml");
         movePresenter = Presenter.load("/view/move/move.fxml");
-
         changeDuePresenter = Presenter.load("/view/pay/change_due.fxml");
 
         dbEmployeePresenter = new DbEmployeePresenter();
@@ -253,9 +259,11 @@ public class App extends Application implements VkProperties {
         dbSalesOrderPresenter = new DbSalesOrderPresenter();
         dbPropertyPresenter = new DbPropertyPresenter();
 
+        reportPresenter = Presenter.load("/view/report/report.fxml");
+
         homePresenter = getHomePresenter(properties.getStr("home"));
 
-        jobBuilder = new WokPrintJobBuilder(48);
+        jobBuilder = new WokPrintJobBuilder(42);
         dispatcher = initPrinterDispatcher(properties);
 
         clock.start();

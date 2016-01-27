@@ -83,7 +83,8 @@
                       AnchorPane.topAnchor="0"/>
         </AnchorPane>
 
-        <GridPane GridPane.rowIndex="2"
+        <GridPane id="gpScroll"
+                  GridPane.rowIndex="2"
                   GridPane.columnIndex="0">
 
             <columnConstraints>
@@ -99,7 +100,7 @@
                        id="optionButton"
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="0">
-                <Label id="optionText"
+                <Label id="smOptionText"
                        text="&#x25B2;"/>
             </StackPane>
 
@@ -107,7 +108,7 @@
                        id="optionButton"
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="1">
-                <Label id="optionText"
+                <Label id="smOptionText"
                        text="&#x25BC;"/>
             </StackPane>
 

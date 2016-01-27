@@ -23,12 +23,22 @@ public class DbCategoryPresenter extends DbEntityPresenter<Category> {
     TableColumn<Category, String> weight;
 
     @Override
+    Label getTitleLabel() {
+        return new Label("Category Information");
+    }
+
+    @Override
+    Label[] getEditLabels() {
+        return new Label[]{new Label("Name"), new Label("Tag"), new Label("Weight")};
+    }
+
+    @Override
     Node[] getEditControls() {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfWeight = createTextField("Weight");
 
-        return new Node[]{new Label("Category Information"), tfName, tfTag, tfWeight};
+        return new Node[]{tfName, tfTag, tfWeight};
     }
 
     @Override
@@ -56,7 +66,10 @@ public class DbCategoryPresenter extends DbEntityPresenter<Category> {
     }
 
     @Override
-    void clearControls() {
+    void toggleControls(boolean visible) {
+        tfName.setVisible(visible);
+        tfTag.setVisible(visible);
+        tfWeight.setVisible(visible);
         tfName.setText("");
         tfTag.setText("");
         tfWeight.setText("");
@@ -79,11 +92,11 @@ public class DbCategoryPresenter extends DbEntityPresenter<Category> {
 
     @Override
     void submitItem(Category item) {
-        App.apiProxy.updateCategory(item, RunLaterCallback.submitCallback());
+        App.apiProxy.updateCategory(item, RunLaterCallback.submitCallback(item, table, (id, o) -> o.setId(id)));
     }
 
     @Override
     void deleteItem(Category item) {
-        App.apiProxy.removeCategory(item.getId(), RunLaterCallback.deleteCallback());
+        App.apiProxy.removeCategory(item.getId(), RunLaterCallback.deleteCallback(item, table));
     }
 }

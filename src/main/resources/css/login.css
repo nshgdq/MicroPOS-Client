@@ -4,6 +4,17 @@
     -fx-vgap: 80px;
 }
 
+#lblPinContainer {
+    -fx-border-color: #A80000;
+    -fx-border-width: 5px;
+}
+
+#lblPinContainer .label {
+    -fx-text-fill: #D8AD00;
+    -fx-font-size: 3em;
+    -fx-font-weight: bolder;
+}
+
 /******************************************************************
  *                                                                *
  * Keypad Style
@@ -18,6 +29,10 @@
 
 #keypadButton {
     -fx-background-color: #A80000;
+    -fx-max-width: 140px;
+    -fx-min-width: 140px;
+    -fx-max-height: 140px;
+    -fx-min-height: 140px;
 }
 
 #keypadText {

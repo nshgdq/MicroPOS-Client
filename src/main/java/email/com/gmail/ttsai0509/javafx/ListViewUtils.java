@@ -2,6 +2,7 @@ package email.com.gmail.ttsai0509.javafx;
 
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import javafx.scene.control.IndexedCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 
@@ -31,9 +32,12 @@ public class ListViewUtils {
     public static void listViewScrollBy(ListView<?> lv, int i) {
         ListViewSkin<?> skin = (ListViewSkin<?>) lv.getSkin();
         VirtualFlow<?> flow = (VirtualFlow<?>) skin.getChildren().get(0);
-        int curr = flow.getFirstVisibleCell().getIndex();
-        int next = Math.max(0, Math.min(flow.getCellCount() - 1, curr + i));
-        flow.scrollTo(next);
+        IndexedCell<?> cell = flow.getFirstVisibleCell();
+        if (cell != null) {
+            int curr = cell.getIndex();
+            int next = Math.max(0, Math.min(flow.getCellCount() - 1, curr + i));
+            flow.scrollTo(next);
+        }
     }
 
     public static void fitToListView(Region n, ListView<?> lv) {

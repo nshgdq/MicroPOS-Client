@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.presenter.modify;
 
+import email.com.gmail.ttsai0509.javafx.ListViewUtils;
 import email.com.gmail.ttsai0509.javafx.control.GridView;
 import email.com.gmail.ttsai0509.javafx.control.PresenterCellAdapter;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
@@ -49,6 +50,12 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
     @FXML public StackPane spItems;
     @FXML public Label holdOptionLabel;
 
+    @FXML public StackPane upOption;
+    @FXML public StackPane downOption;
+
+    @FXML public StackPane backOption;
+    @FXML public StackPane nextOption;
+
     @FXML public Label voidOptionLabel;
     @FXML public GridView<ModifierGroup> gpModifierGroups;
     @FXML public GridView<Modifier> gpModifiers;
@@ -65,6 +72,31 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
         GridPane.setHalignment(lblTotalPrice, HPos.RIGHT);
 
         modGroupOption.setOnMouseClicked(event -> Platform.runLater(this::showModifierGroups));
+
+        upOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(entryModifiers, -2))
+        );
+
+        downOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(entryModifiers, 2))
+        );
+
+        backOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            if (spItems.getChildren().contains(gpModifierGroups)) {
+                gpModifierGroups.prevPage();
+            } else if (spItems.getChildren().contains(gpModifiers)) {
+                gpModifiers.prevPage();
+            }
+        }));
+
+        nextOption.setOnMouseClicked(event -> Platform.runLater(() -> {
+            if (spItems.getChildren().contains(gpModifierGroups)) {
+                gpModifierGroups.nextPage();
+            } else if (spItems.getChildren().contains(gpModifiers)) {
+                gpModifiers.nextPage();
+            }
+        }));
+
 
         subOption.setOnMouseClicked(event -> {
             ProductEntry pe = getItem();
@@ -234,7 +266,7 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                 holdOptionLabel.setText("Hold");
 
             if (newItem.hasStatus(ProductEntryStatus.REQUEST_SENT) || newItem.hasStatus(ProductEntryStatus.REQUEST_HOLD))
-                voidOptionLabel.setText("Remove");
+                voidOptionLabel.setText("Del");
             else
                 voidOptionLabel.setText("Void");
 
@@ -283,19 +315,19 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
         updateModifiers(m -> true);
         updateMenu(null);
     }));
-    private final Action addTabDefault = new Action("Add", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
+    private final Action addTabDefault = new Action("+", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
         updateModifiers(m -> m.hasType(ModifierType.ADDITION));
         updateMenu(ModifierType.ADDITION);
     }));
-    private final Action addTabSelect = new Action("Add", ActionType.TAB_SELECT, event -> Platform.runLater(() -> {
+    private final Action addTabSelect = new Action("+", ActionType.TAB_SELECT, event -> Platform.runLater(() -> {
         updateModifiers(m -> m.hasType(ModifierType.ADDITION));
         updateMenu(ModifierType.ADDITION);
     }));
-    private final Action excTabDefault = new Action("Exc", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
+    private final Action excTabDefault = new Action("-", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
         updateModifiers(m -> m.hasType(ModifierType.EXCLUSION));
         updateMenu(ModifierType.EXCLUSION);
     }));
-    private final Action excTabSelect = new Action("Exc", ActionType.TAB_SELECT, event -> Platform.runLater(() -> {
+    private final Action excTabSelect = new Action("-", ActionType.TAB_SELECT, event -> Platform.runLater(() -> {
         updateModifiers(m -> m.hasType(ModifierType.EXCLUSION));
         updateMenu(ModifierType.EXCLUSION);
     }));
