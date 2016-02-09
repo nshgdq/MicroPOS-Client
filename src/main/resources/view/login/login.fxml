@@ -36,6 +36,7 @@
             <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="NEVER"/>
         </columnConstraints>
 
         <rowConstraints>
@@ -51,7 +52,7 @@
         <StackPane id="lblPinContainer"
                    GridPane.rowIndex="1"
                    GridPane.columnIndex="0"
-                   GridPane.columnSpan="3">
+                   GridPane.columnSpan="4">
             <Label fx:id="lblPin"/>
         </StackPane>
 
@@ -144,11 +145,36 @@
         </StackPane>
 
         <StackPane fx:id="btnLogin"
-                   id="keypadButton"
+                   id="lgKeypadButton"
                    GridPane.rowIndex="5"
-                   GridPane.columnIndex="2">
+                   GridPane.columnIndex="2"
+                   GridPane.columnSpan="2">
             <Label id="keypadText"
                    text="Login"/>
+        </StackPane>
+
+        <StackPane fx:id="btnClockIn"
+                   id="keypadButton"
+                   GridPane.rowIndex="2"
+                   GridPane.columnIndex="3">
+            <Label id="keypadText"
+                   text="In"/>
+        </StackPane>
+
+        <StackPane fx:id="btnClockOut"
+                   id="keypadButton"
+                   GridPane.rowIndex="3"
+                   GridPane.columnIndex="3">
+            <Label id="keypadText"
+                   text="Out"/>
+        </StackPane>
+
+        <StackPane fx:id="btnTimeCard"
+                   id="keypadButton"
+                   GridPane.rowIndex="4"
+                   GridPane.columnIndex="3">
+            <Label id="keypadText"
+                   text="View"/>
         </StackPane>
 
     </GridPane>

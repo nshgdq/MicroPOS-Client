@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import email.com.gmail.ttsai0509.javafx.control.GridView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane fx:controller="ow.micropos.client.desktop.presenter.order.MenuPresenter"
+          id="menuWrapper"
+          xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1">
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints percentHeight="90"/>
+        <RowConstraints percentHeight="10"/>
+    </rowConstraints>
+
+    <!-- Menu -->
+    <StackPane fx:id="spItems"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="0">
+        <GridView fx:id="gvCategories"
+                  id="gpCategories"/>
+        <GridView fx:id="gvMenuItems"
+                  id="gpMenuItems"/>
+    </StackPane>
+
+    <!-- Options -->
+    <GridPane id="gpOptions"
+              GridPane.rowIndex="1"
+              GridPane.columnIndex="0">
+
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+        </columnConstraints>
+
+        <StackPane fx:id="categoriesOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0">
+            <Label text="Back"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="backOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="1">
+            <Label text="&#x25C0;"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="nextOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="2">
+            <Label text="&#x25B6;"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="cancelOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="4">
+            <Label text="Cancel"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="sendOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="5">
+            <Label text="Send"
+                   id="optionText"/>
+        </StackPane>
+
+    </GridPane>
+
+</GridPane>

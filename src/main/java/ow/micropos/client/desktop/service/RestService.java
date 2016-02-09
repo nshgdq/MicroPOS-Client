@@ -6,18 +6,44 @@ import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.menu.*;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import ow.micropos.client.desktop.model.report.ActiveSalesReport;
-import ow.micropos.client.desktop.model.report.DaySalesReport;
+import ow.micropos.client.desktop.model.report.MonthlySalesReport;
+import ow.micropos.client.desktop.model.report.SalesReport;
 import ow.micropos.client.desktop.model.target.Customer;
 import ow.micropos.client.desktop.model.target.Seat;
 import ow.micropos.client.desktop.model.target.Section;
+import ow.micropos.client.desktop.model.timecard.TimeCardEntry;
 import retrofit.Callback;
 import retrofit.http.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public interface RestService {
+
+    /******************************************************************
+     *                                                                *
+     * TimeCard Controller
+     *                                                                *
+     ******************************************************************/
+
+    @GET("/timecard")
+    void getTimeCard(@Query("pin") String pin, Callback<List<TimeCardEntry>> callback);
+
+    @POST("/timecard/clockin")
+    void clockIn(@Query("pin") String pin, @Body String image, Callback<TimeCardEntry> callback);
+
+    @POST("/timecard/clockout")
+    void clockOut(@Query("pin") String pin, @Body String image, Callback<TimeCardEntry> callback);
+
+    @POST("/timecard/create")
+    void createTimeCardEntry(@Body TimeCardEntry entry, Callback<TimeCardEntry> callback);
+
+    @POST("/timecard/update")
+    void updateTimeCardEntry(@Body TimeCardEntry entry, Callback<TimeCardEntry> callback);
+
+    @DELETE("/timecard/remove")
+    void removeTimeCardEntry(@Query("id") long id, Callback<Boolean> callback);
 
     /******************************************************************
      *                                                                *
@@ -110,11 +136,11 @@ public interface RestService {
      *                                                                *
      ******************************************************************/
 
-    @GET("/reports/current")
-    void getCurrentReport(Callback<ActiveSalesReport> callback);
+    @GET("/reports/sales")
+    void getSalesReport(@Query("start") Date start, @Query("end") Date end, @Query("status") SalesOrderStatus status, @Query("type") SalesOrderType type, Callback<SalesReport> callback);
 
-    @GET("/reports/day")
-    void getDayReport(@Query("y") int year, @Query("m") int month, @Query("d") int day, Callback<DaySalesReport> callback);
+    @GET("/reports/monthly")
+    void getMonthlySalesReport(@Query("monthOf") Date monthOf, Callback<MonthlySalesReport> callback);
 
     /******************************************************************
      *                                                                *

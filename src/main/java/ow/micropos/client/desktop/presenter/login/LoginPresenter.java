@@ -1,5 +1,6 @@
 package ow.micropos.client.desktop.presenter.login;
 
+import com.github.sarxos.webcam.Webcam;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,13 +11,24 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.model.error.ErrorInfo;
+import ow.micropos.client.desktop.model.timecard.TimeCardEntry;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
+
 public class LoginPresenter extends Presenter {
+
+    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("MM/dd/yy hh:mm a");
 
 
     @FXML public ImageView imgLogo;
@@ -35,6 +47,10 @@ public class LoginPresenter extends Presenter {
     @FXML public StackPane btnClear;
     @FXML public StackPane btnLogin;
     @FXML public GridPane gpLogin;
+
+    @FXML public StackPane btnClockIn;
+    @FXML public StackPane btnClockOut;
+    @FXML public StackPane btnTimeCard;
 
     private StringProperty rawPin;
 
@@ -85,6 +101,48 @@ public class LoginPresenter extends Presenter {
                 refresh();
             }
         }));
+
+        btnClockIn.setOnMouseClicked(event -> App.apiProxy.clockIn(
+                rawPin.get(),
+                trySnapshot(true),
+                new RunLaterCallback<TimeCardEntry>() {
+                    @Override
+                    public void laterSuccess(TimeCardEntry timeCardEntry) {
+                        refresh();
+                        if (timeCardEntry == null) {
+                            App.notify.showAndWait("Unable to clock in.");
+                        } else {
+                            App.notify.showAndWait("Clocked in at "
+                                    + timeFormat.format(timeCardEntry.getDate()));
+                        }
+                    }
+
+                    @Override
+                    public void laterFailure(ErrorInfo error) {
+                        refresh();
+                    }
+                }));
+
+        btnClockOut.setOnMouseClicked(event -> App.apiProxy.clockOut(
+                rawPin.get(),
+                trySnapshot(false),
+                new RunLaterCallback<TimeCardEntry>() {
+                    @Override
+                    public void laterSuccess(TimeCardEntry timeCardEntry) {
+                        refresh();
+                        if (timeCardEntry == null) {
+                            App.notify.showAndWait("Unable to clock out.");
+                        } else {
+                            App.notify.showAndWait("Clocked out at "
+                                    + timeFormat.format(timeCardEntry.getDate()));
+                        }
+                    }
+
+                    @Override
+                    public void laterFailure(ErrorInfo error) {
+                        refresh();
+                    }
+                }));
     }
 
     @Override
@@ -106,6 +164,53 @@ public class LoginPresenter extends Presenter {
     @Override
     public void refresh() {
         rawPin.set("");
+    }
+
+    private String trySnapshot(boolean clockin) {
+
+        if (!App.properties.getBool("time-card-snapshot"))
+            return "";
+
+        Integer width = App.properties.getInt("time-card-snapshot-width");
+        Integer height = App.properties.getInt("time-card-snapshot-height");
+        if (width == null || height == null)
+            return "";
+
+        String type = App.properties.getStr("time-card-snapshot-type");
+        if (type == null || type.isEmpty())
+            return "";
+
+        App.notify.setTitle("ALERT");
+        App.notify.setHeaderText(clockin ? "Clock In" : "Clock Out");
+        App.notify.setContentText("Please wait...");
+        App.notify.show();
+
+        String result = "";
+
+        try {
+
+            Webcam webcam = Webcam.getDefault(10, TimeUnit.SECONDS);
+            webcam.setViewSize(new Dimension(width, height));
+            webcam.open();
+
+            BufferedImage image = webcam.getImage();
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ImageIO.write(image, type, out);
+            result = Base64.encodeBase64String(out.toByteArray());
+
+            webcam.close();
+
+        } catch (Exception e) {
+
+            // suppress
+
+        }
+
+        App.notify.close();
+
+        return result;
+
     }
 
 }

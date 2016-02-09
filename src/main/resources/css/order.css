@@ -1,4 +1,5 @@
-#editorWrapper, #gpMenu, #gpSalesOrder, #gpCategories, #gpMenuItems, #gpOptions, #gpScroll {
+#editorWrapper, #cookWrapper, #menuWrapper, #gpMenu, #gpSalesOrder, #gpCategories, #gpMenuItems, #gpOptions, #gpScroll,
+#gpEntries, #gvPaymentEditor, #paymentWrapper, #gpChargeEntries, #gpPaymentEntries {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }
@@ -106,4 +107,137 @@
 #lblPeStatus {
     -fx-text-fill: #FFFF0F;
     -fx-padding: 0 10px 0 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Change Due
+ *                                                                *
+ ******************************************************************/
+
+#prompt {
+    -fx-font-size: 3em;
+}
+
+#change {
+    -fx-font-size: 12em;
+    -fx-font-weight: bolder;
+    -fx-text-fill: #FFFF0F;
+}
+
+#done {
+    -fx-font-size: 3em;
+    -fx-padding: 10px 100px;
+    -fx-font-weight: bolder;
+    -fx-background-color: #8C1200;
+}
+
+/******************************************************************
+ *                                                                *
+ * Charges
+ *                                                                *
+ ******************************************************************/
+
+#chargeView {
+    -fx-background-color: #8C1200;
+}
+
+#lblChargeTag {
+    -fx-padding: 0 10px 0 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Charge Entries
+ *                                                                *
+ ******************************************************************/
+
+#chargeEntryView {
+    -fx-background-color: #8C1200;
+}
+
+#lblChargeName {
+    -fx-background-color: #A80000;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblChargeStatus {
+    -fx-text-fill: #FFFF0F;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblChargeValue {
+    -fx-text-fill: #FFFF0F;
+    -fx-font-weight: bolder;
+    -fx-padding: 0 10px 0 10px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Payment Entries
+ *                                                                *
+ ******************************************************************/
+
+#paymentEntryView {
+    -fx-background-color: #8C1200;
+}
+
+#lblPaymentType {
+    -fx-background-color: #A80000;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblPaymentStatus {
+    -fx-text-fill: #FFFF0F;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#lblPaymentAmount {
+    -fx-text-fill: #FFFF0F;
+    -fx-font-weight: bolder;
+    -fx-padding: 0 10px 0 10px;
+}
+
+#gpEntryDue {
+    -fx-border-color: #8C1200;
+    -fx-padding: 0 5px 0 5px;
+}
+
+/******************************************************************
+ *                                                                *
+ * Keypad Style
+ *                                                                *
+ ******************************************************************/
+
+#keypad {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+#keypadButton {
+    -fx-background-color: #8C1200;
+}
+
+#keypadText {
+    -fx-font-size: 2.8em;
+    -fx-font-weight: bolder;
+    -fx-background-color: #8C1200;
+}
+
+#smKeypadText {
+    -fx-font-size: 1.9em;
+    -fx-font-weight: bolder;
+    -fx-background-color: #8C1200;
+}
+
+#keypadEntry {
+    -fx-background-color: transparent;
+    -fx-font-size: 3em;
+    -fx-font-weight: bolder;
+    -fx-text-fill: #FFFF0F;
+}
+
+#gpCookTime {
+    -fx-border-color: #8C1200;
+    -fx-padding: 0 5px 0 5px;
 }

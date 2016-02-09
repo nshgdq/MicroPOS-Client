@@ -71,7 +71,6 @@ public enum Permission {
      *                                                                *
      ******************************************************************/
 
-    CLOSE_UNPAID_ORDERS,
     MIGRATION,
 
     /******************************************************************
@@ -80,9 +79,7 @@ public enum Permission {
      *                                                                *
      ******************************************************************/
 
-    SIMPLE_REPORT,
-    CURRENT_REPORT,
-    DAY_REPORT,
+    SALES_REPORT,
 
     /******************************************************************
      *                                                                *
@@ -108,8 +105,20 @@ public enum Permission {
     DB_SEATS,
     DB_SECTIONS,
     DB_CUSTOMERS,
-    DB_CHARGES;
+    DB_CHARGES,
 
+    /******************************************************************
+     *                                                                *
+     * Time Card Entries
+     *                                                                *
+     ******************************************************************/
+
+    CLOCK_IN,
+    CLOCK_OUT,
+    VIEW_TIME_CARD,
+    TIME_CARD_CREATE,
+    TIME_CARD_UPDATE,
+    TIME_CARD_DELETE;
 
     public static final List<Permission> asList = Collections.unmodifiableList(Arrays.asList(Permission.values()));
 

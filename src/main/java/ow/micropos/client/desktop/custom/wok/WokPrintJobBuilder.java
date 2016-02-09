@@ -8,14 +8,16 @@ import org.slf4j.LoggerFactory;
 import ow.micropos.client.desktop.custom.PrintJobBuilder;
 import ow.micropos.client.desktop.model.enums.PaymentEntryStatus;
 import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
+import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.orders.PaymentEntry;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import ow.micropos.client.desktop.model.report.ActiveSalesReport;
-import ow.micropos.client.desktop.model.report.DaySalesReport;
-import ow.micropos.client.desktop.model.report.Summary;
+import ow.micropos.client.desktop.model.report.MonthlySalesReport;
+import ow.micropos.client.desktop.model.report.SalesReport;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +26,8 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(WokPrintJobBuilder.class);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm a");
+    private static final SimpleDateFormat dayOnlyFormat = new SimpleDateFormat("MM/dd/yy");
+    private static final SimpleDateFormat monthFormat = new SimpleDateFormat("MM/yyyy");
 
     private final int width;
     private final EscPosBuilder builder;
@@ -48,20 +52,20 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
     }
 
     @Override
-    public PrintJob report(ActiveSalesReport report) {
+    public PrintJob salesReport(SalesReport report) {
         return begin()
                 .restaurant()
                 .address()
-                .activeReport(report)
+                .printSalesReport(report)
                 .finish();
     }
 
     @Override
-    public PrintJob report(DaySalesReport report) {
+    public PrintJob monthlySalesReport(MonthlySalesReport report) {
         return begin()
                 .restaurant()
                 .address()
-                .dayReport(report)
+                .printMonthlySalesReport(report)
                 .finish();
     }
 
@@ -112,26 +116,58 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
         return this;
     }
 
-    private WokPrintJobBuilder activeReport(ActiveSalesReport report) {
+    private WokPrintJobBuilder printSalesReport(SalesReport report) {
         return text(dateFormat.format(new Date()))
-                .feed(1)
-                .summary("CLOSED", report.closedSummary)
-                .feed(1)
-                .summary("OPEN", report.openSummary)
-                .feed(1)
-                .summary("VOID", report.voidSummary);
+                .feed()
+                .align(EscPosBuilder.Align.LEFT)
+                .font(EscPosBuilder.Font.EMPHASIZED)
+                .optional(report.start != null, () -> text("Start Date : " + dateFormat.format(report.start)).feed())
+                .optional(report.end != null, () -> text("End Date : " + dateFormat.format(report.end)).feed())
+                .optional(report.status != null, () -> text("Status Filter : " + report.status).feed())
+                .optional(report.type != null, () -> text("Type Filter : " + report.type).feed())
+                .font(EscPosBuilder.Font.REGULAR)
+                .feed()
+                .total("Product Total  (" + report.productCount + ")", report.productTotal.toString())
+                .total("Charge Total   (" + report.chargeCount + ")", report.chargeTotal.toString())
+                .total("Sub Total", report.subTotal.toString())
+                .feed()
+                .total("Tax Total", report.taxTotal.toString())
+                .total("Gratuity Total (" + report.gratuityCount + ")", report.gratuityTotal.toString())
+                .total("Grand Total    (" + report.orderCount + ")", report.grandTotal.toString())
+                .font(EscPosBuilder.Font.EMPHASIZED)
+                .feed()
+                .total("Sales Total", report.grandTotal.subtract(report.gratuityTotal).toString())
+                .font(EscPosBuilder.Font.REGULAR)
+                .feed()
+                .total("Payment Total  (" + report.paymentCount + ")", report.paymentTotal.toString())
+                .total("   Cash        (" + report.cashCount + ")", report.cashTotal.toString())
+                .total("   Credit      (" + report.creditCount + ")", report.creditTotal.toString())
+                .total("   Check       (" + report.checkCount + ")", report.checkTotal.toString())
+                .total("   Giftcard    (" + report.giftcardCount + ")", report.giftcardTotal.toString())
+                .feed();
     }
 
-    private WokPrintJobBuilder dayReport(DaySalesReport report) {
-        return text(dateFormat.format(report.start))
-                .text(" - ")
-                .text(dateFormat.format(report.end))
-                .feed(1)
-                .summary("CLOSED", report.closedSummary)
-                .feed(1)
-                .summary("OPEN", report.openSummary)
-                .feed(1)
-                .summary("VOID", report.voidSummary);
+    private WokPrintJobBuilder printMonthlySalesReport(MonthlySalesReport report) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(report.monthOf);
+
+        return text(dateFormat.format(new Date()))
+                .feed()
+                .align(EscPosBuilder.Align.LEFT)
+                .font(EscPosBuilder.Font.EMPHASIZED)
+                .text("Monthly Report : " + monthFormat.format(report.monthOf)).feed()
+                .font(EscPosBuilder.Font.REGULAR)
+                .feed(2)
+                .col3("Date", "Tax", "Total")
+                .forEach(report.dailySales, sales -> {
+                    int idx = report.dailySales.indexOf(sales);
+                    col3(dayOnlyFormat.format(c.getTime()), report.dailyTax.get(idx).toString(), sales.toString());
+                    c.add(Calendar.DATE, 1);
+                })
+                .feed()
+                .font(EscPosBuilder.Font.EMPHASIZED)
+                .col3("Total", report.netTax.toString(), report.netSales.toString())
+                .feed();
     }
 
     private PrintJob finish() {
@@ -159,6 +195,8 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
 
         return align(EscPosBuilder.Align.CENTER)
                 .font(EscPosBuilder.Font.DWDH)
+                .optional(so.hasType(SalesOrderType.DINEIN), () -> text("Dine In "))
+                .optional(so.hasType(SalesOrderType.TAKEOUT), () -> text("Take Out "))
                 .text("Order " + orderNumber)
                 .feed(2)
                 .align(EscPosBuilder.Align.LEFT)
@@ -173,7 +211,7 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
 
         // Skip void items
         List<ProductEntry> active = so.getProductEntries().filtered(
-                pe -> !pe.hasStatus(ProductEntryStatus.REQUEST_VOID) && !pe.hasStatus(ProductEntryStatus.REQUEST_HOLD_VOID)
+                pe -> !pe.hasStatus(ProductEntryStatus.REQUEST_VOID)
         );
 
         return align(EscPosBuilder.Align.LEFT)
@@ -218,7 +256,7 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
                 pe -> !pe.hasStatus(PaymentEntryStatus.VOID) && !pe.hasStatus(PaymentEntryStatus.REQUEST_VOID)
         );
 
-        return optional(!active.isEmpty(),
+        return optional(!active.isEmpty() && so.dueProperty().get().compareTo(BigDecimal.ZERO) == 0,
                 () -> align(EscPosBuilder.Align.LEFT)
                         .font(EscPosBuilder.Font.REGULAR)
                         .forEach(active, pe -> total(pe.getType().name(), pe.getAmount().toString()))
@@ -226,21 +264,6 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
                         .total("Change Due", so.changeProperty().get().toString())
                         .font(EscPosBuilder.Font.REGULAR)
                         .feed(2));
-    }
-
-    private WokPrintJobBuilder summary(String title, Summary summary) {
-        return align(EscPosBuilder.Align.LEFT)
-                .font(EscPosBuilder.Font.EMPHASIZED)
-                .text(title + " (" + summary.dineInCount + " Dine In, " + summary.takeOutCount + " Take Out)")
-                .font(EscPosBuilder.Font.REGULAR)
-                .feed(1)
-                .total("Product Total (" + summary.productCount + ")", summary.productTotal.toString())
-                .total("Charge Total (" + summary.chargeCount + ")", summary.chargeTotal.toString())
-                .total("Sub Total", summary.subTotal.toString())
-                .total("Tax Total", summary.taxTotal.toString())
-                .font(EscPosBuilder.Font.EMPHASIZED)
-                .total("Sales Total", summary.grandTotal.subtract(summary.gratuityTotal).toString())
-                .font(EscPosBuilder.Font.REGULAR);
     }
 
     /******************************************************************
@@ -274,6 +297,18 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
         builder.text(String.format("%-" + dWidth + "." + dWidth + "s", desc))
                 .text(" ")
                 .text(total)
+                .feed(1);
+
+        return this;
+    }
+
+    private WokPrintJobBuilder col3(String desc, String dat1, String dat2) {
+
+        int cWidth = width / 3;
+
+        builder.text(String.format("%-" + cWidth + "." + cWidth + "s", desc))
+                .text(String.format("%" + cWidth + "s", dat1))
+                .text(String.format("%" + cWidth + "s", dat2))
                 .feed(1);
 
         return this;

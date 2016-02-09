@@ -35,6 +35,14 @@
     -fx-min-height: 140px;
 }
 
+#lgKeypadButton {
+    -fx-background-color: #A80000;
+    -fx-max-width: 290px;
+    -fx-min-width: 290px;
+    -fx-max-height: 140px;
+    -fx-min-height: 140px;
+}
+
 #keypadText {
     -fx-background-color: transparent;
     -fx-text-fill: #D8AD00;

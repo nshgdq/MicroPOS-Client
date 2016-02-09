@@ -26,6 +26,7 @@ import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
 import ow.micropos.client.desktop.model.menu.Modifier;
 import ow.micropos.client.desktop.model.menu.ModifierGroup;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
+import ow.micropos.client.desktop.service.ComparatorUtils;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.math.BigDecimal;
@@ -280,8 +281,18 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
         App.apiProxy.getModifierGroups(new RunLaterCallback<List<ModifierGroup>>() {
             @Override
             public void laterSuccess(List<ModifierGroup> mgList) {
-                mgList.sort((o1, o2) -> o1.getWeight() - o2.getWeight());
-                mgList.forEach(mg -> mg.getModifiers().sort((o1, o2) -> o1.getWeight() - o2.getWeight()));
+                mgList.sort((o1, o2) -> {
+                    if (o1.getWeight() != o2.getWeight())
+                        return o1.getWeight() - o2.getWeight();
+                    else
+                        return ComparatorUtils.tagComparator.compare(o1.getTag(), o2.getTag());
+                });
+                mgList.forEach(mg -> mg.getModifiers().sort((o1, o2) -> {
+                    if (o1.getWeight() != o2.getWeight())
+                        return o1.getWeight() - o2.getWeight();
+                    else
+                        return ComparatorUtils.tagComparator.compare(o1.getTag(), o2.getTag());
+                }));
                 gpModifierGroups.setItems(FXCollections.observableList(mgList));
                 showModifierGroups();
             }

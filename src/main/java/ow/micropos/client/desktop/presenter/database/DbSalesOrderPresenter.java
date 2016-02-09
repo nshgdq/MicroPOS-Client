@@ -13,6 +13,7 @@ import ow.micropos.client.desktop.model.enums.PaymentEntryType;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.orders.PaymentEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
+import ow.micropos.client.desktop.service.ComparatorUtils;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.math.BigDecimal;
@@ -62,7 +63,7 @@ public class DbSalesOrderPresenter extends DbEntityPresenter<SalesOrder> {
 
     @Override
     TableColumn<SalesOrder, String>[] getTableColumns() {
-        id = createTableColumn("ID", param -> param.getValue().idProperty().asString());
+        id = createTableColumn("ID", param -> param.getValue().idProperty().asString(), ComparatorUtils.idComparator);
         status = createTableColumn("Status", param -> param.getValue().statusProperty().asString());
         total = createTableColumn("Total", param -> param.getValue().grandTotalProperty().asString());
         payments = createTableColumn("Payment", param -> param.getValue().paymentSummaryProperty());
@@ -83,6 +84,24 @@ public class DbSalesOrderPresenter extends DbEntityPresenter<SalesOrder> {
     @Override
     void toggleControls(boolean visible) {
 
+    }
+
+    @Override
+    public void refresh() {
+        lblSales.textProperty().unbind();
+        lblPayments.textProperty().unbind();
+        lblCash.textProperty().unbind();
+        lblCredit.textProperty().unbind();
+        lblCheck.textProperty().unbind();
+        lblGC.textProperty().unbind();
+        lblSales.setText("");
+        lblPayments.setText("");
+        lblCash.setText("");
+        lblCredit.setText("");
+        lblCheck.setText("");
+        lblGC.setText("");
+
+        super.refresh();
     }
 
     @Override

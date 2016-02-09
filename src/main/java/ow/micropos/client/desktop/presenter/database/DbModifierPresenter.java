@@ -7,6 +7,7 @@ import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.enums.ModifierType;
 import ow.micropos.client.desktop.model.menu.Modifier;
 import ow.micropos.client.desktop.model.menu.ModifierGroup;
+import ow.micropos.client.desktop.service.ComparatorUtils;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class DbModifierPresenter extends DbEntityPresenter<Modifier> {
     @Override
     TableColumn<Modifier, String>[] getTableColumns() {
         name = createTableColumn("Name", param -> param.getValue().nameProperty());
-        tag = createTableColumn("Tag", param -> param.getValue().tagProperty());
+        tag = createTableColumn("Tag", param -> param.getValue().tagProperty(), ComparatorUtils.tagComparator);
         price = createTableColumn("Price", param -> param.getValue().priceProperty().asString());
         type = createTableColumn("Type", param -> param.getValue().typeProperty().asString());
         group = createTableColumn("Group", param -> param.getValue().modifierGroupSummaryProperty());

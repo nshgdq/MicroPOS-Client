@@ -69,6 +69,8 @@ public class SalesOrder {
 
     private ObjectProperty<Date> date = new SimpleObjectProperty<>();
 
+    private ObjectProperty<Date> cookTime = new SimpleObjectProperty<>();
+
     private ObjectProperty<SalesOrderStatus> status = new SimpleObjectProperty<>();
 
     private ObjectProperty<SalesOrderType> type = new SimpleObjectProperty<>();
@@ -141,6 +143,18 @@ public class SalesOrder {
 
     public void setDate(Date date) {
         this.date.set(date);
+    }
+
+    public Date getCookTime() {
+        return cookTime.get();
+    }
+
+    public ObjectProperty<Date> cookTimeProperty() {
+        return cookTime;
+    }
+
+    public void setCookTime(Date cookTime) {
+        this.cookTime.set(cookTime);
     }
 
     public SalesOrderStatus getStatus() {
@@ -250,20 +264,27 @@ public class SalesOrder {
         return false;
     }
 
-    public void addMenuItem(MenuItem menuItem) {
+    public ProductEntry addMenuItem(MenuItem menuItem) {
         ProductEntry newPE = new ProductEntry(menuItem, BigDecimal.ONE);
+
+        ProductEntry addedTo = null;
 
         boolean added = false;
         for (ProductEntry oldPE : productEntriesProperty()) {
             if (oldPE.canMerge(newPE)) {
                 oldPE.setQuantity(oldPE.getQuantity().add(newPE.getQuantity()));
+                addedTo = oldPE;
                 added = true;
                 break;
             }
         }
 
-        if (!added)
+        if (!added) {
+            addedTo = newPE;
             productEntriesProperty().add(newPE);
+        }
+
+        return addedTo;
     }
 
     public boolean canHaveGratuity() {
@@ -295,8 +316,7 @@ public class SalesOrder {
         for (ProductEntry pe : productEntries)
             if (pe.hasStatus(ProductEntryStatus.REQUEST_EDIT)
                     || pe.hasStatus(ProductEntryStatus.REQUEST_SENT)
-                    || pe.hasStatus(ProductEntryStatus.REQUEST_VOID)
-                    || pe.hasStatus(ProductEntryStatus.REQUEST_HOLD))
+                    || pe.hasStatus(ProductEntryStatus.REQUEST_VOID))
                 return false;
 
         for (ChargeEntry ce : chargeEntries)
@@ -586,6 +606,34 @@ public class SalesOrder {
             });
         }
         return prettyDate.getReadOnlyProperty();
+    }
+
+    /******************************************************************
+     *                                                                *
+     * Cook Time
+     *                                                                *
+     ******************************************************************/
+    private ReadOnlyStringWrapper prettyCookTime;
+
+    public ReadOnlyStringProperty prettyCookTimeProperty() {
+        if (prettyCookTime == null) {
+            prettyCookTime = new ReadOnlyStringWrapper();
+            prettyCookTime.bind(new StringBinding() {
+
+                {
+                    bind(cookTimeProperty());
+                }
+
+                @Override
+                protected String computeValue() {
+                    if (cookTimeProperty().get() == null)
+                        return "";
+                    else
+                        return "@" + tf.format(cookTimeProperty().get()) + " | ";
+                }
+            });
+        }
+        return prettyCookTime.getReadOnlyProperty();
     }
 
     /******************************************************************

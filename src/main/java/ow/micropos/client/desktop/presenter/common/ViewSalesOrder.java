@@ -20,6 +20,7 @@ import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
+import ow.micropos.client.desktop.presenter.order.OrderEditorPresenter;
 
 public class ViewSalesOrder extends ItemPresenter<SalesOrder> {
 
@@ -53,12 +54,15 @@ public class ViewSalesOrder extends ItemPresenter<SalesOrder> {
 
     public final void onClickDefaults() {
         onTopClick(event -> Platform.runLater(() -> {
-            if (getItem() != null)
-                App.main.setNextRefresh(App.paymentEditorPresenter, getItem());
+            if (getItem() != null) {
+                App.main.setNextRefresh(App.orderEditorPresenter, getItem());
+                App.orderEditorPresenter.setView(OrderEditorPresenter.View.PAY);
+            }
         }));
         onBottomClick(event -> Platform.runLater(() -> {
-            if (getItem() != null)
+            if (getItem() != null) {
                 App.main.setNextRefresh(App.orderEditorPresenter, getItem());
+            }
         }));
     }
 

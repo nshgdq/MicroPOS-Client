@@ -1,4 +1,4 @@
-package ow.micropos.client.desktop.presenter.payment;
+package ow.micropos.client.desktop.presenter.order;
 
 import email.com.gmail.ttsai0509.javafx.ListViewUtils;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;

@@ -1,0 +1,59 @@
+#wrapper {
+    -fx-spacing: 10px;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+.date-picker, .date-picker .text-field, .date-picker .label {
+    -fx-font-size: 3em;
+    -fx-font-weight: bolder;
+}
+
+.date-picker .button {
+    -fx-background-color: white;
+    -fx-font-size: 2em;
+    -fx-font-weight: bolder;
+    -fx-min-width: 40px;
+    -fx-max-width: 40px;
+    -fx-pref-width: 40px;
+}
+
+.combo-box {
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: black;
+    -fx-background-color: #777;
+    -fx-max-width: infinity;
+    -fx-border-color: black;
+}
+
+.combo-box .cell {
+    -fx-text-fill: black;
+}
+
+.combo-box .list-cell {
+    -fx-background: #777;
+    -fx-background-color: #777;
+    -fx-text-fill: black;
+}
+
+.combo-box .list-view {
+    -fx-background-color: #777;
+}
+
+.combo-box .label {
+    -fx-font-size: 2.7em;
+}
+
+.stack-button {
+    -fx-background-color: #8C1200;
+}
+
+.label {
+    -fx-padding: 5px 10px;
+    -fx-font-size: 3em;
+}
+
+.title {
+    -fx-border-color: #8C1200;
+    -fx-padding: 0 5px 0 5px;
+}

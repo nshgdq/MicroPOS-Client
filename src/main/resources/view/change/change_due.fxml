@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx/8"
           xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="ow.micropos.client.desktop.presenter.payment.ChangeDuePresenter"
-          stylesheets="/css/pay.css">
+          fx:controller="ow.micropos.client.desktop.presenter.change.ChangeDuePresenter"
+          stylesheets="/css/order.css">
 
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS"/>

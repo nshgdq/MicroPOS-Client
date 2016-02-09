@@ -1,4 +1,4 @@
-package ow.micropos.client.desktop.presenter.payment;
+package ow.micropos.client.desktop.presenter.change;
 
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
 import javafx.application.Platform;

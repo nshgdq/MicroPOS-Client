@@ -10,6 +10,7 @@ import javafx.util.StringConverter;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.target.Seat;
 import ow.micropos.client.desktop.model.target.Section;
+import ow.micropos.client.desktop.service.ComparatorUtils;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
@@ -37,30 +38,20 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
 
     @Override
     Node[] getEditControls() {
-        tfSection = new TextField();
-        tfTag = new TextField();
-        tfRow = new TextField();
-        tfCol = new TextField();
-
-        tfSection.setPromptText("Section");
-        tfTag.setPromptText("Tag");
-        tfRow.setPromptText("Row");
-        tfCol.setPromptText("Col");
+        tfSection = createTextField("Section");
+        tfTag = createTextField("Tag");
+        tfRow = createTextField("Row");
+        tfCol = createTextField("Col");
 
         return new Node[]{tfTag, tfSection, tfRow, tfCol};
     }
 
     @Override
     TableColumn<Seat, String>[] getTableColumns() {
-        section = new TableColumn<>("Section");
-        tag = new TableColumn<>("Tag");
-        row = new TableColumn<>("Row");
-        col = new TableColumn<>("Col");
-
-        section.setCellValueFactory(param -> param.getValue().sectionSummaryProperty());
-        tag.setCellValueFactory(param -> param.getValue().tagProperty());
-        row.setCellValueFactory(param -> param.getValue().rowProperty().asString());
-        col.setCellValueFactory(param -> param.getValue().colProperty().asString());
+        section = createTableColumn("Section", param -> param.getValue().sectionSummaryProperty());
+        tag = createTableColumn("Tag", param -> param.getValue().tagProperty(), ComparatorUtils.tagComparator);
+        row = createTableColumn("Row", param -> param.getValue().rowProperty().asString());
+        col = createTableColumn("Col", param -> param.getValue().colProperty().asString());
 
         return new TableColumn[]{tag, section, row, col};
     }

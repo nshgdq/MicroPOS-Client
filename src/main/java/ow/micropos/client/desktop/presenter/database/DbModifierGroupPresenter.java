@@ -8,6 +8,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.menu.ModifierGroup;
+import ow.micropos.client.desktop.service.ComparatorUtils;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
@@ -44,9 +45,9 @@ public class DbModifierGroupPresenter extends DbEntityPresenter<ModifierGroup> {
 
     @Override
     TableColumn<ModifierGroup, String>[] getTableColumns() {
-        tcId = createTableColumn("ID", param -> param.getValue().idProperty().asString());
+        tcId = createTableColumn("ID", param -> param.getValue().idProperty().asString(), ComparatorUtils.idComparator);
         tcName = createTableColumn("Name", param -> param.getValue().nameProperty());
-        tcTag = createTableColumn("Tag", param -> param.getValue().tagProperty());
+        tcTag = createTableColumn("Tag", param -> param.getValue().tagProperty(), ComparatorUtils.tagComparator);
         tcWeight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
 
         return new TableColumn[]{tcId, tcName, tcTag, tcWeight};

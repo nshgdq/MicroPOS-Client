@@ -10,11 +10,7 @@ import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionLabel;
 import ow.micropos.client.desktop.common.ActionType;
-import ow.micropos.client.desktop.model.report.ActiveSalesReport;
-import ow.micropos.client.desktop.model.report.DaySalesReport;
 import ow.micropos.client.desktop.service.RunLaterCallback;
-
-import java.util.Calendar;
 
 public class ManagerPresenter extends Presenter {
 
@@ -47,48 +43,6 @@ public class ManagerPresenter extends Presenter {
 
     private final ObservableList<Action> managerMenu = FXCollections.observableArrayList(
 
-            new Action("Shutdown", ActionType.FINISH, event -> {
-                App.confirm.showAndWait("Exit Application?", App::exit);
-            }),
-            new Action("Current Report", ActionType.FINISH, event -> {
-                App.confirm.showAndWait("Generate Current Report?", () -> {
-                    App.apiProxy.getCurrentReport(new RunLaterCallback<ActiveSalesReport>() {
-                        @Override
-                        public void laterSuccess(ActiveSalesReport activeSalesReport) {
-                            App.dispatcher.requestPrint("receipt", App.jobBuilder.report(activeSalesReport));
-                        }
-                    });
-                });
-            }),
-            new Action("Day Report", ActionType.FINISH, event -> {
-                Calendar c = Calendar.getInstance();
-                App.confirm.showAndWait(
-                        "Generate Day Report?",
-                        () -> App.apiProxy.getDayReport(
-                                c.get(Calendar.YEAR),
-                                c.get(Calendar.MONTH),
-                                c.get(Calendar.DAY_OF_MONTH),
-                                new RunLaterCallback<DaySalesReport>() {
-                                    @Override
-                                    public void laterSuccess(DaySalesReport report) {
-                                        App.dispatcher.requestPrint("receipt", App.jobBuilder.report(report));
-                                    }
-                                })
-                );
-            }),
-            new Action("Migration", ActionType.FINISH, event -> {
-                App.confirm.showAndWait(
-                        "Migration can not be undone. Please verify all orders before continuing.",
-                        () -> App.apiProxy.migrateSalesOrders(
-                                new RunLaterCallback<Integer>() {
-                                    @Override
-                                    public void laterSuccess(Integer integer) {
-                                        App.notify.showAndWait("Migrated " + integer + " Sales Orders.");
-                                    }
-                                }
-                        )
-                );
-            }),
             new Action("Customers", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 App.main.nextRefresh(App.dbCustomerPresenter);
             })),
@@ -113,11 +67,8 @@ public class ManagerPresenter extends Presenter {
             new Action("Charges", ActionType.BUTTON, event -> Platform.runLater(() -> {
                 App.main.nextRefresh(App.dbChargePresenter);
             })),
-            new Action("Employees", ActionType.TAB_SELECT, event -> {
+            new Action("Employees", ActionType.TAB_DEFAULT, event -> {
                 App.main.nextRefresh(App.dbEmployeePresenter);
-            }),
-            new Action("Positions", ActionType.TAB_SELECT, event -> {
-                App.main.nextRefresh(App.dbPositionPresenter);
             }),
             new Action("Sales Orders", ActionType.TAB_DEFAULT, event -> {
                 App.confirm.showAndWait(
@@ -125,14 +76,33 @@ public class ManagerPresenter extends Presenter {
                         () -> App.main.nextRefresh(App.dbSalesOrderPresenter)
                 );
             }),
-            new Action("Properties", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
+            new Action("Report", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
+                App.main.nextRefresh(App.reportPresenter);
+            })),
+            new Action("Migration", ActionType.TAB_DEFAULT, event -> {
+                App.confirm.showAndWait("Migrated orders will no longer be accessible. Only viewed as records.", () ->
+                        App.confirm.showAndWait("This can NOT be undone. If there are no more open orders, continue...", () ->
+                                        App.apiProxy.migrateSalesOrders(
+                                                new RunLaterCallback<Integer>() {
+                                                    @Override
+                                                    public void laterSuccess(Integer integer) {
+                                                        App.notify.showAndWait("Migrated " + integer + " Sales Orders.");
+                                                    }
+                                                }
+                                        )
+                        ));
+            }),
+            new Action("Shutdown", ActionType.TAB_DEFAULT, event -> {
+                App.confirm.showAndWait("Exit Application?", App::exit);
+            }),
+            new Action("Positions", ActionType.FINISH, event -> {
+                App.main.nextRefresh(App.dbPositionPresenter);
+            }),
+            new Action("Properties", ActionType.FINISH, event -> Platform.runLater(() -> {
                 App.confirm.showAndWait(
                         "WARNING - Database maintenance only. Continue?",
                         () -> App.main.nextRefresh(App.dbPropertyPresenter)
                 );
-            })),
-            new Action("Report", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
-                App.main.nextRefresh(App.reportPresenter);
             }))
     );
 
@@ -152,7 +122,7 @@ public class ManagerPresenter extends Presenter {
             new Action("Finder", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.finderPresenter))
             ),
-            new Action("Manager", ActionType.TAB_SELECT, event -> Platform.runLater(() ->
+            new Action("Manage", ActionType.TAB_SELECT, event -> Platform.runLater(() ->
                     App.main.swapRefresh(App.managerPresenter))
             )
     );

@@ -238,6 +238,7 @@ public class ProductEntry {
                             return "Editing";
                         case REQUEST_HOLD:
                             return "Holding";
+                        case REQUEST_HOLD_VOID:
                         case REQUEST_VOID:
                             return "Voiding";
                         case REQUEST_SENT:

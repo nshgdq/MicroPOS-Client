@@ -158,7 +158,7 @@ public class TakeOutPresenter extends Presenter {
         return menu;
     }
 
-    private final Action manager = new Action("Manager", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
+    private final Action manager = new Action("Manage", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
             App.main.swapRefresh(App.managerPresenter))
     );
 

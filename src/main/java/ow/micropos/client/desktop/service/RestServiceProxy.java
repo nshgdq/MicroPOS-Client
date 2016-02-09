@@ -6,12 +6,14 @@ import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.menu.*;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import ow.micropos.client.desktop.model.report.ActiveSalesReport;
-import ow.micropos.client.desktop.model.report.DaySalesReport;
+import ow.micropos.client.desktop.model.report.MonthlySalesReport;
+import ow.micropos.client.desktop.model.report.SalesReport;
 import ow.micropos.client.desktop.model.target.Customer;
 import ow.micropos.client.desktop.model.target.Seat;
 import ow.micropos.client.desktop.model.target.Section;
+import ow.micropos.client.desktop.model.timecard.TimeCardEntry;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,7 +29,7 @@ public class RestServiceProxy {
 
     public RestServiceProxy(RestService service) {
         this.service = service;
-        this.methodInUse = new AtomicBoolean[52];
+        this.methodInUse = new AtomicBoolean[59];
         for (int i = 0; i < methodInUse.length; i++)
             methodInUse[i] = new AtomicBoolean(false);
     }
@@ -176,18 +178,10 @@ public class RestServiceProxy {
             callback.reject();
     }
 
-    public void getCurrentReport(RestServiceCallback<ActiveSalesReport> callback) {
-        callback.injectMethodInfo(18, methodInUse);
-        if (methodInUse[18].compareAndSet(false, true))
-            service.getCurrentReport(callback);
-        else
-            callback.reject();
-    }
-
-    public void getDayReport(int year, int month, int day, RestServiceCallback<DaySalesReport> callback) {
+    public void getSalesReport(Date start, Date end, SalesOrderStatus status, SalesOrderType type, RestServiceCallback<SalesReport> callback) {
         callback.injectMethodInfo(19, methodInUse);
         if (methodInUse[19].compareAndSet(false, true))
-            service.getDayReport(year, month, day, callback);
+            service.getSalesReport(start, end, status, type, callback);
         else
             callback.reject();
     }
@@ -444,6 +438,62 @@ public class RestServiceProxy {
         callback.injectMethodInfo(51, methodInUse);
         if (methodInUse[51].compareAndSet(false, true))
             service.removeCharge(id, callback);
+        else
+            callback.reject();
+    }
+
+    public void getMonthlySalesReport(Date monthOf, RestServiceCallback<MonthlySalesReport> callback) {
+        callback.injectMethodInfo(52, methodInUse);
+        if (methodInUse[52].compareAndSet(false, true))
+            service.getMonthlySalesReport(monthOf, callback);
+        else
+            callback.reject();
+    }
+
+    public void getTimeCard(String pin, RestServiceCallback<List<TimeCardEntry>> callback) {
+        callback.injectMethodInfo(53, methodInUse);
+        if (methodInUse[53].compareAndSet(false, true))
+            service.getTimeCard(pin, callback);
+        else
+            callback.reject();
+    }
+
+    public void clockIn(String pin, String img, RestServiceCallback<TimeCardEntry> callback) {
+        callback.injectMethodInfo(54, methodInUse);
+        if (methodInUse[54].compareAndSet(false, true))
+            service.clockIn(pin, img, callback);
+        else
+            callback.reject();
+    }
+
+    public void clockOut(String pin, String img, RestServiceCallback<TimeCardEntry> callback) {
+        callback.injectMethodInfo(55, methodInUse);
+        if (methodInUse[55].compareAndSet(false, true))
+            service.clockOut(pin, img, callback);
+        else
+            callback.reject();
+    }
+
+    public void createTimeCardEntry(TimeCardEntry entry, RestServiceCallback<TimeCardEntry> callback) {
+        callback.injectMethodInfo(56, methodInUse);
+        if (methodInUse[56].compareAndSet(false, true))
+            service.createTimeCardEntry(entry, callback);
+        else
+            callback.reject();
+    }
+
+    public void updateTimeCardEntry(TimeCardEntry entry, RestServiceCallback<TimeCardEntry> callback) {
+        callback.injectMethodInfo(57, methodInUse);
+        if (methodInUse[57].compareAndSet(false, true))
+            service.updateTimeCardEntry(entry, callback);
+        else
+            callback.reject();
+    }
+
+    public void removeTimeCardEntry(long id, RestServiceCallback<Boolean> callback) {
+        callback.injectMethodInfo(58, methodInUse);
+        if (methodInUse[58].compareAndSet(false, true))
+            service.removeTimeCardEntry(id, callback);
         else
             callback.reject();
     }

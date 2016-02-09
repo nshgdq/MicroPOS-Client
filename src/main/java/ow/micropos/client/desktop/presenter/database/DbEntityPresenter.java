@@ -21,6 +21,7 @@ import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Iterator;
 
 public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
@@ -156,6 +157,20 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
         return tc;
     }
 
+    protected final TableColumn<T, String> createTableColumn(
+            String name,
+            Callback<TableColumn.CellDataFeatures<T, String>, ObservableValue<String>> callback,
+            Comparator<String> comparator
+    ) {
+        TableColumn<T, String> tc = new TableColumn<>(name);
+        tc.setCellValueFactory(callback);
+
+        if (comparator != null)
+            tc.setComparator(comparator);
+
+        return tc;
+    }
+
     protected final TableColumn<T, String> createEditTableColumn(
             String name,
             Callback<TableColumn.CellDataFeatures<T, String>, ObservableValue<String>> callback,
@@ -170,7 +185,7 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
     /******************************************************************
      *                                                                *
-     * Common Converters
+     * Common
      *                                                                *
      ******************************************************************/
 

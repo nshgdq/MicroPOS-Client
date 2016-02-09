@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ow.micropos.client.desktop.presenter.order.CookPresenter"
+          id="cookWrapper">
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints percentHeight="90"/>
+        <RowConstraints percentHeight="10"/>
+    </rowConstraints>
+
+    <!-- Charge & Payment Editor -->
+    <GridPane id="gvPaymentEditor"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="0">
+
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints percentWidth="25"/>
+            <ColumnConstraints percentWidth="50"/>
+            <ColumnConstraints percentWidth="25"/>
+        </columnConstraints>
+
+
+        <StackPane id="gpCookTime"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="1">
+            <Label fx:id="tfCookTime"
+                   id="keypadEntry"
+                   text="4:20 PM"/>
+        </StackPane>
+
+        <!-- Keypad -->
+        <GridPane GridPane.rowIndex="1"
+                  GridPane.columnIndex="1"
+                  id="keypad">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+                <ColumnConstraints percentWidth="25"/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints percentHeight="25"/>
+                <RowConstraints percentHeight="25"/>
+                <RowConstraints percentHeight="25"/>
+                <RowConstraints percentHeight="25"/>
+            </rowConstraints>
+
+            <StackPane fx:id="btn7"
+                       id="keypadButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0">
+                <Label id="keypadText"
+                       text="7"/>
+            </StackPane>
+
+            <StackPane fx:id="btn8"
+                       id="keypadButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="1">
+                <Label id="keypadText"
+                       text="8"/>
+            </StackPane>
+
+            <StackPane fx:id="btn9"
+                       id="keypadButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="2">
+                <Label id="keypadText"
+                       text="9"/>
+            </StackPane>
+
+            <StackPane fx:id="btnAdd10"
+                       id="keypadButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="3">
+                <Label id="keypadText"
+                       text="+0:10"/>
+            </StackPane>
+
+            <StackPane fx:id="btn4"
+                       id="keypadButton"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="0">
+                <Label id="keypadText"
+                       text="4"/>
+            </StackPane>
+
+            <StackPane fx:id="btn5"
+                       id="keypadButton"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="1">
+                <Label id="keypadText"
+                       text="5"/>
+            </StackPane>
+
+            <StackPane fx:id="btn6"
+                       id="keypadButton"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="2">
+                <Label id="keypadText"
+                       text="6"/>
+            </StackPane>
+
+            <StackPane fx:id="btnAdd15"
+                       id="keypadButton"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="3">
+                <Label id="keypadText"
+                       text="+0:15"/>
+            </StackPane>
+
+            <StackPane fx:id="btn1"
+                       id="keypadButton"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="0">
+                <Label id="keypadText"
+                       text="1"/>
+            </StackPane>
+
+            <StackPane fx:id="btn2"
+                       id="keypadButton"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="1">
+                <Label id="keypadText"
+                       text="2"/>
+            </StackPane>
+
+            <StackPane fx:id="btn3"
+                       id="keypadButton"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="2">
+                <Label id="keypadText"
+                       text="3"/>
+            </StackPane>
+
+            <StackPane fx:id="btnAdd30"
+                       id="keypadButton"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="3">
+                <Label id="keypadText"
+                       text="+0:30"/>
+            </StackPane>
+
+            <StackPane fx:id="btnAmPm"
+                       id="keypadButton"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="0">
+                <Label id="smKeypadText"
+                       text="AM/PM"/>
+            </StackPane>
+
+            <StackPane fx:id="btn0"
+                       id="keypadButton"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="1">
+                <Label id="keypadText"
+                       text="0"/>
+            </StackPane>
+
+            <StackPane fx:id="btnClear"
+                       id="keypadButton"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="2">
+                <Label id="keypadText"
+                       text="Clear"/>
+            </StackPane>
+
+            <StackPane fx:id="btnAdd100"
+                       id="keypadButton"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="3">
+                <Label id="keypadText"
+                       text="+1:00"/>
+            </StackPane>
+
+        </GridPane>
+
+    </GridPane>
+
+    <!-- Options -->
+    <GridPane id="gpOptions"
+              GridPane.rowIndex="1"
+              GridPane.columnIndex="0">
+
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <columnConstraints>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+            <ColumnConstraints percentWidth="16.66"/>
+        </columnConstraints>
+
+        <StackPane fx:id="cancelOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="4">
+            <Label text="Cancel"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="sendOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="5">
+            <Label text="Send"
+                   id="optionText"/>
+        </StackPane>
+
+    </GridPane>
+
+
+</GridPane>

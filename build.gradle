@@ -3,14 +3,14 @@ apply plugin: 'application'
 
 mainClassName = 'ow.micropos.client.desktop.App"'
 sourceCompatibility = 1.8
-version = '1.0'
 
 // Package jar with dependencies
 task fatJar(type: Jar) {
     manifest {
         attributes 'Main-Class': 'ow.micropos.client.desktop.App'
     }
-    baseName = project.name
+    baseName = 'micropos-client'
+    version = '1.0'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
@@ -42,6 +42,8 @@ dependencies {
     compile 'com.squareup.retrofit:converter-jackson:1.9.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.1'
     compile 'org.comtel2000:fx-onscreen-keyboard:8.2.3'
+    compile 'com.github.sarxos:webcam-capture:0.3.10'
+
     //compile 'org.controlsfx:controlsfx:8.40.9'
     //compile 'com.google.inject:guice:4.0'
     //compile 'org.jfxtras:jfxtras-labs:8.0-r3'

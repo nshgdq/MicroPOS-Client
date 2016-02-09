@@ -33,6 +33,7 @@ import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.presenter.ConfirmPresenter;
 import ow.micropos.client.desktop.presenter.MainPresenter;
 import ow.micropos.client.desktop.presenter.NotifyPresenter;
+import ow.micropos.client.desktop.presenter.change.ChangeDuePresenter;
 import ow.micropos.client.desktop.presenter.database.*;
 import ow.micropos.client.desktop.presenter.dinein.DineInPresenter;
 import ow.micropos.client.desktop.presenter.dinein.DineInPromptPresenter;
@@ -42,8 +43,6 @@ import ow.micropos.client.desktop.presenter.manager.ManagerPresenter;
 import ow.micropos.client.desktop.presenter.modify.ProductEditorPresenter;
 import ow.micropos.client.desktop.presenter.move.MovePresenter;
 import ow.micropos.client.desktop.presenter.order.OrderEditorPresenter;
-import ow.micropos.client.desktop.presenter.payment.ChangeDuePresenter;
-import ow.micropos.client.desktop.presenter.payment.PaymentEditorPresenter;
 import ow.micropos.client.desktop.presenter.report.ReportPresenter;
 import ow.micropos.client.desktop.presenter.takeout.TakeOutPresenter;
 import ow.micropos.client.desktop.presenter.target.TargetPresenter;
@@ -101,7 +100,6 @@ public class App extends Application implements VkProperties {
     public static FinderPresenter finderPresenter;
     public static OrderEditorPresenter orderEditorPresenter;
     public static ProductEditorPresenter productEditorPresenter;
-    public static PaymentEditorPresenter paymentEditorPresenter;
     public static TargetPresenter targetPresenter;
     public static MovePresenter movePresenter;
     public static ChangeDuePresenter changeDuePresenter;
@@ -241,10 +239,9 @@ public class App extends Application implements VkProperties {
         finderPresenter = Presenter.load("/view/finder/finder.fxml");
         orderEditorPresenter = Presenter.load("/view/order/order_editor.fxml");
         productEditorPresenter = Presenter.load("/view/modify/product_editor.fxml");
-        paymentEditorPresenter = Presenter.load("/view/pay/payment_editor.fxml");
         targetPresenter = Presenter.load("/view/target/target.fxml");
         movePresenter = Presenter.load("/view/move/move.fxml");
-        changeDuePresenter = Presenter.load("/view/pay/change_due.fxml");
+        changeDuePresenter = Presenter.load("/view/change/change_due.fxml");
 
         dbEmployeePresenter = new DbEmployeePresenter();
         dbPositionPresenter = new DbPositionPresenter();

@@ -8,6 +8,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.menu.Category;
+import ow.micropos.client.desktop.service.ComparatorUtils;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
@@ -43,9 +44,9 @@ public class DbCategoryPresenter extends DbEntityPresenter<Category> {
 
     @Override
     TableColumn<Category, String>[] getTableColumns() {
-        id = createTableColumn("ID", param -> param.getValue().idProperty().asString());
+        id = createTableColumn("ID", param -> param.getValue().idProperty().asString(), ComparatorUtils.idComparator);
         name = createTableColumn("Name", param -> param.getValue().nameProperty());
-        tag = createTableColumn("Tag", param -> param.getValue().tagProperty());
+        tag = createTableColumn("Tag", param -> param.getValue().tagProperty(), ComparatorUtils.tagComparator);
         weight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
 
         return new TableColumn[]{id, name, tag, weight};

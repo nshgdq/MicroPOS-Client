@@ -1,6 +1,5 @@
-package ow.micropos.client.desktop.presenter.payment;
+package ow.micropos.client.desktop.presenter.order;
 
-import email.com.gmail.ttsai0509.javafx.ListViewUtils;
 import email.com.gmail.ttsai0509.javafx.binding.CentStringBinding;
 import email.com.gmail.ttsai0509.javafx.control.PresenterCellAdapter;
 import email.com.gmail.ttsai0509.javafx.presenter.ItemPresenter;
@@ -8,47 +7,27 @@ import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.Action;
-import ow.micropos.client.desktop.common.ActionType;
 import ow.micropos.client.desktop.model.enums.*;
 import ow.micropos.client.desktop.model.error.ErrorInfo;
 import ow.micropos.client.desktop.model.menu.Charge;
 import ow.micropos.client.desktop.model.orders.ChargeEntry;
 import ow.micropos.client.desktop.model.orders.PaymentEntry;
-import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
-import ow.micropos.client.desktop.presenter.order.ViewProductEntry;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
-
-    @FXML public Label time;
-    @FXML public ListView<ProductEntry> orderEntries;
-    @FXML public Label employee;
-    @FXML public Label target;
-    @FXML public Label info;
-    @FXML public Label status;
-    @FXML public Label productTotal;
-    @FXML public Label chargeTotal;
-    @FXML public Label gratuityTotal;
-    @FXML public Label taxTotal;
-    @FXML public Label grandTotal;
+public class PaymentPresenter extends ItemPresenter<SalesOrder> {
 
     @FXML public ListView<Charge> lvCharges;
 
@@ -72,9 +51,6 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     @FXML public StackPane btnCheck;
     @FXML public StackPane btnGiftCard;
 
-    @FXML public StackPane downOption;
-    @FXML public StackPane upOption;
-
     @FXML public StackPane gratuityOption;
     @FXML public StackPane printOption;
     @FXML public StackPane cancelOption;
@@ -91,27 +67,8 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     @FXML
     public void initialize() {
 
-        GridPane.setHalignment(info, HPos.CENTER);
-        GridPane.setHalignment(employee, HPos.LEFT);
-        GridPane.setHalignment(status, HPos.RIGHT);
-        GridPane.setHalignment(target, HPos.LEFT);
-        GridPane.setHalignment(time, HPos.RIGHT);
-        GridPane.setHalignment(productTotal, HPos.RIGHT);
-        GridPane.setHalignment(chargeTotal, HPos.RIGHT);
-        GridPane.setHalignment(gratuityTotal, HPos.RIGHT);
-        GridPane.setHalignment(taxTotal, HPos.RIGHT);
-        GridPane.setHalignment(grandTotal, HPos.RIGHT);
-
         StackPane.setAlignment(tfAmountDue, Pos.CENTER_LEFT);
         StackPane.setAlignment(tfAmountEntry, Pos.CENTER_RIGHT);
-
-        upOption.setOnMouseClicked(
-                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, -2))
-        );
-
-        downOption.setOnMouseClicked(
-                event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, 2))
-        );
 
         cancelOption.setOnMouseClicked(
                 event -> App.confirm.showAndWait("Are you sure? Any changes will not be saved.", App.main::backRefresh)
@@ -124,16 +81,25 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             } else if (getItem().changeProperty().get().compareTo(BigDecimal.ZERO) < 0) {
                 Platform.runLater(() -> App.notify.showAndWait("Payment Due : " + getItem().dueProperty().get()));
 
+            } else if (getItem().getProductEntries().stream().anyMatch(pe -> pe.hasStatus(ProductEntryStatus.HOLD) || pe.hasStatus(ProductEntryStatus.REQUEST_HOLD))) {
+                Platform.runLater(() -> App.notify.showAndWait("Can't close orders with held items."));
+
             } else {
+                SalesOrderStatus prevStatus = getItem().getStatus();
                 getItem().setStatus(SalesOrderStatus.REQUEST_CLOSE);
                 App.apiProxy.postSalesOrder(getItem(), new RunLaterCallback<Long>() {
                     @Override
                     public void laterSuccess(Long aLong) {
                         getItem().setId(aLong);
                         App.main.setSwapRefresh(App.changeDuePresenter, getItem());
-                        //App.main.backRefresh();
-                        //App.notify.showAndWait("Change Due: " + getItem().changeProperty().get().toString());
+                        // TODO : Drawer Kick !
                         App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                    }
+
+                    @Override
+                    public void laterFailure(ErrorInfo error) {
+                        super.laterFailure(error);
+                        getItem().setStatus(prevStatus);
                     }
                 });
             }
@@ -200,14 +166,8 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
             }
         });
 
-        orderEntries.setCellFactory(param -> {
-            ViewProductEntry presenter = Presenter.load("/view/order/view_product_entry.fxml");
-            presenter.fixWidth(orderEntries);
-            return new PresenterCellAdapter<>(presenter);
-        });
-
         lvChargeEntries.setCellFactory(param -> {
-            ViewChargeEntry presenter = Presenter.load("/view/pay/view_charge_entry.fxml");
+            ViewChargeEntry presenter = Presenter.load("/view/order/view_charge_entry.fxml");
             presenter.fixWidth(lvChargeEntries);
             presenter.onClick(event -> Platform.runLater(() -> {
                 ChargeEntry ce = presenter.getItem();
@@ -227,7 +187,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         });
 
         lvPaymentEntries.setCellFactory(param -> {
-            ViewPaymentEntry presenter = Presenter.load("/view/pay/view_payment_entry.fxml");
+            ViewPaymentEntry presenter = Presenter.load("/view/order/view_payment_entry.fxml");
             presenter.fixWidth(lvPaymentEntries);
             presenter.onClick(event -> Platform.runLater(() -> {
                 PaymentEntry pe = presenter.getItem();
@@ -247,7 +207,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         });
 
         lvCharges.setCellFactory(param -> {
-            ViewCharge presenter = Presenter.load("/view/pay/view_charge.fxml");
+            ViewCharge presenter = Presenter.load("/view/order/view_charge.fxml");
             presenter.fixWidth(lvCharges);
             presenter.onClick(event -> Platform.runLater(() -> {
                 ChargeEntry entry = new ChargeEntry(presenter.getItem());
@@ -274,46 +234,12 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
     protected void updateItem(SalesOrder currentItem, SalesOrder newItem) {
 
         if (newItem == null) {
-            unsetLabel(status);
-            unsetLabel(target);
-            unsetLabel(employee);
-            unsetLabel(info);
-            unsetLabel(productTotal);
-            unsetLabel(chargeTotal);
-            unsetLabel(gratuityTotal);
-            unsetLabel(taxTotal);
-            unsetLabel(grandTotal);
-            unsetListView(orderEntries);
             unsetListView(lvChargeEntries);
             unsetListView(lvPaymentEntries);
             unsetLabel(tfAmountDue);
             disableKeypad();
 
         } else {
-            setLabel(info, new StringBinding() {
-                {bind(newItem.idProperty());}
-
-                @Override
-                protected String computeValue() {
-                    Long id = newItem.idProperty().get();
-                    return (id == null) ? "---" : "Order # " + Long.toString(id);
-                }
-
-                @Override
-                public void dispose() {
-                    unbind(newItem.idProperty());
-                }
-            });
-            setLabel(status, newItem.statusTextProperty());
-            setLabel(employee, newItem.employeeNameProperty());
-            setLabel(target, newItem.targetNameProperty());
-            setLabel(time, newItem.prettyTimeProperty());
-            setLabel(productTotal, newItem.productTotalProperty().asString());
-            setLabel(chargeTotal, newItem.chargeTotalProperty().asString());
-            setLabel(grandTotal, newItem.grandTotalProperty().asString());
-            setLabel(gratuityTotal, newItem.gratuityTotalProperty().asString());
-            setLabel(taxTotal, newItem.taxTotalProperty().asString());
-            setListView(orderEntries, newItem.productEntriesProperty());
             setListView(lvChargeEntries, newItem.chargeEntriesProperty());
             setListView(lvPaymentEntries, newItem.paymentEntriesProperty());
             setLabel(tfAmountDue, Bindings.concat("Payment Due : ", newItem.dueProperty().asString()));
@@ -333,40 +259,7 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         unsetListView(lvPaymentEntries);
         //unsetLabel(lblChangeAmount);
         //unsetLabel(lblPaidAmount);
-
-        unsetLabel(status);
-        unsetLabel(target);
-        unsetLabel(employee);
-        unsetLabel(info);
-        unsetLabel(productTotal);
-        unsetLabel(chargeTotal);
-        unsetLabel(gratuityTotal);
-        unsetLabel(taxTotal);
-        unsetLabel(grandTotal);
-        unsetListView(orderEntries);
     }
-
-    /*****************************************************************************
-     *                                                                           *
-     * Menu Buttons
-     *                                                                           *
-     *****************************************************************************/
-
-    @Override
-    public ObservableList<Action> menu() {
-        return menu;
-    }
-
-    private final ObservableList<Action> menu = FXCollections.observableArrayList(
-            new Action("Order", ActionType.TAB_DEFAULT, event -> Platform.runLater(() ->
-                            App.main.setSwapRefresh(App.orderEditorPresenter, getItem())
-            )),
-
-            new Action("Pay", ActionType.TAB_SELECT, event -> Platform.runLater(() ->
-                            App.main.setSwapRefresh(App.paymentEditorPresenter, getItem())
-            ))
-
-    );
 
     private void addPaymentEntry(PaymentEntryType type) {
 
@@ -401,9 +294,8 @@ public class PaymentEditorPresenter extends ItemPresenter<SalesOrder> {
         btnCheck.setOnMouseClicked(event -> addPaymentEntry(PaymentEntryType.CHECK));
         btnGiftCard.setOnMouseClicked(event -> addPaymentEntry(PaymentEntryType.GIFTCARD));
         btnEvenTender.setOnMouseClicked(event -> rawAmount.set(getItem()
-                        .changeProperty()
+                        .dueProperty()
                         .get()
-                        .negate()
                         .toString()
                         .replace(".", "")
         ));

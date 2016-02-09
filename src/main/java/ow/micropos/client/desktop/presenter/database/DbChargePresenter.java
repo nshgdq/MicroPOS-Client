@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.enums.ChargeType;
 import ow.micropos.client.desktop.model.menu.Charge;
+import ow.micropos.client.desktop.service.ComparatorUtils;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class DbChargePresenter extends DbEntityPresenter<Charge> {
     @Override
     TableColumn<Charge, String>[] getTableColumns() {
         name = createTableColumn("Name", param -> param.getValue().nameProperty());
-        tag = createTableColumn("Tag", param -> param.getValue().tagProperty());
+        tag = createTableColumn("Tag", param -> param.getValue().tagProperty(), ComparatorUtils.tagComparator);
         type = createTableColumn("Type", param -> param.getValue().typeProperty().asString());
         amount = createTableColumn("Amount", param -> param.getValue().amountProperty().asString());
         weight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());

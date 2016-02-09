@@ -25,6 +25,7 @@ public class DbPositionPresenter extends ItemPresenter<Position> {
     private TextField tfName;
     private ListView<Position> lvPositions;
     private ListView<Permission> lvPermissionsUsed;
+    private ListView<Permission> lvPermissionsAvailable;
 
     public DbPositionPresenter() {
 
@@ -66,9 +67,8 @@ public class DbPositionPresenter extends ItemPresenter<Position> {
         root.add(lvPositions, 0, 1);
 
         root.add(new StackPane(new Label("Available")), 1, 0);
-        ListView<Permission> lvPermissionsAvailable = new ListView<>();
+        lvPermissionsAvailable = new ListView<>();
         lvPermissionsAvailable.getStyleClass().add("fontSizeHack");
-        lvPermissionsAvailable.setItems(FXCollections.observableList(Permission.asList));
         lvPermissionsAvailable.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {
             Platform.runLater(() -> {
                 if (n != null && getItem() != null && !getItem().hasPermission(n)) {
@@ -103,6 +103,7 @@ public class DbPositionPresenter extends ItemPresenter<Position> {
     @Override
     public void clear() {
         lvPositions.setItems(FXCollections.emptyObservableList());
+        lvPermissionsAvailable.setItems(FXCollections.emptyObservableList());
         setItem(new Position());
     }
 
@@ -112,6 +113,7 @@ public class DbPositionPresenter extends ItemPresenter<Position> {
         App.apiProxy.listPositions(new RunLaterCallback<List<Position>>() {
             @Override
             public void laterSuccess(List<Position> positions) {
+                lvPermissionsAvailable.setItems(FXCollections.observableList(Permission.asList));
                 lvPositions.setItems(FXCollections.observableList(positions));
             }
         });
