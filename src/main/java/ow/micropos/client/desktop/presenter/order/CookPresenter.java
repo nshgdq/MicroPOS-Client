@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
+import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
@@ -21,27 +22,47 @@ import java.util.regex.Pattern;
 
 public class CookPresenter extends ItemPresenter<SalesOrder> {
 
-    @FXML public Label tfCookTime;
-    @FXML public StackPane btn7;
-    @FXML public StackPane btn8;
-    @FXML public StackPane btn9;
-    @FXML public StackPane btn4;
-    @FXML public StackPane btn5;
-    @FXML public StackPane btn6;
-    @FXML public StackPane btn1;
-    @FXML public StackPane btn2;
-    @FXML public StackPane btn3;
-    @FXML public StackPane btn0;
-    @FXML public StackPane btnAdd10;
-    @FXML public StackPane btnAdd15;
-    @FXML public StackPane btnAdd30;
-    @FXML public StackPane btnAdd100;
-    @FXML public StackPane btnAmPm;
-    @FXML public StackPane btnClear;
-    @FXML public StackPane btnSetTime;
+    @FXML
+    public Label tfCookTime;
+    @FXML
+    public StackPane btn7;
+    @FXML
+    public StackPane btn8;
+    @FXML
+    public StackPane btn9;
+    @FXML
+    public StackPane btn4;
+    @FXML
+    public StackPane btn5;
+    @FXML
+    public StackPane btn6;
+    @FXML
+    public StackPane btn1;
+    @FXML
+    public StackPane btn2;
+    @FXML
+    public StackPane btn3;
+    @FXML
+    public StackPane btn0;
+    @FXML
+    public StackPane btnAdd10;
+    @FXML
+    public StackPane btnAdd15;
+    @FXML
+    public StackPane btnAdd30;
+    @FXML
+    public StackPane btnAdd100;
+    @FXML
+    public StackPane btnAmPm;
+    @FXML
+    public StackPane btnClear;
+    @FXML
+    public StackPane btnSetTime;
 
-    @FXML public StackPane cancelOption;
-    @FXML public StackPane sendOption;
+    @FXML
+    public StackPane cancelOption;
+    @FXML
+    public StackPane sendOption;
 
     private SimpleDateFormat stdTimeFormat = new SimpleDateFormat("MM/dd/yy hh:mm a");
     private SimpleDateFormat rawTimeFormat = new SimpleDateFormat("ahhmm");
@@ -90,11 +111,20 @@ public class CookPresenter extends ItemPresenter<SalesOrder> {
                     App.apiProxy.postSalesOrder(getItem(), new RunLaterCallback<Long>() {
                         @Override
                         public void laterSuccess(Long aLong) {
+                            getItem().setId(aLong);
                             App.main.backRefresh();
+
+                            if (App.properties.getBool("print-send-takeout") && getItem().hasType(SalesOrderType.TAKEOUT))
+                                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+
+                            if (App.properties.getBool("print-send-dinein") && getItem().hasType(SalesOrderType.DINEIN))
+                                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+
                             if (getItem().getCookTime() == null)
                                 App.notify.showAndWait("Sales Order " + aLong);
                             else
                                 App.notify.showAndWait("Sales Order " + aLong + " @ " + stdTimeFormat.format(getItem().getCookTime()));
+
                         }
                     });
                 }

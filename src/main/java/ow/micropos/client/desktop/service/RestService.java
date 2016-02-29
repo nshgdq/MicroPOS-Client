@@ -27,7 +27,7 @@ public interface RestService {
      *                                                                *
      ******************************************************************/
 
-    @GET("/timecard")
+    @GET("/timecard/view")
     void getTimeCard(@Query("pin") String pin, Callback<List<TimeCardEntry>> callback);
 
     @POST("/timecard/clockin")
@@ -35,15 +35,6 @@ public interface RestService {
 
     @POST("/timecard/clockout")
     void clockOut(@Query("pin") String pin, @Body String image, Callback<TimeCardEntry> callback);
-
-    @POST("/timecard/create")
-    void createTimeCardEntry(@Body TimeCardEntry entry, Callback<TimeCardEntry> callback);
-
-    @POST("/timecard/update")
-    void updateTimeCardEntry(@Body TimeCardEntry entry, Callback<TimeCardEntry> callback);
-
-    @DELETE("/timecard/remove")
-    void removeTimeCardEntry(@Query("id") long id, Callback<Boolean> callback);
 
     /******************************************************************
      *                                                                *
@@ -261,5 +252,16 @@ public interface RestService {
 
     @DELETE("/database/charges/{id}")
     void removeCharge(@Path("id") long id, Callback<Boolean> callback);
+
+    /* Time Card Entries **********************************************/
+
+    @GET("/database/timeCardEntries")
+    void listTimeCardEntries(@Query("employee") Long id, @Query("start") Date start, @Query("end") Date end, Callback<List<TimeCardEntry>> callback);
+
+    @POST("/database/timeCardEntries")
+    void updateTimeCardEntry(@Body TimeCardEntry timeCardEntry, Callback<Long> callback);
+
+    @DELETE("/database/timeCardEntries/{id}")
+    void removeTimeCardEntry(@Path("id") long id, Callback<Boolean> callback);
 
 }

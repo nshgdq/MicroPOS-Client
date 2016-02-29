@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.model.error.ErrorInfo;
@@ -24,12 +25,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class LoginPresenter extends Presenter {
 
-    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("MM/dd/yy hh:mm a");
-
+    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("EEE, MM/dd/yy hh:mm a");
 
     @FXML public ImageView imgLogo;
     @FXML public Label lblPin;
@@ -112,14 +114,14 @@ public class LoginPresenter extends Presenter {
                         if (timeCardEntry == null) {
                             App.notify.showAndWait("Unable to clock in.");
                         } else {
-                            App.notify.showAndWait("Clocked in at "
-                                    + timeFormat.format(timeCardEntry.getDate()));
+                            App.notify.showAndWait("Clocked in at " + timeFormat.format(timeCardEntry.getDate()));
                         }
                     }
 
                     @Override
                     public void laterFailure(ErrorInfo error) {
                         refresh();
+                        App.notify.showAndWait(error.getMessage());
                     }
                 }));
 
@@ -133,16 +135,36 @@ public class LoginPresenter extends Presenter {
                         if (timeCardEntry == null) {
                             App.notify.showAndWait("Unable to clock out.");
                         } else {
-                            App.notify.showAndWait("Clocked out at "
-                                    + timeFormat.format(timeCardEntry.getDate()));
+                            App.notify.showAndWait("Clocked out at " + timeFormat.format(timeCardEntry.getDate()));
                         }
                     }
 
                     @Override
                     public void laterFailure(ErrorInfo error) {
                         refresh();
+                        App.notify.showAndWait(error.getMessage());
                     }
                 }));
+
+        btnTimeCard.setOnMouseClicked(event -> App.apiProxy.viewTimeCard(
+                rawPin.get(),
+                new RunLaterCallback<java.util.List<TimeCardEntry>>() {
+                    @Override
+                    public void laterSuccess(List<TimeCardEntry> timeCardEntries) {
+                        refresh();
+                        String result = "";
+                        for (TimeCardEntry e : timeCardEntries)
+                            result += e.getClockin().toString() + timeFormat.format(e.getDate()) + "\n";
+                        App.notify.showAndWait(result);
+                    }
+
+                    @Override
+                    public void laterFailure(ErrorInfo error) {
+                        refresh();
+                        App.notify.showAndWait(error.getMessage());
+                    }
+                }
+        ));
     }
 
     @Override
@@ -211,6 +233,48 @@ public class LoginPresenter extends Presenter {
 
         return result;
 
+    }
+
+    private String formatTimeCard(List<TimeCardEntry> timeCardEntries) {
+
+        timeCardEntries.sort((e1, e2) -> e1.getDate().compareTo(e2.getDate()));
+
+        String result = "";
+
+        boolean isWorking = false;
+
+        Date date = new Date(0);
+
+        for (TimeCardEntry e : timeCardEntries) {
+
+            if (!DateUtils.isSameDay(date, e.getDate())) {
+                date = e.getDate();
+                result += "\n";
+            }
+
+            boolean clockIn = e.getClockin();
+
+            if (isWorking) {
+                if (clockIn) {
+
+                } else {
+
+                }
+
+            } else {
+                if (clockIn) {
+
+                } else {
+
+                }
+            }
+        }
+
+        for (TimeCardEntry e : timeCardEntries) {
+            result += e.getClockin().toString() + timeFormat.format(e.getDate()) + "\n";
+        }
+
+        return result;
     }
 
 }

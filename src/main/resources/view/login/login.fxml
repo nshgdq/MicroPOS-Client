@@ -15,10 +15,10 @@
     </rowConstraints>
 
     <columnConstraints>
-        <ColumnConstraints percentWidth="10"/>
-        <ColumnConstraints percentWidth="40"/>
-        <ColumnConstraints percentWidth="40"/>
-        <ColumnConstraints percentWidth="10"/>
+        <ColumnConstraints percentWidth="5"/>
+        <ColumnConstraints percentWidth="45"/>
+        <ColumnConstraints percentWidth="45"/>
+        <ColumnConstraints percentWidth="5"/>
     </columnConstraints>
 
     <StackPane GridPane.rowIndex="0"

@@ -48,6 +48,12 @@
                    id="createText"/>
         </StackPane>
 
+        <StackPane fx:id="spWalkIn"
+                   id="createButton">
+            <Label text="Walk-In"
+                   id="createText"/>
+        </StackPane>
+
         <StackPane fx:id="spReset"
                    id="resetButton">
             <Label text="Reset"

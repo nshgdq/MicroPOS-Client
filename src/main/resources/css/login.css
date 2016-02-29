@@ -1,7 +1,7 @@
 /* Gap between logo & keypad */
 #gpLogin {
-    -fx-hgap: 80px;
-    -fx-vgap: 80px;
+    -fx-hgap: 30px;
+    -fx-vgap: 30px;
 }
 
 #lblPinContainer {
@@ -29,18 +29,18 @@
 
 #keypadButton {
     -fx-background-color: #A80000;
-    -fx-max-width: 140px;
-    -fx-min-width: 140px;
-    -fx-max-height: 140px;
-    -fx-min-height: 140px;
+    -fx-max-width: 130px;
+    -fx-min-width: 130px;
+    -fx-max-height: 130px;
+    -fx-min-height: 130px;
 }
 
 #lgKeypadButton {
     -fx-background-color: #A80000;
-    -fx-max-width: 290px;
-    -fx-min-width: 290px;
-    -fx-max-height: 140px;
-    -fx-min-height: 140px;
+    -fx-max-width: 270px;
+    -fx-min-width: 270px;
+    -fx-max-height: 130px;
+    -fx-min-height: 130px;
 }
 
 #keypadText {

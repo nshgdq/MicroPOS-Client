@@ -63,6 +63,10 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         printers = createTableColumn("Printers", param -> param.getValue().printersProperty().asString());
         weight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
 
+        name.setMaxWidth(300);
+        name.setMinWidth(300);
+        name.setPrefWidth(300);
+
         return new TableColumn[]{name, tag, price, category, printers, weight};
     }
 

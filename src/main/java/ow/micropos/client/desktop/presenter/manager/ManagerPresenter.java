@@ -76,22 +76,33 @@ public class ManagerPresenter extends Presenter {
                         () -> App.main.nextRefresh(App.dbSalesOrderPresenter)
                 );
             }),
+            new Action("Time Cards", ActionType.TAB_DEFAULT, event -> {
+                App.main.nextRefresh(App.dbTimeCardPresenter);
+            }),
             new Action("Report", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
                 App.main.nextRefresh(App.reportPresenter);
             })),
-            new Action("Migration", ActionType.TAB_DEFAULT, event -> {
-                App.confirm.showAndWait("Migrated orders will no longer be accessible. Only viewed as records.", () ->
-                        App.confirm.showAndWait("This can NOT be undone. If there are no more open orders, continue...", () ->
-                                        App.apiProxy.migrateSalesOrders(
-                                                new RunLaterCallback<Integer>() {
-                                                    @Override
-                                                    public void laterSuccess(Integer integer) {
-                                                        App.notify.showAndWait("Migrated " + integer + " Sales Orders.");
-                                                    }
+            new Action("Migration", ActionType.TAB_DEFAULT,
+                    // Warning 1
+                    event -> App.confirm.showAndWait(
+                            "Migrated orders will no longer be accessible. Only viewed as records.",
+
+                            // Warning 2
+                            () -> App.confirm.showAndWait(
+                                    "This can NOT be undone. If there are no more open orders, continue...",
+
+                                    // Migration
+                                    () -> App.apiProxy.migrateSalesOrders(
+                                            new RunLaterCallback<Integer>() {
+                                                @Override
+                                                public void laterSuccess(Integer integer) {
+                                                    App.notify.showAndWait("Migrated " + integer + " Sales Orders.");
                                                 }
-                                        )
-                        ));
-            }),
+                                            }
+                                    )
+                            )
+                    )
+            ),
             new Action("Shutdown", ActionType.TAB_DEFAULT, event -> {
                 App.confirm.showAndWait("Exit Application?", App::exit);
             }),

@@ -24,6 +24,7 @@ import java.util.function.Predicate;
 public class TakeOutPresenter extends Presenter {
 
     @FXML StackPane spCreate;
+    @FXML StackPane spWalkIn;
     @FXML StackPane spReset;
     @FXML StackPane spBack;
     @FXML StackPane spNext;
@@ -40,6 +41,21 @@ public class TakeOutPresenter extends Presenter {
         spReset.setOnMouseClicked(event -> Platform.runLater(this::refresh));
         spBack.setOnMouseClicked(event -> Platform.runLater(gvCustomers::prevPage));
         spNext.setOnMouseClicked(event -> Platform.runLater(gvCustomers::nextPage));
+        spWalkIn.setOnMouseClicked(event -> {
+            if (App.properties.has("walkin-id")) {
+                App.apiProxy.getCustomer(App.properties.getLng("walkin-id"), new RunLaterCallback<Customer>() {
+                    @Override
+                    public void laterSuccess(Customer c) {
+                        App.main.setNextRefresh(
+                                App.orderEditorPresenter,
+                                SalesOrder.forCustomer(App.employee, c, App.properties.getBd("tax-percent"))
+                        );
+                    }
+                });
+            } else {
+                App.notify.showAndWait("Walk-In customer not set. Please notify manager.");
+            }
+        });
         spCreate.setOnMouseClicked(event -> {
             String fn = tfFirstName.getText();
             String ln = tfLastName.getText();
@@ -57,6 +73,8 @@ public class TakeOutPresenter extends Presenter {
                         );
                     }
                 });
+            } else {
+                App.notify.showAndWait("Phone Number, First Name, or Last Name required.");
             }
         });
 

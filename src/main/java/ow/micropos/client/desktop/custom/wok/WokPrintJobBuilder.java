@@ -5,6 +5,7 @@ import email.com.gmail.ttsai0509.math.BigDecimalUtils;
 import email.com.gmail.ttsai0509.print.printer.PrintJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ow.micropos.client.desktop.App;
 import ow.micropos.client.desktop.custom.PrintJobBuilder;
 import ow.micropos.client.desktop.model.enums.PaymentEntryStatus;
 import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
@@ -118,7 +119,7 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
 
     private WokPrintJobBuilder printSalesReport(SalesReport report) {
         return text(dateFormat.format(new Date()))
-                .feed()
+                .feed(2)
                 .align(EscPosBuilder.Align.LEFT)
                 .font(EscPosBuilder.Font.EMPHASIZED)
                 .optional(report.start != null, () -> text("Start Date : " + dateFormat.format(report.start)).feed())
@@ -152,13 +153,13 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
         c.setTime(report.monthOf);
 
         return text(dateFormat.format(new Date()))
-                .feed()
+                .feed(2)
                 .align(EscPosBuilder.Align.LEFT)
                 .font(EscPosBuilder.Font.EMPHASIZED)
                 .text("Monthly Report : " + monthFormat.format(report.monthOf)).feed()
-                .font(EscPosBuilder.Font.REGULAR)
-                .feed(2)
+                .feed(1)
                 .col3("Date", "Tax", "Total")
+                .font(EscPosBuilder.Font.REGULAR)
                 .forEach(report.dailySales, sales -> {
                     int idx = report.dailySales.indexOf(sales);
                     col3(dayOnlyFormat.format(c.getTime()), report.dailyTax.get(idx).toString(), sales.toString());
@@ -188,22 +189,24 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
      ******************************************************************/
 
     private WokPrintJobBuilder salesOrderInfo(SalesOrder so) {
-
-        String datetime = dateFormat.format(so.getDate());
-        String employee = so.getEmployee().getFirstName();
-        String orderNumber = so.getId().toString();
-
         return align(EscPosBuilder.Align.CENTER)
                 .font(EscPosBuilder.Font.DWDH)
                 .optional(so.hasType(SalesOrderType.DINEIN), () -> text("Dine In "))
                 .optional(so.hasType(SalesOrderType.TAKEOUT), () -> text("Take Out "))
-                .text("Order " + orderNumber)
+                .optional(App.properties.getBool("receipt-order-id"), () -> text("#" + so.getId().toString()))
                 .feed(2)
                 .align(EscPosBuilder.Align.LEFT)
                 .font(EscPosBuilder.Font.REGULAR)
-                .text("Date     : " + datetime)
+                .text("Date     : " + dateFormat.format(so.getDate()))
                 .feed(1)
-                .text("Employee : " + employee)
+                .text("Server   : " + so.getEmployee().getFirstName())
+                .feed(1)
+                .optional(so.hasType(SalesOrderType.DINEIN),
+                        () -> text("Seat     : " + so.getSeat().getId()))
+                .optional(so.hasType(SalesOrderType.TAKEOUT),
+                        () -> text("Customer : " + so.getCustomer().fullNameProperty().get()).feed(1))
+                .optional(so.hasType(SalesOrderType.TAKEOUT),
+                        () -> text("Phone    : " + so.getCustomer().getPhoneNumber()))
                 .feed(2);
     }
 

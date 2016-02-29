@@ -92,8 +92,23 @@ public class PaymentPresenter extends ItemPresenter<SalesOrder> {
                     public void laterSuccess(Long aLong) {
                         getItem().setId(aLong);
                         App.main.setSwapRefresh(App.changeDuePresenter, getItem());
+
                         // TODO : Drawer Kick !
-                        App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+
+                        // Print takeout receipt on pay
+                        if (App.properties.getBool("print-pay-takeout") && getItem().hasType(SalesOrderType.TAKEOUT))
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+
+                            // Print dinein receipt on pay
+                        else if (App.properties.getBool("print-pay-dinein") && getItem().hasType(SalesOrderType.DINEIN))
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+
+                            // TODO : Remove hardcoded scenario - print receipt for take out orders that pay immediately
+                        else if (getItem().hasType(SalesOrderType.TAKEOUT)
+                                && getItem().hasStatus(SalesOrderStatus.REQUEST_CLOSE)
+                                && prevStatus == SalesOrderStatus.REQUEST_OPEN)
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+
                     }
 
                     @Override

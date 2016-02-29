@@ -62,6 +62,8 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
     @FXML public GridView<Modifier> gpModifiers;
     @FXML public ListView<Modifier> entryModifiers;
 
+    BigDecimal originalQty;
+
     @FXML
     public void initialize() {
 
@@ -101,10 +103,20 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
 
         subOption.setOnMouseClicked(event -> {
             ProductEntry pe = getItem();
-            if (pe.getQuantity().compareTo(BigDecimal.ONE) > 0) {
-                pe.setQuantity(pe.getQuantity().subtract(BigDecimal.ONE));
-                if (pe.hasStatus(ProductEntryStatus.SENT))
-                    pe.setStatus(ProductEntryStatus.REQUEST_EDIT);
+            if (pe.hasStatus(ProductEntryStatus.REQUEST_SENT)
+                    || App.employee.hasPermission(Permission.VOID_PRODUCT_ENTRY)
+                    || pe.getQuantity().compareTo(originalQty) > 0) {
+
+                if (pe.getQuantity().compareTo(BigDecimal.ONE) > 0) {
+                    pe.setQuantity(pe.getQuantity().subtract(BigDecimal.ONE));
+                    if (pe.hasStatus(ProductEntryStatus.SENT))
+                        pe.setStatus(ProductEntryStatus.REQUEST_EDIT);
+                }
+
+            } else {
+
+                App.notify.showAndWait(Permission.VOID_PRODUCT_ENTRY);
+
             }
         });
 
@@ -270,6 +282,8 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                 voidOptionLabel.setText("Del");
             else
                 voidOptionLabel.setText("Void");
+
+            originalQty = newItem.getQuantity();
 
         }
     }

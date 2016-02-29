@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
+import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.menu.Category;
 import ow.micropos.client.desktop.model.menu.MenuItem;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
@@ -61,7 +62,15 @@ public class MenuPresenter extends ItemPresenter<SalesOrder> {
                 App.apiProxy.postSalesOrder(getItem(), new RunLaterCallback<Long>() {
                     @Override
                     public void laterSuccess(Long aLong) {
+                        getItem().setId(aLong);
                         App.main.backRefresh();
+
+                        if (App.properties.getBool("print-send-takeout") && getItem().hasType(SalesOrderType.TAKEOUT))
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+
+                        if (App.properties.getBool("print-send-dinein") && getItem().hasType(SalesOrderType.DINEIN))
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+
                         App.notify.showAndWait("Sales Order " + aLong);
                     }
                 });

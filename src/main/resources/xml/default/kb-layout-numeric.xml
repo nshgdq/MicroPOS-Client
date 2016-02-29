@@ -5,7 +5,8 @@
           keyWidth="40"
           verticalGap="0">
     <Row>
-        <!-- <Key codes="" keyWidth="335" /> -->
+        <Key codes=""
+             keyWidth="335"/>
         <Key codes="49"
              keyLabel="1"/>
         <Key codes="50"
@@ -14,6 +15,8 @@
              keyLabel="3"/>
     </Row>
     <Row>
+        <Key codes=""
+             keyWidth="335"/>
         <Key codes="52"
              keyLabel="4"/>
         <Key codes="53"
@@ -22,6 +25,8 @@
              keyLabel="6"/>
     </Row>
     <Row>
+        <Key codes=""
+             keyWidth="335"/>
         <Key codes="55"
              keyLabel="7"/>
         <Key codes="56"
@@ -30,6 +35,8 @@
              keyLabel="9"/>
     </Row>
     <Row rowEdgeFlags="bottom">
+        <Key codes=""
+             keyWidth="335"/>
         <Key codes="-5"
              keyLabel="!"
              keyLabelStyle=".font-fxkeyboard"

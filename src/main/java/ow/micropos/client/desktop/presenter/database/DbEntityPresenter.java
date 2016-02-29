@@ -21,12 +21,15 @@ import ow.micropos.client.desktop.common.Action;
 import ow.micropos.client.desktop.common.ActionType;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 
 public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
     TableView<T> table;
+
 
     protected DbEntityPresenter() {
         GridPane root = new GridPane();
@@ -36,9 +39,11 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
 
         RowConstraints rc1 = new RowConstraints();
         RowConstraints rc2 = new RowConstraints();
+        RowConstraints rc3 = new RowConstraints();
         rc1.setVgrow(Priority.NEVER);
-        rc2.setVgrow(Priority.ALWAYS);
-        root.getRowConstraints().setAll(rc1, rc2);
+        rc2.setVgrow(Priority.NEVER);
+        rc3.setVgrow(Priority.ALWAYS);
+        root.getRowConstraints().setAll(rc1, rc2, rc3);
 
         ColumnConstraints cc1 = new ColumnConstraints();
         ColumnConstraints cc2 = new ColumnConstraints();
@@ -54,7 +59,7 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {if (n != null) setItem(n);});
         table.getColumns().addAll(getTableColumns());
-        GridPane.setConstraints(table, 0, 0, 1, 2);
+        GridPane.setConstraints(table, 0, 0, 1, 3);
 
         // TODO : Scroll Buttons for DBEntityPresenter
         StackPane upButton = new StackPane(new Label("&#x25B2;"));
@@ -73,7 +78,11 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
         controls.getChildren().addAll(getEditControls());
         GridPane.setConstraints(controls, 2, 1);
 
-        root.getChildren().setAll(table, title, labels, controls);
+        VBox extra = new VBox(10);
+        extra.getChildren().addAll(getExtraControls());
+        GridPane.setConstraints(extra, 1, 2, 2, 1, HPos.LEFT, VPos.TOP);
+
+        root.getChildren().setAll(table, title, labels, controls, extra);
 
         Presenter.injectView(this, root);
 
@@ -84,6 +93,10 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
     abstract Label[] getEditLabels();
 
     abstract Node[] getEditControls();
+
+    protected Node[] getExtraControls() {
+        return new Node[0];
+    }
 
     abstract TableColumn<T, String>[] getTableColumns();
 
@@ -148,6 +161,10 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
         return tf;
     }
 
+    protected final CheckBox createCheckBox(String prompt) {
+        return new CheckBox(prompt);
+    }
+
     protected final TableColumn<T, String> createTableColumn(
             String name,
             Callback<TableColumn.CellDataFeatures<T, String>, ObservableValue<String>> callback
@@ -202,6 +219,29 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
                 return Long.parseLong(string);
             } catch (NumberFormatException e) {
                 return 0L;
+            }
+        }
+    };
+
+    protected static final StringConverter<Date> dateTimeConverter = new StringConverter<Date>() {
+
+        private final SimpleDateFormat format = new SimpleDateFormat("yyyy MM dd hh mm a");
+
+        @Override
+        public String toString(Date object) {
+            try {
+                return format.format(object);
+            } catch (Exception e) {
+                return "";
+            }
+        }
+
+        @Override
+        public Date fromString(String string) {
+            try {
+                return format.parse(string);
+            } catch (Exception e) {
+                return null;
             }
         }
     };

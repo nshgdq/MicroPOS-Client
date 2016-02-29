@@ -117,6 +117,7 @@ public class App extends Application implements VkProperties {
     public static DbCustomerPresenter dbCustomerPresenter;
     public static DbSalesOrderPresenter dbSalesOrderPresenter;
     public static DbPropertyPresenter dbPropertyPresenter;
+    public static DbTimeCardPresenter dbTimeCardPresenter;
 
     // Report Presenters
     public static ReportPresenter reportPresenter;
@@ -224,7 +225,11 @@ public class App extends Application implements VkProperties {
 
         stage.getIcons().add(logo);
 
-        primary = new StageScene(pConfig, stage, keyboard);
+        if (properties.getBool("virtual-keyboard"))
+            primary = new StageScene(pConfig, stage, keyboard);
+        else
+            primary = new StageScene(pConfig, stage);
+
         secondary = new StageScene(sConfig);
 
         main = Presenter.load("/view/main.fxml");
@@ -255,6 +260,7 @@ public class App extends Application implements VkProperties {
         dbCustomerPresenter = new DbCustomerPresenter();
         dbSalesOrderPresenter = new DbSalesOrderPresenter();
         dbPropertyPresenter = new DbPropertyPresenter();
+        dbTimeCardPresenter = new DbTimeCardPresenter();
 
         reportPresenter = Presenter.load("/view/report/report.fxml");
 

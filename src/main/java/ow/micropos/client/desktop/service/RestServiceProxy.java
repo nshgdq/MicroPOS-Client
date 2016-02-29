@@ -450,7 +450,7 @@ public class RestServiceProxy {
             callback.reject();
     }
 
-    public void getTimeCard(String pin, RestServiceCallback<List<TimeCardEntry>> callback) {
+    public void viewTimeCard(String pin, RestServiceCallback<List<TimeCardEntry>> callback) {
         callback.injectMethodInfo(53, methodInUse);
         if (methodInUse[53].compareAndSet(false, true))
             service.getTimeCard(pin, callback);
@@ -474,18 +474,18 @@ public class RestServiceProxy {
             callback.reject();
     }
 
-    public void createTimeCardEntry(TimeCardEntry entry, RestServiceCallback<TimeCardEntry> callback) {
+    public void listTimeCardEntries(Long id, Date start, Date end, RestServiceCallback<List<TimeCardEntry>> callback) {
         callback.injectMethodInfo(56, methodInUse);
         if (methodInUse[56].compareAndSet(false, true))
-            service.createTimeCardEntry(entry, callback);
+            service.listTimeCardEntries(id, start, end, callback);
         else
             callback.reject();
     }
 
-    public void updateTimeCardEntry(TimeCardEntry entry, RestServiceCallback<TimeCardEntry> callback) {
+    public void updateTimeCardEntry(TimeCardEntry timeCardEntry, RestServiceCallback<Long> callback) {
         callback.injectMethodInfo(57, methodInUse);
         if (methodInUse[57].compareAndSet(false, true))
-            service.updateTimeCardEntry(entry, callback);
+            service.updateTimeCardEntry(timeCardEntry, callback);
         else
             callback.reject();
     }
@@ -497,5 +497,6 @@ public class RestServiceProxy {
         else
             callback.reject();
     }
+
 
 }

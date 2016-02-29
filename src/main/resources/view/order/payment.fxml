@@ -261,20 +261,20 @@
                        text="Check"/>
             </StackPane>
 
-            <StackPane fx:id="btn0"
+            <StackPane fx:id="btn00"
                        id="keypadButton"
                        GridPane.rowIndex="3"
                        GridPane.columnIndex="0">
                 <Label id="keypadText"
-                       text="0"/>
+                       text="00"/>
             </StackPane>
 
-            <StackPane fx:id="btn00"
+            <StackPane fx:id="btn0"
                        id="keypadButton"
                        GridPane.rowIndex="3"
                        GridPane.columnIndex="1">
                 <Label id="keypadText"
-                       text="00"/>
+                       text="0"/>
             </StackPane>
 
             <StackPane fx:id="btnClear"
