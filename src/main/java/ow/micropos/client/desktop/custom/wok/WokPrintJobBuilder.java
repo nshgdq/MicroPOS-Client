@@ -92,11 +92,7 @@ public class WokPrintJobBuilder implements PrintJobBuilder {
     private WokPrintJobBuilder address() {
         builder.align(EscPosBuilder.Align.CENTER)
                 .font(EscPosBuilder.Font.REGULAR)
-                .text("6 NORTH BOLTON AVE.")
-                .feed(1)
-                .text("ALEXANDRIA, LA 71301")
-                .feed(1)
-                .text("(318) 448-8247")
+                .text("RESTAURANT")
                 .feed(2);
         return this;
     }
