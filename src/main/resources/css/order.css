@@ -1,5 +1,5 @@
 #editorWrapper, #cookWrapper, #menuWrapper, #gpMenu, #gpSalesOrder, #gpCategories, #gpMenuItems, #gpOptions, #gpScroll,
-#gpEntries, #gvPaymentEditor, #paymentWrapper, #gpChargeEntries, #gpPaymentEntries {
+#gpEntries, #gvPaymentEditor, #paymentWrapper, #gpChargeEntries, #gpPaymentEntries, #gpTouchToggle {
     -fx-hgap: 10px;
     -fx-vgap: 10px;
 }

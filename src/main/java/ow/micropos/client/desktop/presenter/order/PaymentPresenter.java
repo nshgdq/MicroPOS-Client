@@ -93,21 +93,19 @@ public class PaymentPresenter extends ItemPresenter<SalesOrder> {
                         getItem().setId(aLong);
                         App.main.setSwapRefresh(App.changeDuePresenter, getItem());
 
-                        // TODO : Drawer Kick !
-
                         // Print takeout receipt on pay
                         if (App.properties.getBool("print-pay-takeout") && getItem().hasType(SalesOrderType.TAKEOUT))
-                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem(), true));
 
-                            // Print dinein receipt on pay
+                        // Print dinein receipt on pay
                         else if (App.properties.getBool("print-pay-dinein") && getItem().hasType(SalesOrderType.DINEIN))
-                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem(), true));
 
-                            // TODO : Remove hardcoded scenario - print receipt for take out orders that pay immediately
+                        // TODO : Remove hardcoded scenario - print receipt for take out orders that pay immediately
                         else if (getItem().hasType(SalesOrderType.TAKEOUT)
                                 && getItem().hasStatus(SalesOrderStatus.REQUEST_CLOSE)
                                 && prevStatus == SalesOrderStatus.REQUEST_OPEN)
-                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem(), true));
 
                     }
 
@@ -131,7 +129,7 @@ public class PaymentPresenter extends ItemPresenter<SalesOrder> {
         printOption.setOnMouseClicked(event -> Platform.runLater(() -> {
             if (getItem().canPrint()) {
                 App.main.backRefresh();
-                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem(), false));
             } else {
                 App.notify.showAndWait("Changes must be sent before printing.");
             }

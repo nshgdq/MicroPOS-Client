@@ -22,7 +22,7 @@ public final class BigDecimalUtils {
     }
 
     public static BigDecimal asPercent(BigDecimal decimal) {
-        return asQuantity(decimal.multiply(HUNDRED));
+        return asQuantity(decimal.multiply(HUNDRED).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     private static boolean isIntValue(BigDecimal bd) {

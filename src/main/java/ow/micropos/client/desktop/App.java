@@ -1,17 +1,10 @@
 package ow.micropos.client.desktop;
 
-import email.com.gmail.ttsai0509.escpos.com.ComUtils;
 import email.com.gmail.ttsai0509.javafx.StageScene;
 import email.com.gmail.ttsai0509.javafx.beans.DateTimeClock;
 import email.com.gmail.ttsai0509.javafx.presenter.Presenter;
 import email.com.gmail.ttsai0509.print.dispatcher.PrinterDispatcher;
-import email.com.gmail.ttsai0509.print.dispatcher.PrinterDispatcherAsync;
-import email.com.gmail.ttsai0509.print.printer.RawPrinter;
-import email.com.gmail.ttsai0509.utils.LoggerOutputStream;
-import email.com.gmail.ttsai0509.utils.NullOutputStream;
-import email.com.gmail.ttsai0509.utils.PrinterConfig;
-import email.com.gmail.ttsai0509.utils.TypedProperties;
-import gnu.io.SerialPort;
+import ow.micropos.client.desktop.common.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
@@ -25,9 +18,7 @@ import org.comtel2000.keyboard.control.VkProperties;
 import org.comtel2000.keyboard.robot.FXRobotHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ow.micropos.client.desktop.common.DataConverter;
-import ow.micropos.client.desktop.custom.PrintJobBuilder;
-import ow.micropos.client.desktop.custom.wok.WokPrintJobBuilder;
+import ow.micropos.client.desktop.misc.DataConverter;
 import ow.micropos.client.desktop.model.employee.Employee;
 import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.presenter.ConfirmPresenter;
@@ -53,10 +44,7 @@ import retrofit.RestAdapter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
@@ -266,8 +254,16 @@ public class App extends Application implements VkProperties {
 
         homePresenter = getHomePresenter(properties.getStr("home"));
 
-        jobBuilder = new WokPrintJobBuilder(42);
-        dispatcher = initPrinterDispatcher(properties);
+        //jobBuilder = new WokPrintJobBuilder(42);
+        jobBuilder = new TemplatePrintJobBuilder(
+                properties.getStr("r-name"),
+                properties.getStr("r-address1"),
+                properties.getStr("r-address2"),
+                properties.getStr("r-phone"),
+                properties.getStr("r-thanks"),
+                42
+        );
+        dispatcher = PrinterDispatcherFactory.transientConnectionDispatcher(properties);
 
         clock.start();
         primary.setShow(main);
@@ -277,7 +273,7 @@ public class App extends Application implements VkProperties {
     private File configProperties(String pathname) {
         File userFile = new File(pathname + "/app.properties");
 
-        // Load all custom properties
+        // Load all print properties
         if (userFile.isFile())
             properties = TypedProperties.fromFile(userFile);
         else
@@ -322,64 +318,6 @@ public class App extends Application implements VkProperties {
         if (key.length() > 30)
             key = key.substring(0, 27) + "...";
         System.out.println(String.format("%-30s%s", key, val));
-    }
-
-    private PrinterDispatcher initPrinterDispatcher(TypedProperties properties) {
-
-        PrinterDispatcher dispatcher = new PrinterDispatcherAsync();
-
-        // Get Printer Configurations
-        int count = properties.getInt("printers");
-        PrinterConfig[] printerConfigs = new PrinterConfig[count];
-        for (int i = 0; i < count; i++)
-            printerConfigs[i] = PrinterConfig.fromProperties(properties, "printer" + i);
-
-        new Thread(() -> {
-
-            Map<String, OutputStream> deviceMap = new HashMap<>();
-
-            // Load default devices
-            deviceMap.put("CLI", System.out);
-            deviceMap.put("LOG", new LoggerOutputStream(PrinterDispatcher.class, LoggerOutputStream.Level.INFO));
-            deviceMap.put("NULL", new NullOutputStream());
-
-            // Load config devices
-            for (PrinterConfig printerConfig : printerConfigs) {
-
-                // Open SerialPort if it's not opened yet, and we are able to.
-                if (!deviceMap.containsKey(printerConfig.device) && printerConfig.serialConfig != null) {
-                    try {
-                        SerialPort sp = ComUtils.connectSerialPort(printerConfig.device, 2000, printerConfig
-                                .serialConfig);
-                        deviceMap.put(printerConfig.device, sp.getOutputStream());
-
-                    } catch (Error e) {
-                        log.error("Check serial drivers. " + printerConfig.name + " using LOG.");
-
-                    } catch (Exception e) {
-                        log.warn("Check serial port " + printerConfig.device + ". " + printerConfig.name + " using " +
-                                "LOG");
-
-                    }
-                }
-
-                OutputStream device = deviceMap.get(printerConfig.device);
-
-                // Device issues default to the Logger
-                if (device == null)
-                    dispatcher.registerPrinter(printerConfig.name, new RawPrinter(deviceMap.get("LOG")));
-                else
-                    dispatcher.registerPrinter(printerConfig.name, new RawPrinter(device));
-
-            }
-
-            // Dispatcher runs on same thread as opened OutputStreams
-            dispatcher.run();
-
-        }).start();
-
-        return dispatcher;
-
     }
 
 }

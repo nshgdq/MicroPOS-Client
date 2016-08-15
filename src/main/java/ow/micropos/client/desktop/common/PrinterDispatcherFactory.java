@@ -10,7 +10,6 @@ import email.com.gmail.ttsai0509.serial.SerialFactory;
 import gnu.io.SerialPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,10 +29,8 @@ public enum PrinterDispatcherFactory {
      * http://stackoverflow.com/questions/3843363/thread-interrupt-not-ending-blocking-call-on-input-stream-read
      */
 
-    public static PrinterDispatcher transientConnectionDispatcher() throws IOException {
+    public static PrinterDispatcher transientConnectionDispatcher(TypedProperties properties) throws IOException {
         PrinterDispatcher dispatcher = new PrinterDispatcherAsync();
-
-        TypedProperties properties = new TypedProperties(new FileSystemResource("printer.properties").getInputStream());
 
         // Get Printer Configurations (See printer.properties for proper format)
         int count = properties.getInt("printers");
@@ -66,11 +63,9 @@ public enum PrinterDispatcherFactory {
         return dispatcher;
     }
 
-    public static PrinterDispatcher persistentConnectionDispatcher() throws IOException {
+    public static PrinterDispatcher persistentConnectionDispatcher(TypedProperties properties) throws IOException {
 
         PrinterDispatcher dispatcher = new PrinterDispatcherAsync();
-
-        TypedProperties properties = new TypedProperties(new FileSystemResource("printer.properties").getInputStream());
 
         // Get Printer Configurations (See printer.properties for proper format)
         int count = properties.getInt("printers");

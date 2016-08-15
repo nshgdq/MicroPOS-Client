@@ -9,8 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import org.comtel2000.keyboard.control.VkProperties;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.Action;
-import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.misc.Action;
+import ow.micropos.client.desktop.misc.ActionType;
 import ow.micropos.client.desktop.model.enums.SalesOrderStatus;
 import ow.micropos.client.desktop.model.enums.SalesOrderType;
 import ow.micropos.client.desktop.model.report.MonthlySalesReport;
@@ -34,6 +34,8 @@ public class ReportPresenter extends Presenter {
     public TextField tfYear2;
     public ComboBox<SalesOrderStatus> cbStatus;
     public ComboBox<SalesOrderType> cbType;
+    public ComboBox<SalesOrderStatus> activeStatus;
+    public ComboBox<SalesOrderType> activeType;
 
     public TextField tfMonth;
     public TextField tfYear;
@@ -58,6 +60,9 @@ public class ReportPresenter extends Presenter {
 
         cbStatus.setItems(FXCollections.observableList(Arrays.asList(null, SalesOrderStatus.OPEN, SalesOrderStatus.CLOSED, SalesOrderStatus.VOID)));
         cbType.setItems(FXCollections.observableList(Arrays.asList(null, SalesOrderType.DINEIN, SalesOrderType.TAKEOUT)));
+
+        activeStatus.setItems(FXCollections.observableList(Arrays.asList(null, SalesOrderStatus.OPEN, SalesOrderStatus.CLOSED, SalesOrderStatus.VOID)));
+        activeType.setItems(FXCollections.observableList(Arrays.asList(null, SalesOrderType.DINEIN, SalesOrderType.TAKEOUT)));
 
         clearReport.setOnMouseClicked(event -> {
             cbStatus.getSelectionModel().select(SalesOrderStatus.CLOSED);
@@ -157,8 +162,8 @@ public class ReportPresenter extends Presenter {
                 App.apiProxy.getSalesReport(
                         null,
                         null,
-                        cbStatus.getValue(),
-                        cbType.getValue(),
+                        activeStatus.getValue(),
+                        activeType.getValue(),
                         new RunLaterCallback<SalesReport>() {
                             @Override
                             public void laterSuccess(SalesReport salesReport) {
@@ -174,6 +179,9 @@ public class ReportPresenter extends Presenter {
     public void refresh() {
         cbStatus.getSelectionModel().select(SalesOrderStatus.CLOSED);
         cbType.getSelectionModel().clearSelection();
+
+        activeStatus.getSelectionModel().select(SalesOrderStatus.CLOSED);
+        activeType.getSelectionModel().clearSelection();
 
         Calendar c = Calendar.getInstance();
 

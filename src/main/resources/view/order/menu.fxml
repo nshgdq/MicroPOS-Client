@@ -53,19 +53,50 @@
                    id="optionText"/>
         </StackPane>
 
-        <StackPane fx:id="backOption"
-                   id="optionButton"
-                   GridPane.rowIndex="0"
-                   GridPane.columnIndex="1">
-            <Label text="&#x25C0;"
-                   id="optionText"/>
-        </StackPane>
+        <GridPane id="gpOptions"
+                  GridPane.rowIndex="0"
+                  GridPane.columnIndex="1">
 
-        <StackPane fx:id="nextOption"
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints vgrow="ALWAYS"/>
+            </rowConstraints>
+
+            <StackPane fx:id="backOption"
+                       id="optionButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0">
+                <Label text="&#x25C0;"
+                       id="optionText"/>
+            </StackPane>
+
+            <StackPane fx:id="nextOption"
+                       id="optionButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="1">
+                <Label text="&#x25B6;"
+                       id="optionText"/>
+            </StackPane>
+
+        </GridPane>
+
+        <StackPane fx:id="printOption"
                    id="optionButton"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="2">
-            <Label text="&#x25B6;"
+            <Label text="Print"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="gratuityOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="3">
+            <Label text="Gratuity"
                    id="optionText"/>
         </StackPane>
 

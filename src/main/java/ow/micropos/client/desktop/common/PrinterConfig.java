@@ -1,6 +1,6 @@
 package ow.micropos.client.desktop.common;
 
-import email.com.gmail.ttsai0509.escpos.com.serial.*;
+import email.com.gmail.ttsai0509.serial.config.*;
 
 import java.util.List;
 

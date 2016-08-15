@@ -16,8 +16,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.Action;
-import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.misc.Action;
+import ow.micropos.client.desktop.misc.ActionType;
 import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
 import ow.micropos.client.desktop.model.orders.ProductEntry;
 import ow.micropos.client.desktop.model.orders.SalesOrder;
@@ -27,20 +27,50 @@ import java.util.ArrayList;
 
 public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
 
-    @FXML public Label time;
-    @FXML public Label employee;
-    @FXML public Label target;
-    @FXML public Label info;
-    @FXML public Label status;
-    @FXML public Label productTotal;
-    @FXML public Label chargeTotal;
-    @FXML public Label gratuityTotal;
-    @FXML public Label taxTotal;
-    @FXML public Label grandTotal;
-    @FXML public ListView<ProductEntry> orderEntries;
-    @FXML public StackPane upOption;
-    @FXML public StackPane downOption;
-    @FXML public StackPane spTabContent;
+    public static enum View {
+        ORDER, PAY, COOK
+    }
+
+    public static enum Toggle {
+        MODIFY, HOLD, SEND
+    }
+
+    @FXML
+    public Label time;
+    @FXML
+    public Label employee;
+    @FXML
+    public Label target;
+    @FXML
+    public Label info;
+    @FXML
+    public Label status;
+    @FXML
+    public Label untaxedProductTotal;
+    @FXML
+    public Label productTotal;
+    @FXML
+    public Label chargeTotal;
+    @FXML
+    public Label gratuityTotal;
+    @FXML
+    public Label taxTotal;
+    @FXML
+    public Label grandTotal;
+    @FXML
+    public ListView<ProductEntry> orderEntries;
+    @FXML
+    public StackPane upOption;
+    @FXML
+    public StackPane downOption;
+    @FXML
+    public StackPane spTabContent;
+    @FXML
+    public StackPane toggleModOption;
+    @FXML
+    public StackPane toggleHoldOption;
+    @FXML
+    public StackPane toggleSendOption;
 
     private MenuPresenter menuPresenter;
     private PaymentPresenter payPresenter;
@@ -53,6 +83,8 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
     private int rEditWeight;
     private int rHoldWeight;
     private int rVoidWeight;
+
+    private Toggle currToggle;
 
     @FXML
     public void initialize() {
@@ -76,6 +108,7 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         GridPane.setHalignment(status, HPos.RIGHT);
         GridPane.setHalignment(target, HPos.LEFT);
         GridPane.setHalignment(time, HPos.RIGHT);
+        GridPane.setHalignment(untaxedProductTotal, HPos.RIGHT);
         GridPane.setHalignment(productTotal, HPos.RIGHT);
         GridPane.setHalignment(chargeTotal, HPos.RIGHT);
         GridPane.setHalignment(gratuityTotal, HPos.RIGHT);
@@ -85,26 +118,47 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         upOption.setOnMouseClicked(
                 event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, -2))
         );
-
         downOption.setOnMouseClicked(
                 event -> Platform.runLater(() -> ListViewUtils.listViewScrollBy(orderEntries, 2))
+        );
+        toggleModOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> setToggle(Toggle.MODIFY))
+        );
+        toggleHoldOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> setToggle(Toggle.HOLD))
+        );
+        toggleSendOption.setOnMouseClicked(
+                event -> Platform.runLater(() -> setToggle(Toggle.SEND))
         );
 
         orderEntries.setCellFactory(param -> {
             ViewProductEntry presenter = Presenter.load("/view/order/view_product_entry.fxml");
             presenter.fixWidth(orderEntries);
-            presenter.onClick(event -> {
-                if (presenter.getItem().getStatus() != ProductEntryStatus.VOID
-                        && presenter.getItem().getStatus() != ProductEntryStatus.REQUEST_VOID) {
-                    Platform.runLater(() -> {
-                        App.productEditorPresenter.setContextList(getItem().getProductEntries());
-                        App.main.setNextRefresh(App.productEditorPresenter, presenter.getItem());
-                    });
+            presenter.onClick(event -> Platform.runLater(() -> {
+
+                // Modify toggle shows entry modification screen
+                if (currToggle == Toggle.MODIFY && !presenter.getItem().hasVoidStatus()) {
+                    App.productEditorPresenter.setContextList(getItem().getProductEntries());
+                    App.main.setNextRefresh(App.productEditorPresenter, presenter.getItem());
+
+                // Hold toggle for quickly holding multiple entries
+                } else if (currToggle == Toggle.HOLD && !presenter.getItem().hasVoidStatus()) {
+                    if (presenter.getItem().hasStatus(ProductEntryStatus.REQUEST_SENT)) {
+                        presenter.getItem().setStatus(ProductEntryStatus.REQUEST_HOLD);
+                        sortProductEntries(orderEntries.getItems());
+                    }
+
+                // Send toggle for quickly sending multiple entries
+                } else if (currToggle == Toggle.SEND && !presenter.getItem().hasVoidStatus()) {
+                    if (presenter.getItem().hasStatus(ProductEntryStatus.HOLD)
+                            || presenter.getItem().hasStatus(ProductEntryStatus.REQUEST_HOLD)) {
+                        presenter.getItem().setStatus(ProductEntryStatus.REQUEST_SENT);
+                        sortProductEntries(orderEntries.getItems());
+                    }
                 }
-            });
+            }));
             return new PresenterCellAdapter<>(presenter);
         });
-
     }
 
     @Override
@@ -115,6 +169,7 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             unsetLabel(target);
             unsetLabel(employee);
             unsetLabel(info);
+            unsetLabel(untaxedProductTotal);
             unsetLabel(productTotal);
             unsetLabel(chargeTotal);
             unsetLabel(gratuityTotal);
@@ -127,7 +182,9 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
 
         } else {
             setLabel(info, new StringBinding() {
-                {bind(newItem.idProperty());}
+                {
+                    bind(newItem.idProperty());
+                }
 
                 @Override
                 protected String computeValue() {
@@ -144,6 +201,7 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             setLabel(employee, newItem.employeeNameProperty());
             setLabel(target, newItem.targetNameProperty());
             setLabel(time, Bindings.concat(newItem.prettyCookTimeProperty(), newItem.prettyTimeProperty()));
+            setLabel(untaxedProductTotal, newItem.untaxedProductTotalProperty().asString());
             setLabel(productTotal, newItem.productTotalProperty().asString());
             setLabel(chargeTotal, newItem.chargeTotalProperty().asString());
             setLabel(grandTotal, newItem.grandTotalProperty().asString());
@@ -151,13 +209,13 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
             setLabel(taxTotal, newItem.taxTotalProperty().asString());
             setListView(orderEntries, newItem.getProductEntries());
 
-            sortProductEntries(orderEntries.getItems());
-
             menuPresenter.setItem(newItem);
             payPresenter.setItem(newItem);
             cookPresenter.setItem(newItem);
 
+            sortProductEntries(orderEntries.getItems());
             setView(View.ORDER);
+            setToggle(Toggle.MODIFY);
         }
     }
 
@@ -173,6 +231,7 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         unsetLabel(target);
         unsetLabel(employee);
         unsetLabel(info);
+        unsetLabel(untaxedProductTotal);
         unsetLabel(productTotal);
         unsetLabel(chargeTotal);
         unsetLabel(gratuityTotal);
@@ -182,29 +241,13 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         setItem(null);
     }
 
-    public static enum View {
-        ORDER, PAY, COOK
-    }
-
-    public void setView(View view) {
-        switch (view) {
-            case ORDER:
-                updateMenu(View.ORDER);
-                spTabContent.getChildren().setAll(menuPresenter.getView());
-                menuPresenter.refresh();
-                break;
-            case PAY:
-                updateMenu(View.PAY);
-                spTabContent.getChildren().setAll(payPresenter.getView());
-                payPresenter.refresh();
-                break;
-            case COOK:
-                updateMenu(View.COOK);
-                cookPresenter.refresh();
-                spTabContent.getChildren().setAll(cookPresenter.getView());
-                break;
-        }
-    }
+    /**
+     * ***************************************************************
+     * *
+     * Helpers
+     * *
+     * ****************************************************************
+     */
 
     public void scrollToEntry(ProductEntry entry) {
         Platform.runLater(() -> {
@@ -213,11 +256,56 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
         });
     }
 
-    /*****************************************************************************
-     *                                                                           *
+    public void setView(View view) {
+        switch (view) {
+            case ORDER:
+                menu.setAll(orderTabSelect, payTabDefault, cookTabDefault);
+                spTabContent.getChildren().setAll(menuPresenter.getView());
+                menuPresenter.refresh();
+                break;
+            case PAY:
+                menu.setAll(orderTabDefault, payTabSelect, cookTabDefault);
+                spTabContent.getChildren().setAll(payPresenter.getView());
+                payPresenter.refresh();
+                break;
+            case COOK:
+                menu.setAll(orderTabDefault, payTabDefault, cookTabSelect);
+                cookPresenter.refresh();
+                spTabContent.getChildren().setAll(cookPresenter.getView());
+                break;
+        }
+    }
+
+    public void setToggle(Toggle toggle) {
+        switch (toggle) {
+            case MODIFY:
+                toggleModOption.setStyle("-fx-background-color: #590000");
+                toggleHoldOption.setStyle("-fx-background-color: #A80000");
+                toggleSendOption.setStyle("-fx-background-color: #A80000");
+                currToggle = Toggle.MODIFY;
+                break;
+            case HOLD:
+                toggleModOption.setStyle("-fx-background-color: #A80000");
+                toggleHoldOption.setStyle("-fx-background-color: #590000");
+                toggleSendOption.setStyle("-fx-background-color: #A80000");
+                currToggle = Toggle.HOLD;
+                break;
+            case SEND:
+                toggleModOption.setStyle("-fx-background-color: #A80000");
+                toggleHoldOption.setStyle("-fx-background-color: #A80000");
+                toggleSendOption.setStyle("-fx-background-color: #590000");
+                currToggle = Toggle.SEND;
+                break;
+        }
+    }
+
+    /**
+     * **************************************************************************
+     * *
      * Menu Buttons
-     *                                                                           *
-     *****************************************************************************/
+     * *
+     * ***************************************************************************
+     */
 
     @Override
     public ObservableList<Action> menu() {
@@ -233,21 +321,13 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
     private final Action payTabDefault = new Action("Pay", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> setView(View.PAY)));
     private final Action cookTabDefault = new Action("Cook", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> setView(View.COOK)));
 
-    private void updateMenu(View view) {
-        switch (view) {
-            case ORDER:
-                menu.setAll(orderTabSelect, payTabDefault, cookTabDefault);
-                break;
-
-            case PAY:
-                menu.setAll(orderTabDefault, payTabSelect, cookTabDefault);
-                break;
-
-            case COOK:
-                menu.setAll(orderTabDefault, payTabDefault, cookTabSelect);
-                break;
-        }
-    }
+    /**
+     * ***************************************************************
+     * *
+     * Product Entry Sorting
+     * *
+     * ****************************************************************
+     */
 
     private int getStatusWeight(ProductEntry pe) {
         switch (pe.getStatus()) {
@@ -281,4 +361,5 @@ public class OrderEditorPresenter extends ItemPresenter<SalesOrder> {
                 return ComparatorUtils.tagComparator.compare(pe1.getMenuItem().getTag(), pe2.getMenuItem().getTag());
         });
     }
+
 }

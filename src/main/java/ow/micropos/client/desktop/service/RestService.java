@@ -118,6 +118,7 @@ public interface RestService {
      *                                                                *
      ******************************************************************/
 
+    @Deprecated
     @GET("/settings")
     void getSettings(@Query("keys") String[] keys, Callback<Map<String, String>> callback);
 

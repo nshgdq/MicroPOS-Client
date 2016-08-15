@@ -1,7 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 .gradle/
 .idea/
-backup/
-build/
-application.yml
-src/test/
+app.properties
+mandarin-logo.jpg
+mandarin-logo.png
+micropos-mandarin-logo.ai

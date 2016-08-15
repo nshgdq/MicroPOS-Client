@@ -181,6 +181,11 @@ public class ProductEntry {
         productEntries.add(this);
     }
 
+    public boolean hasVoidStatus() {
+        return hasStatus(ProductEntryStatus.VOID)
+                || hasStatus(ProductEntryStatus.REQUEST_VOID)
+                || hasStatus(ProductEntryStatus.REQUEST_HOLD_VOID);
+    }
 
     /******************************************************************
      *                                                                *

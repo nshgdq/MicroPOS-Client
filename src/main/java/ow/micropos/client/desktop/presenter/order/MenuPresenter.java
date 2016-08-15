@@ -16,6 +16,7 @@ import ow.micropos.client.desktop.model.orders.SalesOrder;
 import ow.micropos.client.desktop.service.ComparatorUtils;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -24,6 +25,8 @@ public class MenuPresenter extends ItemPresenter<SalesOrder> {
     @FXML public StackPane categoriesOption;
     @FXML public StackPane sendOption;
     @FXML public StackPane backOption;
+    @FXML public StackPane gratuityOption;
+    @FXML public StackPane printOption;
     @FXML public StackPane cancelOption;
     @FXML public StackPane nextOption;
     @FXML public StackPane spItems;
@@ -66,10 +69,10 @@ public class MenuPresenter extends ItemPresenter<SalesOrder> {
                         App.main.backRefresh();
 
                         if (App.properties.getBool("print-send-takeout") && getItem().hasType(SalesOrderType.TAKEOUT))
-                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem(), false));
 
                         if (App.properties.getBool("print-send-dinein") && getItem().hasType(SalesOrderType.DINEIN))
-                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                            App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem(), false));
 
                         App.notify.showAndWait("Sales Order " + aLong);
                     }
@@ -77,16 +80,22 @@ public class MenuPresenter extends ItemPresenter<SalesOrder> {
             }
         });
 
-        /*
+        gratuityOption.setOnMouseClicked(event -> {
+            if (getItem().canHaveGratuity() && !getItem().hasGratuity()) {
+                getItem().setGratuityPercent(App.properties.getBd("gratuity-percent"));
+            } else {
+                getItem().setGratuityPercent(BigDecimal.ZERO);
+            }
+        });
+
         printOption.setOnMouseClicked(event -> Platform.runLater(() -> {
             if (getItem().canPrint()) {
                 App.main.backRefresh();
-                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem(), false));
             } else {
                 App.notify.showAndWait("Changes must be sent before printing.");
             }
         }));
-        */
 
         gvCategories.setPage(0);
         gvCategories.setRows(App.properties.getInt("order-category-rows"));

@@ -12,7 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
-import ow.micropos.client.desktop.common.Action;
+import ow.micropos.client.desktop.misc.Action;
 
 import java.io.IOException;
 

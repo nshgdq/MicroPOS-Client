@@ -17,8 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.Action;
-import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.misc.Action;
+import ow.micropos.client.desktop.misc.ActionType;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -259,6 +259,18 @@ public abstract class DbEntityPresenter<T> extends ItemPresenter<T> {
             } catch (NumberFormatException e) {
                 return BigDecimal.ZERO;
             }
+        }
+    };
+
+    protected static final StringConverter<Boolean> booleanConverter = new StringConverter<Boolean>() {
+        @Override
+        public String toString(Boolean object) {
+            return object ? "1" : "0";
+        }
+
+        @Override
+        public Boolean fromString(String string) {
+            return string.equals("1");
         }
     };
 

@@ -7,9 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.Action;
-import ow.micropos.client.desktop.common.ActionLabel;
-import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.misc.Action;
+import ow.micropos.client.desktop.misc.ActionLabel;
+import ow.micropos.client.desktop.misc.ActionType;
 import ow.micropos.client.desktop.service.RunLaterCallback;
 
 public class ManagerPresenter extends Presenter {

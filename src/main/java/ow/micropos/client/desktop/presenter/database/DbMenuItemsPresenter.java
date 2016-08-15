@@ -19,6 +19,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
     TextField tfName;
     TextField tfTag;
     TextField tfPrice;
+    TextField tfTaxed;
     TextField tfCategory;
     TextField tfPrinters;
     TextField tfWeight;
@@ -26,6 +27,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
     TableColumn<MenuItem, String> name;
     TableColumn<MenuItem, String> tag;
     TableColumn<MenuItem, String> price;
+    TableColumn<MenuItem, String> taxed;
     TableColumn<MenuItem, String> category;
     TableColumn<MenuItem, String> printers;
     TableColumn<MenuItem, String> weight;
@@ -37,7 +39,15 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
 
     @Override
     Label[] getEditLabels() {
-        return new Label[]{new Label("Name"), new Label("Tag"), new Label("Price"), new Label("Categories"), new Label("Printers"), new Label("Weight")};
+        return new Label[]{
+                new Label("Name"),
+                new Label("Tag"),
+                new Label("Price"),
+                new Label("Taxed"),
+                new Label("Categories"),
+                new Label("Printers"),
+                new Label("Weight")
+        };
     }
 
 
@@ -46,11 +56,12 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         tfName = createTextField("Name");
         tfTag = createTextField("Tag");
         tfPrice = createTextField("Price");
+        tfTaxed = createTextField("Taxed");
         tfCategory = createTextField("Categories");
         tfPrinters = createTextField("Printers");
         tfWeight = createTextField("Weight");
 
-        return new Node[]{tfName, tfTag, tfPrice, tfCategory, tfPrinters, tfWeight};
+        return new Node[]{tfName, tfTag, tfPrice, tfTaxed, tfCategory, tfPrinters, tfWeight};
     }
 
     @Override
@@ -59,6 +70,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         name = createTableColumn("Name", param -> param.getValue().nameProperty());
         tag = createTableColumn("Tag", param -> param.getValue().tagProperty(), ComparatorUtils.tagComparator);
         price = createTableColumn("Price", param -> param.getValue().priceProperty().asString());
+        taxed = createTableColumn("Taxed", param -> param.getValue().taxedProperty().asString());
         category = createTableColumn("Category", param -> param.getValue().categorySummaryProperty());
         printers = createTableColumn("Printers", param -> param.getValue().printersProperty().asString());
         weight = createTableColumn("Weight", param -> param.getValue().weightProperty().asString());
@@ -67,7 +79,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         name.setMinWidth(300);
         name.setPrefWidth(300);
 
-        return new TableColumn[]{name, tag, price, category, printers, weight};
+        return new TableColumn[]{name, tag, price, taxed, category, printers, weight};
     }
 
     @Override
@@ -75,6 +87,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         tfName.textProperty().unbindBidirectional(currentItem.nameProperty());
         tfTag.textProperty().unbindBidirectional(currentItem.tagProperty());
         tfPrice.textProperty().unbindBidirectional(currentItem.priceProperty());
+        tfTaxed.textProperty().unbindBidirectional(currentItem.taxedProperty());
         tfCategory.textProperty().unbindBidirectional(currentItem.getCategory().idProperty());
         tfPrinters.textProperty().unbindBidirectional(currentItem.printersProperty());
         tfWeight.textProperty().unbindBidirectional(currentItem.weightProperty());
@@ -85,6 +98,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         tfName.textProperty().bindBidirectional(newItem.nameProperty());
         tfTag.textProperty().bindBidirectional(newItem.tagProperty());
         tfPrice.textProperty().bindBidirectional(newItem.priceProperty(), priceConverter);
+        tfTaxed.textProperty().bindBidirectional(newItem.taxedProperty(), booleanConverter);
         tfCategory.textProperty().bindBidirectional(newItem.getCategory().idProperty(), idConverter);
         tfPrinters.textProperty().bindBidirectional(newItem.printersProperty(), listConverter);
         tfWeight.textProperty().bindBidirectional(newItem.weightProperty(), numberConverter);
@@ -95,6 +109,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         tfName.setVisible(visible);
         tfTag.setVisible(visible);
         tfPrice.setVisible(visible);
+        tfTaxed.setVisible(visible);
         tfCategory.setVisible(visible);
         tfPrinters.setVisible(visible);
         tfWeight.setVisible(visible);
@@ -102,6 +117,7 @@ public class DbMenuItemsPresenter extends DbEntityPresenter<MenuItem> {
         tfName.setText("");
         tfTag.setText("");
         tfPrice.setText("");
+        tfTaxed.setText("");
         tfCategory.setText("");
         tfPrinters.setText("");
         tfWeight.setText("");

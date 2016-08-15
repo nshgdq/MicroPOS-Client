@@ -167,7 +167,7 @@ public class TemplatePrintJobBuilder implements PrintJobBuilder {
                 .feed()
                 .total("Item Sales Total", report.salesTotal.toString())
                 .forEach(report.categorySalesTotals.entrySet(), item -> {
-
+                    total("   " + item.getKey(), item.getValue().toPlainString());
                 })
                 .font(EscPosBuilder.Font.REGULAR)
                 .feed()
@@ -230,7 +230,7 @@ public class TemplatePrintJobBuilder implements PrintJobBuilder {
                 .text("Server   : " + so.getEmployee().getFirstName())
                 .feed(1)
                 .optional(so.hasType(SalesOrderType.DINEIN),
-                        () -> text("Seat     : " + so.getSeat().getId()))
+                        () -> text("Seat     : " + so.getSeat().getTag()))
                 .optional(so.hasType(SalesOrderType.TAKEOUT),
                         () -> text("Customer : " + so.getCustomer().fullNameProperty().get()).feed(1))
                 .optional(so.hasType(SalesOrderType.TAKEOUT),

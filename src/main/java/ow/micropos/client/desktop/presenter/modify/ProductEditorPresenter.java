@@ -18,8 +18,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import org.fxmisc.easybind.EasyBind;
 import ow.micropos.client.desktop.App;
-import ow.micropos.client.desktop.common.Action;
-import ow.micropos.client.desktop.common.ActionType;
+import ow.micropos.client.desktop.misc.Action;
+import ow.micropos.client.desktop.misc.ActionType;
 import ow.micropos.client.desktop.model.enums.ModifierType;
 import ow.micropos.client.desktop.model.enums.Permission;
 import ow.micropos.client.desktop.model.enums.ProductEntryStatus;
@@ -99,7 +99,6 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                 gpModifiers.nextPage();
             }
         }));
-
 
         subOption.setOnMouseClicked(event -> {
             ProductEntry pe = getItem();
@@ -215,7 +214,7 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
                 });
         });
 
-        updateMenu(null);
+        updateMenu(ModifierType.ADDITION);
         showModifierGroups();
     }
 
@@ -332,14 +331,6 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
 
     private final ObservableList<Action> menu = FXCollections.observableArrayList(new ArrayList<>());
 
-    private final Action allTabDefault = new Action("All", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
-        updateModifiers(m -> true);
-        updateMenu(null);
-    }));
-    private final Action allTabSelect = new Action("All", ActionType.TAB_SELECT, event -> Platform.runLater(() -> {
-        updateModifiers(m -> true);
-        updateMenu(null);
-    }));
     private final Action addTabDefault = new Action("+", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
         updateModifiers(m -> m.hasType(ModifierType.ADDITION));
         updateMenu(ModifierType.ADDITION);
@@ -364,22 +355,6 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
         updateModifiers(m -> m.hasType(ModifierType.SUBSTITUTION));
         updateMenu(ModifierType.SUBSTITUTION);
     }));
-    private final Action insTabDefault = new Action("Ins", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
-        updateModifiers(m -> m.hasType(ModifierType.INSTRUCTION));
-        updateMenu(ModifierType.INSTRUCTION);
-    }));
-    private final Action insTabSelect = new Action("Ins", ActionType.TAB_SELECT, event -> Platform.runLater(() -> {
-        updateModifiers(m -> m.hasType(ModifierType.INSTRUCTION));
-        updateMenu(ModifierType.INSTRUCTION);
-    }));
-    private final Action varTabDefault = new Action("Var", ActionType.TAB_DEFAULT, event -> Platform.runLater(() -> {
-        updateModifiers(m -> m.hasType(ModifierType.VARIATION));
-        updateMenu(ModifierType.VARIATION);
-    }));
-    private final Action varTabSelect = new Action("Var", ActionType.TAB_SELECT, event -> Platform.runLater(() -> {
-        updateModifiers(m -> m.hasType(ModifierType.VARIATION));
-        updateMenu(ModifierType.VARIATION);
-    }));
 
     @Override
     public ObservableList<Action> menu() {
@@ -388,23 +363,17 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
 
     private void updateMenu(ModifierType type) {
         if (type == null)
-            menu.setAll(allTabSelect, addTabDefault, excTabDefault, subTabDefault, insTabDefault, varTabDefault);
+            menu.setAll(addTabDefault, excTabDefault, subTabDefault);
         else
             switch (type) {
                 case ADDITION:
-                    menu.setAll(allTabDefault, addTabSelect, excTabDefault, subTabDefault, insTabDefault, varTabDefault);
+                    menu.setAll(addTabSelect, excTabDefault, subTabDefault);
                     break;
                 case SUBSTITUTION:
-                    menu.setAll(allTabDefault, addTabDefault, excTabDefault, subTabSelect, insTabDefault, varTabDefault);
+                    menu.setAll(addTabDefault, excTabDefault, subTabSelect);
                     break;
                 case EXCLUSION:
-                    menu.setAll(allTabDefault, addTabDefault, excTabSelect, subTabDefault, insTabDefault, varTabDefault);
-                    break;
-                case INSTRUCTION:
-                    menu.setAll(allTabDefault, addTabDefault, excTabDefault, subTabDefault, insTabSelect, varTabDefault);
-                    break;
-                case VARIATION:
-                    menu.setAll(allTabDefault, addTabDefault, excTabDefault, subTabDefault, insTabDefault, varTabSelect);
+                    menu.setAll(addTabDefault, excTabSelect, subTabDefault);
                     break;
             }
     }
@@ -426,7 +395,7 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
      ******************************************************************/
 
     private ObservableList<Modifier> source = FXCollections.emptyObservableList();
-    private Predicate<Modifier> predicate = m -> true;
+    private Predicate<Modifier> predicate = m -> m.hasType(ModifierType.ADDITION);
 
     private void updateModifiers(Predicate<Modifier> predicate) {
         this.predicate = predicate;
@@ -440,8 +409,8 @@ public class ProductEditorPresenter extends ItemPresenter<ProductEntry> {
 
     private void resetModifiers() {
         this.source = FXCollections.emptyObservableList();
-        this.predicate = m -> true;
-        updateMenu(null);
+        this.predicate = m -> m.hasType(ModifierType.ADDITION);
+        updateMenu(ModifierType.ADDITION);
         gpModifiers.setItems(source.filtered(predicate));
     }
 

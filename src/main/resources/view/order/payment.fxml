@@ -324,14 +324,6 @@
             <ColumnConstraints percentWidth="16.66"/>
         </columnConstraints>
 
-        <StackPane fx:id="gratuityOption"
-                   id="optionButton"
-                   GridPane.rowIndex="0"
-                   GridPane.columnIndex="0">
-            <Label text="Gratuity"
-                   id="optionText"/>
-        </StackPane>
-
         <StackPane fx:id="voidOption"
                    id="optionButton"
                    GridPane.rowIndex="0"
@@ -346,6 +338,14 @@
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="2">
             <Label text="Print"
+                   id="optionText"/>
+        </StackPane>
+
+        <StackPane fx:id="gratuityOption"
+                   id="optionButton"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="3">
+            <Label text="Gratuity"
                    id="optionText"/>
         </StackPane>
 

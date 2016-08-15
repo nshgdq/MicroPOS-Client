@@ -41,7 +41,15 @@
             <Label>Active Sales</Label>
         </StackPane>
 
-        <StackPane GridPane.rowIndex="1"
+        <ComboBox GridPane.rowIndex="1"
+                  GridPane.columnIndex="0"
+                  fx:id="activeStatus"/>
+
+        <ComboBox GridPane.rowIndex="2"
+                  GridPane.columnIndex="0"
+                  fx:id="activeType"/>
+
+        <StackPane GridPane.rowIndex="3"
                    GridPane.columnIndex="0"
                    styleClass="stack-button"
                    fx:id="generateActiveReport">

@@ -43,7 +43,7 @@ public class DbSeatPresenter extends DbEntityPresenter<Seat> {
         tfRow = createTextField("Row");
         tfCol = createTextField("Col");
 
-        return new Node[]{tfTag, tfSection, tfRow, tfCol};
+        return new Node[]{tfSection, tfTag, tfRow, tfCol};
     }
 
     @Override

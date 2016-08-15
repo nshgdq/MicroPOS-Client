@@ -115,10 +115,10 @@ public class CookPresenter extends ItemPresenter<SalesOrder> {
                             App.main.backRefresh();
 
                             if (App.properties.getBool("print-send-takeout") && getItem().hasType(SalesOrderType.TAKEOUT))
-                                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem(), false));
 
                             if (App.properties.getBool("print-send-dinein") && getItem().hasType(SalesOrderType.DINEIN))
-                                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem()));
+                                App.dispatcher.requestPrint("receipt", App.jobBuilder.check(getItem(), false));
 
                             if (getItem().getCookTime() == null)
                                 App.notify.showAndWait("Sales Order " + aLong);

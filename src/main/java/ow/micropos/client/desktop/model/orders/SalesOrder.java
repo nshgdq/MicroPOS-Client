@@ -302,6 +302,13 @@ public class SalesOrder {
         return false;
     }
 
+    public boolean hasUntaxedEntry() {
+        for (ProductEntry pe : productEntries)
+            if (!pe.getMenuItem().getTaxed())
+                return true;
+        return false;
+    }
+
     public boolean canPrint() {
         if (hasStatus(SalesOrderStatus.REQUEST_CLOSE)
                 || hasStatus(SalesOrderStatus.REQUEST_OPEN)
@@ -379,6 +386,7 @@ public class SalesOrder {
      *                                                                *
      ******************************************************************/
 
+    private ReadOnlyObjectWrapper<BigDecimal> untaxedProductTotal;
     private ReadOnlyObjectWrapper<BigDecimal> productTotal;
     private ReadOnlyObjectWrapper<BigDecimal> chargeTotal;
     private ReadOnlyObjectWrapper<BigDecimal> subTotal;
@@ -389,12 +397,31 @@ public class SalesOrder {
     private ReadOnlyObjectWrapper<BigDecimal> change;
     private ReadOnlyObjectWrapper<BigDecimal> due;
 
+    public ReadOnlyObjectProperty<BigDecimal> untaxedProductTotalProperty() {
+        if (untaxedProductTotal == null) {
+            untaxedProductTotal = new ReadOnlyObjectWrapper<>();
+            untaxedProductTotal.bind(EasyBind.combine(
+                    EasyBind.map(
+                            productEntriesProperty().filtered(pe -> !pe.getMenuItem().taxedProperty().get()),
+                            ProductEntry::totalProperty
+                    ),
+                    bigDecimalStream -> BigDecimalUtils.asDollars(
+                            bigDecimalStream
+                                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                                    .max(BigDecimal.ZERO)
+                    )
+            ));
+
+        }
+        return untaxedProductTotal.getReadOnlyProperty();
+    }
+
     public ReadOnlyObjectProperty<BigDecimal> productTotalProperty() {
         if (productTotal == null) {
             productTotal = new ReadOnlyObjectWrapper<>();
             productTotal.bind(EasyBind.combine(
                     EasyBind.map(
-                            productEntriesProperty(),
+                            productEntriesProperty().filtered(pe -> pe.getMenuItem().taxedProperty().get()),
                             ProductEntry::totalProperty
                     ),
                     bigDecimalStream -> BigDecimalUtils.asDollars(
@@ -433,6 +460,7 @@ public class SalesOrder {
         return chargeTotal.getReadOnlyProperty();
     }
 
+    // Taxable Sub Total
     public ReadOnlyObjectProperty<BigDecimal> subTotalProperty() {
         if (subTotal == null) {
             subTotal = new ReadOnlyObjectWrapper<>();
@@ -502,7 +530,8 @@ public class SalesOrder {
                     subTotalProperty(),
                     taxTotalProperty(),
                     gratuityTotalProperty(),
-                    (a, b, c) -> BigDecimalUtils.asDollars(a.add(b).add(c).max(BigDecimal.ZERO))
+                    untaxedProductTotalProperty(),
+                    (a, b, c, d) -> BigDecimalUtils.asDollars(a.add(b).add(c).add(d).max(BigDecimal.ZERO))
             ));
         }
         return grandTotal.getReadOnlyProperty();

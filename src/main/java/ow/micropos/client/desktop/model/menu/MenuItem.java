@@ -9,7 +9,7 @@ import ow.micropos.client.desktop.model.orders.ProductEntry;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class MenuItem {
+public class    MenuItem {
 
     public MenuItem() {}
 
@@ -22,6 +22,8 @@ public class MenuItem {
     private IntegerProperty weight = new SimpleIntegerProperty();
 
     private ObjectProperty<BigDecimal> price = new SimpleObjectProperty<>();
+
+    private BooleanProperty taxed = new SimpleBooleanProperty();
 
     private ObjectProperty<Category> category = new SimpleObjectProperty<>();
 
@@ -83,6 +85,18 @@ public class MenuItem {
 
     public ObjectProperty<BigDecimal> priceProperty() {
         return price;
+    }
+
+    public boolean getTaxed() {
+        return taxed.get();
+    }
+
+    public BooleanProperty taxedProperty() {
+        return taxed;
+    }
+
+    public void setTaxed(boolean taxed) {
+        this.taxed.set(taxed);
     }
 
     public void setPrice(BigDecimal price) {

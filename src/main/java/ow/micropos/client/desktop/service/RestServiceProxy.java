@@ -170,6 +170,7 @@ public class RestServiceProxy {
             callback.reject();
     }
 
+    @Deprecated
     public void getSettings(String[] keys, RestServiceCallback<Map<String, String>> callback) {
         callback.injectMethodInfo(17, methodInUse);
         if (methodInUse[17].compareAndSet(false, true))

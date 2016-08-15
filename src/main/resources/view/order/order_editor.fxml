@@ -24,6 +24,7 @@
 
         <rowConstraints>
             <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="ALWAYS"/>
             <RowConstraints vgrow="NEVER"/>
             <RowConstraints vgrow="NEVER"/>
@@ -70,7 +71,43 @@
 
         </GridPane>
 
-        <AnchorPane GridPane.rowIndex="1"
+        <GridPane id="gpTouchToggle"
+                  GridPane.rowIndex="1"
+                  GridPane.columnIndex="0">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="33.33"/>
+                <ColumnConstraints percentWidth="33.33"/>
+                <ColumnConstraints percentWidth="33.33"/>
+            </columnConstraints>
+
+            <StackPane fx:id="toggleModOption"
+                       id="optionButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0">
+                <Label text="Modify"
+                       id="smOptionText"/>
+            </StackPane>
+
+            <StackPane fx:id="toggleHoldOption"
+                       id="optionButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="1">
+                <Label text="Hold"
+                       id="smOptionText"/>
+            </StackPane>
+
+            <StackPane fx:id="toggleSendOption"
+                       id="optionButton"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="2">
+                <Label text="Send"
+                       id="smOptionText"/>
+            </StackPane>
+
+        </GridPane>
+
+        <AnchorPane GridPane.rowIndex="2"
                     GridPane.columnIndex="0">
             <ListView fx:id="orderEntries"
                       id="lvOrderEntries"
@@ -81,7 +118,7 @@
         </AnchorPane>
 
         <GridPane id="gpScroll"
-                  GridPane.rowIndex="2"
+                  GridPane.rowIndex="3"
                   GridPane.columnIndex="0">
 
             <columnConstraints>
@@ -112,7 +149,7 @@
         </GridPane>
 
         <GridPane id="gpBottom"
-                  GridPane.rowIndex="3"
+                  GridPane.rowIndex="4"
                   GridPane.columnIndex="0">
 
             <columnConstraints>
@@ -120,54 +157,64 @@
                 <ColumnConstraints hgrow="NEVER"/>
             </columnConstraints>
 
-            <Label text="Product Total"
+            <Label text="Giftcard Total"
                    styleClass="secondary-info"
                    GridPane.rowIndex="0"
+                   GridPane.columnIndex="0"/>
+
+            <Label fx:id="untaxedProductTotal"
+                   styleClass="secondary-info"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="1"/>
+
+            <Label text="Product Total"
+                   styleClass="secondary-info"
+                   GridPane.rowIndex="1"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="productTotal"
                    styleClass="secondary-info"
-                   GridPane.rowIndex="0"
+                   GridPane.rowIndex="1"
                    GridPane.columnIndex="1"/>
 
             <Label text="Discount"
                    styleClass="secondary-info"
-                   GridPane.rowIndex="1"
+                   GridPane.rowIndex="2"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="chargeTotal"
                    styleClass="secondary-info"
-                   GridPane.rowIndex="1"
+                   GridPane.rowIndex="2"
                    GridPane.columnIndex="1"/>
 
             <Label text="Gratuity"
                    styleClass="secondary-info"
-                   GridPane.rowIndex="2"
+                   GridPane.rowIndex="3"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="gratuityTotal"
                    styleClass="secondary-info"
-                   GridPane.rowIndex="2"
+                   GridPane.rowIndex="3"
                    GridPane.columnIndex="1"/>
 
             <Label text="Sales Tax"
                    styleClass="secondary-info"
-                   GridPane.rowIndex="3"
+                   GridPane.rowIndex="4"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="taxTotal"
                    styleClass="secondary-info"
-                   GridPane.rowIndex="3"
+                   GridPane.rowIndex="4"
                    GridPane.columnIndex="1"/>
 
             <Label text="Grand Total"
                    styleClass="primary-info"
-                   GridPane.rowIndex="4"
+                   GridPane.rowIndex="5"
                    GridPane.columnIndex="0"/>
 
             <Label fx:id="grandTotal"
                    styleClass="primary-info"
-                   GridPane.rowIndex="4"
+                   GridPane.rowIndex="5"
                    GridPane.columnIndex="1"/>
         </GridPane>
 
